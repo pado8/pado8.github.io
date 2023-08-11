@@ -7,7 +7,7 @@ const webpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
  
 module.exports = {
     // name은 webpack의 이름
-    name: 'react-project',
+    name: 'pado8.githup.io',
  
     // mode는 개발모드인지 production 모드인지 등을 구분
     mode: 'development',
@@ -17,7 +17,7 @@ module.exports = {
     // 특정 확장자 내용을 제거할 수도 있다.
     // 확장자명 뿐만 아니라 라이브러리도 명시 가능
     resolve: {
-        extensions: ['.js']
+        extensions: ['.js', 'jsx']
     },
  
     // 내가 앞으로 번들 할 파일들
@@ -36,7 +36,7 @@ module.exports = {
         // 여러가지의 rule로 바벨을 사용하겠다.
         rules: [{
             // 확장자가 js 이거나 jsx 일 때 (정규식) babel을 넣는다.
-            test: /\.js?/,
+            test: /\.jsx?/,
             loader: 'babel-loader',  // webpack과 babel을 연결해주는 babel 라이브러리
             // babel에 대한 옵션내용 추가
             options: {
