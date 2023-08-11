@@ -5,6 +5,12 @@ const path = require('path')
 const webpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 // npm install로 설치한 패키지 역시 가져올 수 있다.
  
+const CnameWebpackPlugin = require('cname-webpack-plugin');
+
+module.exports = {
+
+};
+
 module.exports = {
     // name은 webpack의 이름
     name: 'pado8.githup.io',
@@ -65,7 +71,11 @@ module.exports = {
     plugins: [
         new webpackPlugin()
     ],
- 
+    plugins: [
+        new CnameWebpackPlugin({
+            domain: 'aquapado.com',
+          }),
+      ],
     // 내보낼 파일의 위치와 파일명 (번들 한 파일) 
     output: {
         path: path.join(__dirname, 'dist'),
