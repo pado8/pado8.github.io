@@ -23,7 +23,7 @@ module.exports = {
     // 특정 확장자 내용을 제거할 수도 있다.
     // 확장자명 뿐만 아니라 라이브러리도 명시 가능
     resolve: {
-        extensions: ['.js', 'jsx']
+        extensions: ['.js', '.jsx']
     },
  
     // 내가 앞으로 번들 할 파일들

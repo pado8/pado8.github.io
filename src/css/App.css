@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+/* 기획 중 */
+h1 {
+  font-size: 22px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
