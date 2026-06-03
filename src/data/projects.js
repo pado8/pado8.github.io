@@ -28,6 +28,6 @@ export const projects = [
     },
     tags: ['Next.js', 'TypeScript', 'Supabase', 'Tailwind CSS'],
     demo: 'https://alpha-ants.aquapado.com/',
-    status: 'wip',
+    status: 'active',
   },
 ]

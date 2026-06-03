@@ -1,14 +1,17 @@
 const skills = [
-  { name: 'HTML / CSS',  icon: '\u{1F310}' },
-  { name: 'JavaScript', icon: '⚡' },
-  { name: 'TypeScript', icon: '\u{1F537}' },
-  { name: 'React',      icon: '⚛️' },
-  { name: 'Vite',       icon: '⚡' },
-  { name: 'Python',     icon: '\u{1F40D}' },
-  { name: 'Tauri',      icon: '\u{1F980}' },
-  { name: 'Node.js',    icon: '\u{1F7E2}' },
-  { name: 'Git',        icon: '\u{1F4E6}' },
-  { name: 'Webpack',    icon: '\u{1F4E6}' },
+  { name: 'React',         icon: '⚛️' },
+  { name: 'Next.js',       icon: '▲' },
+  { name: 'TypeScript',    icon: '\u{1F537}' },
+  { name: 'Node.js',       icon: '\u{1F7E2}' },
+  { name: 'Python',        icon: '\u{1F40D}' },
+  { name: 'Tauri',         icon: '\u{1F980}' },
+  { name: 'Supabase',      icon: '⚡' },
+  { name: 'PostgreSQL',    icon: '\u{1F418}' },
+  { name: 'Tailwind CSS',  icon: '\u{1F3A8}' },
+  { name: 'Vite',          icon: '\u{1F680}' },
+  { name: 'Git',           icon: '\u{1F4E6}' },
+  { name: 'Claude',        icon: '\u{1F916}' },
+  { name: 'AI Pair Programming', icon: '✨' },
 ]
 
 export default function About({ t }) {
