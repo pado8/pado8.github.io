@@ -30,4 +30,17 @@ export const projects = [
     demo: 'https://alpha-ants.aquapado.com/',
     status: 'active',
   },
+  {
+    id: 'rafdonia',
+    title: {
+      en: 'Rafdonia',
+      ko: '미궁 (Rafdonia)',
+    },
+    desc: {
+      en: 'A 2D top-down pixel-art roguelike RPG, built solo in Unity. Procedural dungeons, permadeath, and mouse-aimed combat — currently in active development toward an MVP.',
+      ko: 'Unity로 혼자 개발 중인 2D 탑다운 픽셀 로그라이크 RPG. 절차적 던전, 영구 사망, 마우스 조준 전투를 담고 있어요. 현재 MVP를 향해 개발 중입니다.',
+    },
+    tags: ['Unity', 'C#', '2D', 'Roguelike', 'Pixel Art'],
+    status: 'wip',
+  },
 ]
