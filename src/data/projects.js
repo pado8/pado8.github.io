@@ -27,6 +27,7 @@ export const projects = [
       ko: '한·미 주식 포트폴리오를 기록하고 공유하는 웹 플랫폼. 보유 종목을 입력하면 현재가·수익률·누적 배당을 자동으로 계산하고, 개미 등급으로 공유할 수 있어요.',
     },
     tags: ['Next.js', 'TypeScript', 'Supabase', 'Tailwind CSS'],
+    demo: 'https://alpha-ants.aquapado.com/',
     status: 'wip',
   },
 ]
