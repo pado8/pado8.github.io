@@ -16,4 +16,17 @@ export const projects = [
     badge: '295+',
     status: 'active',
   },
+  {
+    id: 'alpha-ants-portfolio',
+    title: {
+      en: "Alpha Ant's Portfolio",
+      ko: '알파 개미의 포트폴리오',
+    },
+    desc: {
+      en: 'A web platform for sharing Korean & US stock portfolios. Record your holdings to auto-track current prices, returns, and cumulative dividends, then share your "ant investor" tier. Built with Next.js and Supabase.',
+      ko: '한·미 주식 포트폴리오를 기록하고 공유하는 웹 플랫폼. 보유 종목을 입력하면 현재가·수익률·누적 배당을 자동으로 계산하고, 개미 등급으로 공유할 수 있어요.',
+    },
+    tags: ['Next.js', 'TypeScript', 'Supabase', 'Tailwind CSS'],
+    status: 'wip',
+  },
 ]
