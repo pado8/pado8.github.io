@@ -2,4 +2,8 @@
 User-agent: *
 Allow: /
 
+# Naver search robot (explicitly allowed)
+User-agent: Yeti
+Allow: /
+
 Sitemap: https://aquapado.com/sitemap.xml
