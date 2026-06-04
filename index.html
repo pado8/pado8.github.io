@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0d9488" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Search engine site verification -->
@@ -22,7 +26,10 @@
     <meta property="og:title" content="노태효 포트폴리오 | 타르코프 시세 오버레이 · 알파 개미의 포트폴리오 · 미궁" />
     <meta property="og:description" content="풀스택 개발자가 직접 만든 프로젝트들 — 타르코프 시세 오버레이, 알파 개미의 주식 포트폴리오, 픽셀 로그라이크 미궁. 다운로드 & 플레이." />
     <meta property="og:url" content="https://aquapado.com/" />
-    <meta property="og:image" content="https://raw.githubusercontent.com/pado8/tarkov-price-overlay/dev/assets/screenshots/01-main-lookup.png" />
+    <meta property="og:image" content="https://aquapado.com/og-cover.jpg" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="노태효(아쿠아파도) 포트폴리오 — 노트북을 들고 파도를 타는 개발자 일러스트" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:locale:alternate" content="en_US" />
 
@@ -30,7 +37,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="노태효 포트폴리오 | 타르코프 시세 오버레이 외" />
     <meta name="twitter:description" content="풀스택 개발자가 직접 만든 프로젝트들 — 타르코프 시세 오버레이, 알파 개미의 주식 포트폴리오, 픽셀 로그라이크 미궁." />
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/pado8/tarkov-price-overlay/dev/assets/screenshots/01-main-lookup.png" />
+    <meta name="twitter:image" content="https://aquapado.com/og-cover.jpg" />
+    <meta name="twitter:image:alt" content="노태효(아쿠아파도) 포트폴리오 커버 이미지" />
 
     <!-- Structured data -->
     <script type="application/ld+json">
@@ -39,16 +47,24 @@
       "@graph": [
         {
           "@type": "Person",
+          "@id": "https://aquapado.com/#person",
           "name": "Taehyo Noh",
           "alternateName": "노태효",
           "url": "https://aquapado.com/",
+          "image": "https://aquapado.com/og-cover.jpg",
           "jobTitle": "Full-stack Developer",
+          "email": "mailto:floe9235@gmail.com",
+          "nationality": "South Korea",
+          "knowsAbout": ["React", "TypeScript", "Tauri", "Next.js", "Supabase", "Python", "Unity", "C#", "OCR"],
           "sameAs": ["https://github.com/pado8"]
         },
         {
           "@type": "WebSite",
+          "@id": "https://aquapado.com/#website",
           "name": "노태효 포트폴리오",
-          "url": "https://aquapado.com/"
+          "url": "https://aquapado.com/",
+          "inLanguage": "ko",
+          "author": { "@id": "https://aquapado.com/#person" }
         },
         {
           "@type": "SoftwareApplication",
@@ -56,9 +72,29 @@
           "operatingSystem": "Windows",
           "applicationCategory": "GameApplication",
           "url": "https://aquapado.com/",
+          "author": { "@id": "https://aquapado.com/#person" },
           "downloadUrl": "https://github.com/pado8/tarkov-price-overlay-releases/releases/latest",
           "description": "Escape from Tarkov 화면 위에 투명하게 뜨는 실시간 시세 오버레이. OCR로 아이템을 인식하고 플리마켓·상인 가격을 보여줍니다.",
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        },
+        {
+          "@type": "WebApplication",
+          "name": "알파 개미의 포트폴리오 (Alpha Ant's Portfolio)",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Web",
+          "url": "https://alpha-ants.aquapado.com/",
+          "author": { "@id": "https://aquapado.com/#person" },
+          "description": "한·미 주식 포트폴리오를 기록하고 공유하는 웹 플랫폼. 보유 종목의 현재가·수익률·누적 배당을 자동 계산하고 개미 등급으로 공유합니다.",
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+        },
+        {
+          "@type": "VideoGame",
+          "name": "미궁 (Rafdonia)",
+          "url": "https://rafdonia-deploy.vercel.app/",
+          "author": { "@id": "https://aquapado.com/#person" },
+          "gamePlatform": "Web browser",
+          "applicationCategory": "Game",
+          "description": "Unity로 혼자 개발 중인 2D 탑다운 픽셀 로그라이크 RPG. 절차적 던전, 영구 사망, 마우스 조준 전투. 브라우저에서 바로 플레이할 수 있습니다."
         }
       ]
     }
@@ -66,6 +102,36 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <header>
+        <h1>노태효 (Taehyo Noh) — 풀스택 개발자</h1>
+        <p>웹과 데스크탑에서 실제로 쓰이는 것들을 만드는 풀스택 개발자입니다. 프론트엔드부터 백엔드·DB까지 직접 다루며, AI 도구를 적극 활용해 빠르게 만들고 직접 배포합니다.</p>
+      </header>
+      <main>
+        <section>
+          <h2>프로젝트</h2>
+          <article>
+            <h3>타르코프 시세 오버레이 (Tarkov Price Overlay)</h3>
+            <p>Escape from Tarkov 화면 위에 투명하게 뜨는 데스크탑 오버레이. OCR로 아이템 이름을 인식하고 플리마켓·상인 실시간 시세를 바로 보여줍니다. Tauri · React · TypeScript · Python.</p>
+            <p><a href="https://github.com/pado8/tarkov-price-overlay-releases/releases/latest">무료 다운로드</a> · <a href="https://github.com/pado8/tarkov-price-overlay-releases">GitHub</a></p>
+          </article>
+          <article>
+            <h3>알파 개미의 포트폴리오 (Alpha Ant's Portfolio)</h3>
+            <p>한·미 주식 포트폴리오를 기록하고 공유하는 웹 플랫폼. 보유 종목의 현재가·수익률·누적 배당을 자동 계산하고 개미 등급으로 공유합니다. Next.js · Supabase.</p>
+            <p><a href="https://alpha-ants.aquapado.com/">사이트 바로가기</a></p>
+          </article>
+          <article>
+            <h3>미궁 (Rafdonia)</h3>
+            <p>Unity로 혼자 개발 중인 2D 탑다운 픽셀 로그라이크 RPG. 절차적 던전, 영구 사망, 마우스 조준 전투. 브라우저에서 바로 플레이할 수 있습니다.</p>
+            <p><a href="https://rafdonia-deploy.vercel.app/">브라우저에서 플레이</a></p>
+          </article>
+        </section>
+        <section>
+          <h2>연락처</h2>
+          <p><a href="mailto:floe9235@gmail.com">floe9235@gmail.com</a> · <a href="https://github.com/pado8">GitHub @pado8</a></p>
+        </section>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
