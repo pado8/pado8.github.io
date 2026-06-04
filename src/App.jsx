@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTheme } from './hooks/useTheme'
 import { useLang } from './hooks/useLang'
 import { translations } from './i18n'
@@ -12,6 +13,17 @@ function App() {
   const { theme, toggle: toggleTheme } = useTheme()
   const { lang, toggle: toggleLang } = useLang()
   const t = translations[lang]
+
+  // Keep <html lang>, document title and meta description in sync with the
+  // active language so crawlers (which render the default English state) get
+  // matching SEO signals instead of the static Korean ones.
+  useEffect(() => {
+    document.documentElement.lang = lang
+    document.title = t.meta.title
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', t.meta.description)
+  }, [lang, t])
 
   return (
     <div className="app">

@@ -1,5 +1,9 @@
 export const translations = {
   en: {
+    meta: {
+      title: "Taehyo Noh — Full-stack Developer | Tarkov Price Overlay, Alpha Ant's Portfolio, Rafdonia",
+      description: "Portfolio of full-stack developer Taehyo Noh. Download Tarkov Price Overlay — a real-time flea market & trader price OCR overlay for Escape from Tarkov — plus Alpha Ant's stock-portfolio sharing platform and the pixel roguelike Rafdonia.",
+    },
     nav: {
       about: 'About',
       projects: 'Projects',
@@ -39,6 +43,10 @@ export const translations = {
     },
   },
   ko: {
+    meta: {
+      title: '노태효 포트폴리오 | 타르코프 시세 오버레이 · 알파 개미의 포트폴리오 · 미궁',
+      description: '풀스택 개발자 노태효(Taehyo Noh)의 포트폴리오. 타르코프 시세 오버레이(EFT 실시간 가격 OCR 오버레이), 알파 개미의 주식 포트폴리오 공유 사이트, 픽셀 로그라이크 게임 미궁(Rafdonia) 등 직접 만든 프로젝트를 다운로드하고 플레이할 수 있습니다.',
+    },
     nav: {
       about: '소개',
       projects: '프로젝트',
