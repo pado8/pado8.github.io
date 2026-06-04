@@ -23,7 +23,7 @@ export default function ProjectCard({ project, t, lang }) {
           <div className="project-card__badges">
             <span className={`badge badge--${project.status}`}>{statusLabel}</span>
             {project.badge && (
-              <span className="badge badge--count">↓ {project.badge} {t.projects.downloads_label}</span>
+              <span className="badge badge--count">↑ {project.badge} {t.projects.downloads_label}</span>
             )}
           </div>
         </div>
@@ -49,7 +49,7 @@ export default function ProjectCard({ project, t, lang }) {
           )}
           {project.demo && (
             <a href={project.demo} target="_blank" rel="noopener noreferrer" className="btn btn--sm btn--outline">
-              &#8599; {t.projects.demo}
+              &#8599; {project.demoLabel?.[lang] ?? t.projects.demo}
             </a>
           )}
         </div>

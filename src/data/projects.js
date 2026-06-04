@@ -28,6 +28,7 @@ export const projects = [
     },
     tags: ['Next.js', 'TypeScript', 'Supabase', 'Tailwind CSS'],
     demo: 'https://alpha-ants.aquapado.com/',
+    demoLabel: { en: 'Link', ko: '링크' },
     screenshot: '/alpha-ants.png',
     status: 'active',
   },
