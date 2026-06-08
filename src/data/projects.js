@@ -12,7 +12,7 @@ export const projects = [
     tags: ['Tauri', 'React', 'TypeScript', 'Python', 'OCR'],
     github: 'https://github.com/pado8/tarkov-price-overlay-releases',
     download: 'https://github.com/pado8/tarkov-price-overlay-releases/releases/latest',
-    screenshot: 'https://raw.githubusercontent.com/pado8/tarkov-price-overlay/dev/assets/screenshots/01-main-lookup.png',
+    screenshot: 'https://raw.githubusercontent.com/pado8/tarkov-price-overlay/dev/tarkov-price-overlay/assets/screenshots/01-main-lookup.png',
     badge: '295+',
     status: 'active',
   },
