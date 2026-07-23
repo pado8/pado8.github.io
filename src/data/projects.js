@@ -35,6 +35,21 @@ export const projects = [
     status: 'active',
   },
   {
+    id: 'poe-simulator',
+    title: {
+      en: 'PoE 3.29 Simulators',
+      ko: 'PoE 3.29 시뮬레이터',
+    },
+    desc: {
+      en: 'A suite of Craft-of-Exile-style planning tools for Path of Exile 3.29 "Curse of the Allflame" — a unique-item transformation (Enshrouding) simulator, an Allflame item-crafting simulator, a Chromatic Orb cost calculator, and a Betrayal Syndicate reward planner. Built with Next.js, bilingual (KO/EN).',
+      ko: 'Path of Exile 3.29 "올플레임의 저주"를 위한 craftofexile류 플래닝 도구 모음. 고유템 변환(인슈라우딩)·올플레임 아이템 크래프팅·색채의 오브 계산기·배신 신디케이트 보상 플래너를 담았어요. Next.js로 제작했고 한/영을 지원해요.',
+    },
+    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Path of Exile'],
+    demo: 'https://poe.aquapado.com/',
+    demoLabel: { en: 'Link', ko: '링크' },
+    status: 'active',
+  },
+  {
     id: 'rafdonia',
     title: {
       en: 'Rafdonia',
