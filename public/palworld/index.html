@@ -74,47 +74,65 @@
   .mapbox, .side { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px; }
 
   #stage { position:relative; border-radius:10px; overflow:hidden; background:#0a121d;
-    border:1px solid var(--line); }
+    border:1px solid var(--line); touch-action:none; }
   #stage.drag { outline:2px dashed var(--gold); outline-offset:-6px; }
-  #mapimg { width:100%; display:block; }
+  #stage.grab { cursor:grab; }
+  #stage.grabbing { cursor:grabbing; }
+  #zoomer { transform-origin:0 0; will-change:transform; }
+  #mapimg { width:100%; display:block; -webkit-user-drag:none; user-select:none; }
+
+  /* ---- 확대/축소 ---- */
+  .zoomctl { position:absolute; right:9px; top:9px; z-index:8; display:flex; flex-direction:column; gap:5px; }
+  .zoomctl button { width:32px; height:32px; border-radius:8px; cursor:pointer;
+    background:rgba(13,21,32,.88); border:1px solid var(--line); color:var(--text);
+    font-size:15px; font-weight:700; line-height:1; font-family:inherit;
+    display:grid; place-items:center; backdrop-filter:blur(3px); }
+  .zoomctl button:hover { border-color:var(--water); color:var(--water); }
+  .zoomctl button:active { background:var(--water); color:#05121e; }
+  .zoomlv { position:absolute; left:9px; top:9px; z-index:8; font-size:11px; font-weight:700;
+    font-family:ui-monospace,Consolas,monospace; color:var(--dim);
+    background:rgba(13,21,32,.88); border:1px solid var(--line);
+    padding:3px 8px; border-radius:7px; pointer-events:none; }
   #drop { padding:56px 20px; text-align:center; color:var(--dim); font-size:13.5px; cursor:pointer; }
   #drop b { color:var(--gold); display:block; font-size:15px; margin-bottom:8px; }
   #drop .hint { font-size:12px; margin-top:12px; line-height:1.9; }
 
-  .pin { position:absolute; transform:translate(-50%,-50%); cursor:pointer;
+  .pin { position:absolute; transform:translate(-50%,-50%) scale(calc(1/var(--z,1))); cursor:pointer;
     display:flex; flex-direction:column; align-items:center; z-index:5; }
   .pin .dot { width:22px; height:22px; border-radius:50%; border:2.5px solid #0a121d;
     display:grid; place-items:center; font-size:11px; font-weight:800; color:#05121e;
     background:var(--water); box-shadow:0 0 0 5px rgba(63,169,245,.25); transition:.15s; }
   .pin.ice .dot { background:var(--ice); box-shadow:0 0 0 5px rgba(126,224,232,.25); }
   .pin:hover .dot { transform:scale(1.25); }
-  .pin .lab { margin-top:4px; font-size:11px; font-weight:700; white-space:nowrap;
+  #habsvg { pointer-events:none; }
+  #habsvg .habg { pointer-events:auto; }
+  .pin .lab { position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    margin-top:4px; font-size:11px; font-weight:700; white-space:nowrap;
     background:rgba(10,18,29,.88); border:1px solid var(--line);
-    padding:1px 7px; border-radius:5px; }
+    padding:1px 7px; border-radius:5px; pointer-events:none; }
 
   /* 서식 구역 (팰도감에서 추출한 실제 폴리곤) */
   #habsvg { position:absolute; inset:0; width:100%; height:100%; z-index:4; overflow:visible; }
   #habsvg .habg { cursor:pointer; }
   #habsvg .habg polygon {
-    fill:rgba(63,169,245,.22); stroke:var(--water); stroke-width:.45;
+    fill:var(--hc,#3fa9f5); fill-opacity:.20;
+    stroke:var(--hc,#3fa9f5); stroke-width:.45;
     stroke-linejoin:round; vector-effect:non-scaling-stroke; transition:.15s; }
-  #habsvg .habg.ice polygon { fill:rgba(126,224,232,.20); stroke:var(--ice); }
-  #habsvg .habg:hover polygon { fill:rgba(63,169,245,.40); stroke-width:.9; }
-  #habsvg .habg.ice:hover polygon { fill:rgba(126,224,232,.38); }
+  #habsvg .habg:hover polygon { fill-opacity:.42; stroke-width:1; }
 
   /* 서식 구역 번호 배지 — 핀(원)과 구별되게 둥근 사각형 */
-  .hbadge { position:absolute; transform:translate(-50%,-50%); z-index:5;
+  .hbadge { position:absolute; transform:translate(-50%,-50%) scale(calc(1/var(--z,1))); z-index:5;
     display:flex; flex-direction:column; align-items:center; cursor:pointer; }
   .hbadge .hnum { width:21px; height:21px; border-radius:6px; border:2px solid #0a121d;
     display:grid; place-items:center; font-size:11px; font-weight:800; color:#05121e;
-    background:var(--water); box-shadow:0 0 0 4px rgba(63,169,245,.28); transition:.15s; }
-  .hbadge.ice .hnum { background:var(--ice); box-shadow:0 0 0 4px rgba(126,224,232,.28); }
+    background:var(--hc,var(--water)); box-shadow:0 0 0 4px rgba(10,18,29,.55); transition:.15s; }
   .hbadge:hover .hnum { transform:scale(1.25); }
-  .hbadge .hlab { margin-top:4px; font-size:11px; font-weight:700; white-space:nowrap;
+  .hbadge .hlab { position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    margin-top:4px; font-size:11px; font-weight:700; white-space:nowrap;
     background:rgba(10,18,29,.88); border:1px solid var(--line);
     padding:1px 7px; border-radius:5px; pointer-events:none; }
 
-  .probe { position:absolute; transform:translate(-50%,-50%); z-index:6; pointer-events:none; }
+  .probe { position:absolute; transform:translate(-50%,-50%) scale(calc(1/var(--z,1))); z-index:6; pointer-events:none; }
   .probe .x { width:16px; height:16px; border:2px solid var(--gold); border-radius:50%; }
   .probe .t { position:absolute; left:14px; top:-4px; white-space:nowrap; font-size:11px;
     font-family:monospace; background:var(--gold); color:#05121e; padding:1px 6px; border-radius:4px; font-weight:700; }
@@ -192,6 +210,8 @@
   .tip { margin-top:10px; font-size:12px; color:var(--dim); background:var(--panel2);
     padding:9px 11px; border-radius:7px; }
 
+  .tablewrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tablewrap table { min-width:460px; }
   table { width:100%; border-collapse:collapse; font-size:13.5px;
     background:var(--panel); border-radius:10px; overflow:hidden; }
   th,td { padding:10px 13px; text-align:left; border-bottom:1px solid var(--line); }
@@ -214,6 +234,35 @@
     background:var(--gold); color:#05121e; padding:10px 20px; border-radius:999px;
     font-size:13px; font-weight:700; opacity:0; transition:.25s; pointer-events:none; z-index:99; }
   .toast.on { opacity:1; transform:translateX(-50%) translateY(0); }
+  /* ================= 모바일 ================= */
+  @media (max-width:760px){
+    body { padding:14px 11px 56px; line-height:1.6; }
+    h1 { font-size:23px; }
+    h2 { font-size:17px; margin:28px 0 12px; }
+    h2 .n { display:block; margin-left:0; margin-top:3px; font-size:12px; }
+    .sub { font-size:13px; }
+    .notice { font-size:12.5px; padding:11px 13px; }
+    .cards { grid-template-columns:1fr; gap:11px; }
+    .card { padding:13px; }
+    .cname { font-size:16px; }
+    .row { font-size:12.5px; }
+    .row .k { width:48px; }
+    .deckgrid { grid-template-columns:1fr 1fr; }
+    .filters { gap:6px; }
+    .prog { margin-left:0; width:100%; }
+    /* 손가락으로 누르기 좋게 */
+    .tab { padding:9px 15px; }
+    .btn { padding:9px 13px; font-size:12.5px; }
+    .chk { gap:8px; padding:4px 0 4px 8px; }
+    .chk input { width:21px; height:21px; }
+    .zoomctl button { width:38px; height:38px; font-size:17px; }
+    .cal input { padding:8px; font-size:13px; }
+  }
+  @media (max-width:420px){
+    .deckgrid { grid-template-columns:1fr; }
+    h1 { font-size:20px; }
+    .slot { padding:12px; }
+  }
 </style>
 </head>
 <body>
@@ -270,7 +319,7 @@
 </div>
 
 <!-- ============ 지도 ============ -->
-<h2>서식지 지도 <span class="n">추천 팰 10마리 · 정확 좌표 4 · 팰도감 서식 구역 4 · 표시 불가 3</span></h2>
+<h2>서식지 지도 <span class="n">추천 팰 10마리 · 좌표 핀 5 · 팰도감 서식 구역 4 · 표시 불가 2</span></h2>
 <div class="maprow">
   <div class="mapbox">
     <div id="stage">
@@ -284,7 +333,13 @@
           · 지도 <b>가장자리가 잘리지 않게</b> 전체가 나오도록 찍어주세요
         </div>
       </div>
-      <img id="mapimg" style="display:none" alt="팰월드 지도">
+      <div id="zoomer"><img id="mapimg" style="display:none" alt="팰월드 지도"></div>
+      <div class="zoomctl" id="zoomctl" hidden>
+        <button type="button" id="zIn"  title="확대"     aria-label="확대">＋</button>
+        <button type="button" id="zOut" title="축소"     aria-label="축소">－</button>
+        <button type="button" id="zFit" title="전체 보기" aria-label="전체 보기">⤢</button>
+      </div>
+      <div class="zoomlv" id="zoomlv" hidden>100%</div>
     </div>
 
     <div class="ctrl">
@@ -329,8 +384,10 @@
   <div class="side">
     <h3>범례</h3>
     <div class="legend">
-      <div><span class="sw" style="background:var(--water)"></span> 물속성 팰</div>
-      <div><span class="sw" style="background:var(--ice)"></span> 얼음속성 팰</div>
+      <div><span class="sw" style="background:#3fa9f5"></span> ④ 샤키드</div>
+      <div><span class="sw" style="background:#7ee0e8"></span> ⑦ 실키누</div>
+      <div><span class="sw" style="background:#a9b8ff"></span> ⑨ 백랑이</div>
+      <div><span class="sw" style="background:#86e7b4"></span> ⑩ 블리자모스</div>
       <div><span class="sw" style="background:var(--water);border:2px solid #0a121d;box-shadow:0 0 0 3px rgba(63,169,245,.25)"></span> <b style="color:var(--text)">핀 ●</b> — 정확한 좌표</div>
       <div><span class="sw" style="background:rgba(63,169,245,.25);border:1.5px solid var(--water);border-radius:3px"></span> <b style="color:var(--text)">반투명 영역</b> — 팰도감 서식 구역</div>
       <div><span class="sw" style="background:var(--water);border-radius:4px;border:2px solid #0a121d"></span> <b style="color:var(--text)">둥근 사각 번호</b> — 구역 주인 (오른쪽 위 끝)</div>
@@ -349,7 +406,9 @@
         ⑤ 빙천마 <span class="coord">-357, 508</span><br>
         ⑦ 실키누 <span class="coord">-312, 355</span><br>
         ② 레비드라 <span class="coord">349, -86</span><br>
-        ⑥ 펭킹 <span class="coord">114, -352</span>
+        ⑥ 펭킹 <span class="coord">114, -352</span><br>
+        ③ 아주리비 <span class="coord">92, -717</span>
+        <span style="font-size:11px">남쪽 바다 작은 섬 · 제보</span>
       </p>
     </div>
 
@@ -362,7 +421,8 @@
         ⑨ 백랑이 — 설원 전역<br>
         ⑩ 블리자모스 — 설원 전역<br><br>
         <span style="font-size:11px">얼음 3종은 같은 설원 바이옴이라 구역이 거의 겹칩니다.
-        체크박스로 하나씩 꺼서 보세요.</span>
+        구역과 번호 배지 <b>색을 팰별로 다르게</b> 칠했으니 색으로 구분하시고,
+        그래도 헷갈리면 체크박스로 하나씩 꺼보세요.</span>
       </p>
     </div>
 
@@ -371,8 +431,6 @@
       <p style="line-height:1.9">
         <b>① 넵티오스</b> — 본섬이 아닌 <b>페이브레이크 섬</b>이라 이 지도(-1000~1000) 밖입니다.
         권장 레벨대 50~60.<br><br>
-        <b>③ 아주리비</b> — 팰도감에 서식 구역 데이터가 없습니다. 호수·해안 전역에
-        널리 분포해 특정 구역이 지정되지 않은 것으로 보입니다. 물가를 돌아다니면 만납니다.<br><br>
         <b>⑧ 시바</b> — 팰도감 <b>서식지 불명</b>. 던전 스폰이라 지상 구역이 없습니다.
         <span style="font-size:11px">레비드라 × 주작 교배가 훨씬 빠릅니다.</span>
       </p>
@@ -399,13 +457,13 @@
 
 <!-- ============ 패시브 ============ -->
 <h2>패시브 &amp; 스킬 세팅 원칙</h2>
-<table>
+<div class="tablewrap"><table>
   <tr><th style="width:130px">유형</th><th style="width:190px">예시</th><th>설명</th></tr>
   <tr><td><b>순수 공격력</b></td><td>근육광, 광폭</td><td>가장 기본. 최소 1~2칸은 확보</td></tr>
   <tr><td><b>속성 강화</b></td><td>냉혈(얼음) 계열</td><td>해당 속성 스킬만 쓴다면 일반 공격력 패시브보다 효율이 좋음</td></tr>
   <tr><td><b>쿨타임 감소</b></td><td>조급함 계열</td><td>고위력·긴쿨 덱에서 실질 DPS 상승폭이 가장 큼</td></tr>
   <tr><td><b>방어형</b></td><td>다부진 몸</td><td>탱커 역할 전용. 딜러에겐 비추천</td></tr>
-</table>
+</table></div>
 <div class="tip" style="margin-top:12px">
   <b>스킬 3슬롯 공식 — 고위력 긴쿨 1 + 중간 위력 2.</b><br>
   3개를 전부 긴쿨로 채우면 딜 공백이 생겨 오히려 총딜이 떨어집니다.
@@ -416,14 +474,14 @@
 
 <!-- ============ 상성 ============ -->
 <h2>상성 &amp; 약점 대비</h2>
-<table>
+<div class="tablewrap"><table>
   <tr><th style="width:150px">상대 속성</th><th style="width:110px">상성</th><th>대응</th></tr>
   <tr><td>불</td><td class="good">매우 유리</td><td>물 팰 그대로 밀면 됩니다</td></tr>
   <tr><td>풀</td><td class="good">유리</td><td>얼음 자유칸(빙천마) 투입</td></tr>
   <tr><td>드래곤</td><td class="good">유리</td><td>얼음 스킬 + 아주리비의 드래곤기</td></tr>
   <tr><td><b>전기</b></td><td class="bad">매우 불리</td><td>물의 약점. <b>최대 난관</b></td></tr>
   <tr><td><b>불 (얼음 팰 기준)</b></td><td class="bad">불리</td><td>자유칸을 빼고 물 팰로 스위치</td></tr>
-</table>
+</table></div>
 <div class="tip" style="margin-top:12px">
   <b>전기 보스 대비책</b><br>
   물 4마리 고정이라 전기 구간에서 확실히 고전합니다. 얼음도 전기를 못 잡아요.<br><br>
@@ -486,14 +544,14 @@ const PALS = [
     tip:'알파라 포획률이 낮습니다. 레전드 구체 + 부상 상태 진입 필수.' },
   { id:'azur', name:'아주리비', eng:'Azurobe', el:['water','dragon'], core:true, idx:3,
     lv:'Lv 30~40대', hab:'호수·해안 지대에 야생으로 다수 서식', coord:null,
-    nomap:'팰도감에 서식 구역 데이터 없음 · 호수·해안 전역 분포',
-    note:'고정 스폰 아님 · 물가 돌아다니면 쉽게 발견',
+    coord:[92,-717], coordSrc:'제보',
+    note:'남쪽 바다 작은 섬 · 팰도감에는 서식 구역 데이터가 없어 이 지점은 제보 기준입니다',
     feat:'물/드래곤 이중 속성이라 드래곤 스킬 탑재 가능. 물 4마리 제약에서 유일하게 다른 속성 딜을 끼워넣는 편법',
     skills:['물속성 주력기 2개','드래곤 속성기 1개 — 어둠 속성 적 대응'],
     tip:'교배 재료로도 자주 쓰이니 패시브 좋은 개체를 여러 마리 모아두면 편합니다.' },
   { id:'gobf', name:'샤키드', eng:'Gobfin', el:['water'], core:true, idx:4,
     lv:'Lv 15~25 · 저레벨', hab:"샤키드의 영역(Gobfin's Turf) — 무리 지어 대량 스폰", coord:null,
-    hab_id:'gobf', habNote:'팰도감 서식 구역 (주간)',
+    hab_id:'gobf', habColor:'#3fa9f5', habNote:'팰도감 서식 구역 (주간)',
     note:'같은 이름의 지역에 떼로 나옵니다',
     feat:'파트너 스킬이 플레이어 본인 공격력 증가. 총기 딜링 위주라면 체감이 가장 큼',
     skills:['딜은 기대하지 않음 — 파트너 스킬 유지가 목적','저쿨 물속성 아무거나 3개면 충분'],
@@ -512,7 +570,7 @@ const PALS = [
     skills:['물속성 고위력기 1','얼음속성 고위력기 1','상황 대응용 저쿨기 1'],
     tip:'레벨이 낮게 잡히니 응축 4성까지 필수. 안 그러면 후반에 못 버팁니다.' },
   { id:'sibe', name:'실키누', eng:'Sibelyx', el:['ice'], core:false, idx:7,
-    lv:'Lv 40 · 필드 알파', hab:'설원 지대', coord:[-312,355], hab_id:'sibe', habNote:'팰도감 서식 구역',
+    lv:'Lv 40 · 필드 알파', hab:'설원 지대', coord:[-312,355], hab_id:'sibe', habColor:'#7ee0e8', habNote:'팰도감 서식 구역',
     note:'빙천마보다 남쪽',
     feat:'비교적 일찍 확보 가능한 안정적 얼음 딜러. 빙천마 잡기 전 자유칸 임시용',
     skills:['얼음 고위력기 2 + 저쿨기 1 표준 배분'],
@@ -526,14 +584,14 @@ const PALS = [
     tip:'교체 옵션 — 샤키드 대신 넣으면 화력은 오르지만 플레이어 공격력 버프를 잃습니다.' },
   { id:'cryo', name:'백랑이', eng:'Cryolinx', el:['ice'], core:false, idx:9,
     lv:'Lv 40~50대', hab:'팰파고스섬 설원 지대 (본섬)', coord:null,
-    hab_id:'cryo', habNote:'팰도감 서식 구역',
+    hab_id:'cryo', habColor:'#a9b8ff', habNote:'팰도감 서식 구역',
     note:'⚠ 이 가이드 초판은 페이브레이크 소속(-1165,-1556)으로 적었으나, 팰도감 확인 결과 본섬 설원 팰입니다',
     feat:'순수 얼음 딜러. 이동 수단이 이미 있다면 자유칸 대안',
     skills:['얼음 고위력기 2 + 저쿨기 1 표준 배분'],
     tip:'교체 옵션 — 빙천마 대신 쓰려면 비행 탈것을 따로 확보해야 합니다.' },
   { id:'mamc', name:'블리자모스', eng:'Mammorest Cryst', el:['ice'], core:false, idx:10,
     lv:'Lv 40 전후', hab:'천문산맥 서쪽 사면 일대 야생', coord:null,
-    hab_id:'mamc', habNote:'팰도감 서식 구역',
+    hab_id:'mamc', habColor:'#86e7b4', habNote:'팰도감 서식 구역',
     note:'설원 서편에서 확률 높음',
     feat:'HP·방어가 높은 탱커. 어그로 분산용',
     skills:['얼음 광역기 위주','생존이 목적이니 방어형 패시브 우선'],
@@ -565,6 +623,10 @@ function say(msg){
 
 /* =============== 지도 =============== */
 const stage = document.getElementById('stage');
+const zoomer = document.getElementById('zoomer');
+/* 확대 상태. loadImage() 가 아래 줌 블록보다 먼저 실행되므로 (TDZ 회피) 여기서 선언한다. */
+const ZMIN = 1, ZMAX = 8;
+let z = 1, tx = 0, ty = 0;
 const drop  = document.getElementById('drop');
 const img   = document.getElementById('mapimg');
 const file  = document.getElementById('file');
@@ -573,6 +635,9 @@ function loadImage(src){
   img.src = src;
   img.style.display = 'block';
   drop.style.display = 'none';
+  document.getElementById('zoomctl').hidden = false;
+  document.getElementById('zoomlv').hidden = false;
+  stage.classList.add('grab'); resetView();
   img.onload = renderPins;
 }
 const saved = LS.get('pw_img', null) || (typeof EMBEDDED_MAP === 'string' ? EMBEDDED_MAP : null);
@@ -613,6 +678,9 @@ function readFile(f){
 document.getElementById('clearImg').addEventListener('click', ()=>{
   LS.del('pw_img'); img.style.display='none'; img.src='';
   drop.style.display='block';
+  document.getElementById('zoomctl').hidden = true;
+  document.getElementById('zoomlv').hidden = true;
+  stage.classList.remove('grab'); resetView();
   document.querySelectorAll('.pin,.probe').forEach(n=>n.remove());
   say('이미지 제거됨');
 });
@@ -659,12 +727,13 @@ function renderHabBadges(list){
   items.forEach(({p,x,y})=>{
     const el = document.createElement('div');
     el.className = 'hbadge' + (p.el[0]==='ice' ? ' ice' : '');
+    if(p.habColor) el.style.setProperty('--hc', p.habColor);
     el.style.left = x + '%'; el.style.top = y + '%';
     el.innerHTML = `<div class="hnum">${p.idx}</div>` +
       (showLab ? `<div class="hlab">${p.name}</div>` : '');
     el.title = `${p.name} · ${p.habNote || '서식 구역'}`;
     el.addEventListener('click', ev=>{ ev.stopPropagation(); focusCard(p.id); });
-    stage.appendChild(el);
+    zoomer.appendChild(el);
   });
 }
 
@@ -683,6 +752,7 @@ function renderPins(){
       const ice = p.el[0]==='ice';
       const g = document.createElementNS(SVGNS,'g');
       g.setAttribute('class','habg' + (ice?' ice':''));
+      if(p.habColor) g.style.setProperty('--hc', p.habColor);
       HABITAT[p.hab_id].forEach(poly=>{
         const el = document.createElementNS(SVGNS,'polygon');
         el.setAttribute('points', poly.map(c=>`${(fx(c[0])*100).toFixed(2)},${(fy(c[1])*100).toFixed(2)}`).join(' '));
@@ -694,7 +764,7 @@ function renderPins(){
       g.addEventListener('click', ev=>{ ev.stopPropagation(); focusCard(p.id); });
       svg.appendChild(g);
     });
-    stage.appendChild(svg);
+    zoomer.appendChild(svg);
     renderHabBadges(withHab);
   }
 
@@ -708,14 +778,111 @@ function renderPins(){
       (showLab ? `<div class="lab">${p.name}</div>` : '');
     el.title = `${p.name} · ${p.coord[0]}, ${p.coord[1]}`;
     el.addEventListener('click', ev=>{ ev.stopPropagation(); focusCard(p.id); });
-    stage.appendChild(el);
+    zoomer.appendChild(el);
   });
 }
+
+/* =============== 확대 / 축소 / 이동 ===============
+   #zoomer 에 transform 을 걸어 지도·구역·마커를 통째로 변환한다.
+   마커는 --z 로 역보정해 배율과 상관없이 같은 크기로 보인다. */
+function applyView(){
+  const w = stage.clientWidth, h = stage.clientHeight;
+  tx = Math.min(0, Math.max(tx, w - w*z));           // 여백이 생기지 않게 고정
+  ty = Math.min(0, Math.max(ty, h - h*z));
+  zoomer.style.transform = `translate(${tx}px,${ty}px) scale(${z})`;
+  stage.style.setProperty('--z', z);
+  const lv = document.getElementById('zoomlv');
+  if(lv) lv.textContent = Math.round(z*100) + '%';
+  stage.classList.toggle('grab', z > 1 && img.style.display !== 'none');
+}
+function resetView(){ z = 1; tx = 0; ty = 0; applyView(); }
+
+/* 화면상의 한 점을 고정한 채 배율만 바꾼다 */
+function zoomAt(nz, cx, cy){
+  nz = Math.min(ZMAX, Math.max(ZMIN, nz));
+  if(nz === z) return;
+  tx = cx - (cx - tx) * (nz / z);
+  ty = cy - (cy - ty) * (nz / z);
+  z = nz; applyView();
+}
+function zoomCenter(f){
+  zoomAt(z * f, stage.clientWidth / 2, stage.clientHeight / 2);
+}
+
+document.getElementById('zIn') .addEventListener('click', e=>{ e.stopPropagation(); zoomCenter(1.5); });
+document.getElementById('zOut').addEventListener('click', e=>{ e.stopPropagation(); zoomCenter(1/1.5); });
+document.getElementById('zFit').addEventListener('click', e=>{ e.stopPropagation(); resetView(); });
+
+stage.addEventListener('wheel', e=>{
+  if(img.style.display === 'none') return;
+  e.preventDefault();
+  const r = stage.getBoundingClientRect();
+  zoomAt(z * (e.deltaY < 0 ? 1.18 : 1/1.18), e.clientX - r.left, e.clientY - r.top);
+}, { passive:false });
+
+/* 포인터 드래그로 이동 · 두 손가락으로 확대. 클릭(좌표 프로브)과 구분하려고
+   일정 거리 이상 움직였을 때만 드래그로 취급한다. */
+const pts = new Map();
+let panning = false, moved = false, last = null, pinch = null;
+
+stage.addEventListener('pointerdown', e=>{
+  if(img.style.display === 'none') return;
+  if(e.target.closest('.zoomctl')) return;
+  pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if(pts.size === 1){ panning = true; moved = false; last = {x:e.clientX, y:e.clientY}; }
+  else if(pts.size === 2){
+    panning = false;
+    const [a,b] = [...pts.values()];
+    pinch = { d: Math.hypot(a.x-b.x, a.y-b.y), z };
+  }
+});
+stage.addEventListener('pointermove', e=>{
+  if(!pts.has(e.pointerId)) return;
+  pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+
+  if(pinch && pts.size === 2){
+    const [a,b] = [...pts.values()];
+    const d = Math.hypot(a.x-b.x, a.y-b.y);
+    const r = stage.getBoundingClientRect();
+    zoomAt(pinch.z * (d / pinch.d), (a.x+b.x)/2 - r.left, (a.y+b.y)/2 - r.top);
+    moved = true;
+    return;
+  }
+  if(!panning || !last) return;
+  const dx = e.clientX - last.x, dy = e.clientY - last.y;
+  if(!moved && Math.hypot(dx, dy) < 4) return;       // 클릭으로 남겨둠
+  moved = true;
+  if(z > 1){
+    stage.classList.add('grabbing');
+    tx += dx; ty += dy; applyView();
+  }
+  last = {x:e.clientX, y:e.clientY};
+});
+function endPointer(e){
+  pts.delete(e.pointerId);
+  if(pts.size < 2) pinch = null;
+  if(pts.size === 0){ panning = false; last = null; stage.classList.remove('grabbing'); }
+}
+stage.addEventListener('pointerup', endPointer);
+stage.addEventListener('pointercancel', endPointer);
+stage.addEventListener('pointerleave', endPointer);
+
+stage.addEventListener('dblclick', e=>{
+  if(img.style.display === 'none') return;
+  const r = stage.getBoundingClientRect();
+  zoomAt(z >= ZMAX ? ZMIN : z*2, e.clientX - r.left, e.clientY - r.top);
+});
+
+window.addEventListener('resize', applyView);
+applyView();
 
 /* ----- 클릭 좌표 프로브 / 마법사 ----- */
 let wizMode = 0, wizPts = [];
 stage.addEventListener('click', e=>{
   if(img.style.display === 'none') return;
+  if(moved) return;                          // 지도를 끌어 옮긴 동작이면 좌표 찍지 않음
+  if(e.target.closest('.zoomctl')) return;
+  /* 변환된 이미지의 실제 화면 사각형 기준이라 확대 상태에서도 좌표가 정확하다 */
   const r = img.getBoundingClientRect();
   const f1 = (e.clientX - r.left) / r.width;
   const f2 = (e.clientY - r.top) / r.height;
@@ -732,7 +899,7 @@ stage.addEventListener('click', e=>{
   pr.className = 'probe';
   pr.style.left = f1*100 + '%'; pr.style.top = f2*100 + '%';
   pr.innerHTML = `<div class="x"></div><div class="t">${Math.round(invX(f1))}, ${Math.round(invY(f2))}</div>`;
-  stage.appendChild(pr);
+  zoomer.appendChild(pr);
 });
 
 /* ----- 보정 입력 ----- */
@@ -833,7 +1000,7 @@ cards.innerHTML = PALS.map(p=>`
       <span class="b lv">${p.lv}</span>${p.core?'<span class="b lv">핵심</span>':''}
     </div>
     <div class="row"><span class="k">서식지</span><span>${p.hab}</span></div>
-    ${p.coord?`<div class="row"><span class="k">좌표</span><span><span class="coord">${p.coord[0]}, ${p.coord[1]}</span></span></div>`:''}
+    ${p.coord?`<div class="row"><span class="k">좌표</span><span><span class="coord">${p.coord[0]}, ${p.coord[1]}</span>${p.coordSrc?` <span style="color:var(--dim);font-size:11.5px">— ${p.coordSrc} (팰도감 데이터 아님)</span>`:''}</span></div>`:''}
     ${p.hab_id?`<div class="row"><span class="k">지도</span><span>서식 구역 표시 <span style="color:var(--dim);font-size:11.5px">— ${p.habNote}</span></span></div>`:''}
     ${p.nomap?`<div class="row"><span class="k">지도</span><span style="color:var(--dim)">${p.nomap}</span></div>`:''}
     <div class="row"><span class="k">비고</span><span>${p.note}</span></div>
