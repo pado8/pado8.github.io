@@ -92,6 +92,18 @@
     background:rgba(10,18,29,.88); border:1px solid var(--line);
     padding:1px 7px; border-radius:5px; }
 
+  /* 대략적인 서식 범위 (정확한 좌표가 없는 팰) */
+  .area { position:absolute; transform:translate(-50%,-50%); border-radius:50%;
+    border:2px dashed var(--water); background:rgba(63,169,245,.12);
+    z-index:4; cursor:pointer; display:grid; place-items:center; transition:.15s; }
+  .area.ice { border-color:var(--ice); background:rgba(126,224,232,.12); }
+  .area:hover { background:rgba(63,169,245,.24); }
+  .area.ice:hover { background:rgba(126,224,232,.24); }
+  .area .alab { font-size:11px; font-weight:700; white-space:nowrap; text-align:center;
+    background:rgba(10,18,29,.88); border:1px solid var(--line);
+    padding:1px 7px; border-radius:5px; pointer-events:none; }
+  .area .alab i { display:block; font-style:normal; font-size:9.5px; color:var(--dim); font-weight:400; }
+
   .probe { position:absolute; transform:translate(-50%,-50%); z-index:6; pointer-events:none; }
   .probe .x { width:16px; height:16px; border:2px solid var(--gold); border-radius:50%; }
   .probe .t { position:absolute; left:14px; top:-4px; white-space:nowrap; font-size:11px;
@@ -137,7 +149,8 @@
   .card { background:var(--panel); border:1px solid var(--line); border-radius:12px;
     padding:16px; transition:.2s; }
   .card.flash { border-color:var(--gold); box-shadow:0 0 0 3px rgba(245,196,81,.15); }
-  .card.done { opacity:.5; }
+  .card.off { opacity:.45; }
+  .card.nomap { opacity:.72; }
   .chead { display:flex; align-items:flex-start; gap:10px; }
   .idx { width:26px; height:26px; border-radius:50%; flex:none; display:grid; place-items:center;
     font-size:13px; font-weight:700; background:var(--water); color:#05121e; }
@@ -145,8 +158,11 @@
   .idx.none { background:var(--line); color:var(--dim); }
   .cname { font-size:17px; font-weight:700; }
   .ceng { font-size:11px; color:var(--dim); }
-  .chk { margin-left:auto; }
-  .chk input { width:17px; height:17px; accent-color:var(--ok); cursor:pointer; }
+  .chk { margin-left:auto; display:flex; align-items:center; gap:6px; flex:none;
+    font-size:11px; color:var(--dim); cursor:pointer; user-select:none; }
+  .chk input { width:17px; height:17px; accent-color:var(--water); cursor:pointer; }
+  .chk input:disabled { cursor:not-allowed; opacity:.4; }
+  .chk.dis { cursor:not-allowed; }
   .badges { display:flex; gap:5px; flex-wrap:wrap; margin:9px 0 12px; }
   .b { font-size:11px; padding:2px 9px; border-radius:999px; font-weight:600; }
   .b.water { background:rgba(63,169,245,.15); color:var(--water); }
@@ -200,9 +216,12 @@
 </header>
 
 <div class="notice">
-  <b>지도가 포함되어 있습니다.</b> 서식지 좌표가 지도 위에 자동으로 찍혀 있어요.
+  <b>지도가 포함되어 있습니다.</b> 서식지가 지도 위에 자동으로 표시됩니다 —
+  <b>정확한 좌표가 있는 팰은 핀(●)</b>으로, <b>좌표 없이 지역만 알려진 팰은 점선 원(○)</b>으로
+  대략적인 서식 범위를 그립니다. 점선 원은 <b>어림잡은 범위이지 정확한 위치가 아닙니다.</b><br>
+  아래 팰 카드의 <b>「지도 표시」 체크박스</b>로 각 팰을 지도에 띄울지 끌지 고를 수 있습니다.
   마커를 클릭하면 해당 팰 상세로 이동하고, 지도 아무 데나 클릭하면 그 지점의 좌표가 표시됩니다.
-  마커 위치가 실제와 어긋나면 <b>2점 자동 보정</b>으로 맞추세요. 개인 참고용으로만 사용하시고 재배포는 삼가주세요.
+  위치가 실제와 어긋나면 <b>2점 자동 보정</b>으로 맞추세요. 개인 참고용으로만 사용하시고 재배포는 삼가주세요.
 </div>
 
 <!-- ============ 덱 ============ -->
@@ -241,7 +260,7 @@
 </div>
 
 <!-- ============ 지도 ============ -->
-<h2>서식지 지도 <span class="n">맵 이미지를 올리면 좌표가 자동으로 찍힙니다</span></h2>
+<h2>서식지 지도 <span class="n">추천 팰 10마리 · 정확 좌표 4 · 대략 범위 3 · 지도 밖 3</span></h2>
 <div class="maprow">
   <div class="mapbox">
     <div id="stage">
@@ -273,6 +292,8 @@
         <button class="btn gold" id="wizBtn">2점 자동 보정</button>
         <button class="btn" id="resetCal">기본값</button>
         <button class="btn" id="toggleLab">이름 숨기기</button>
+        <button class="btn" id="showAll">전체 표시</button>
+        <button class="btn" id="hideAll">전체 숨김</button>
         <button class="btn warn" id="clearImg">이미지 제거</button>
       </div>
       <div style="margin-top:9px; font-size:11.5px; color:var(--dim)">
@@ -300,13 +321,16 @@
     <div class="legend">
       <div><span class="sw" style="background:var(--water)"></span> 물속성 팰</div>
       <div><span class="sw" style="background:var(--ice)"></span> 얼음속성 팰</div>
+      <div><span class="sw" style="background:var(--water);border:2px solid #0a121d;box-shadow:0 0 0 3px rgba(63,169,245,.25)"></span> <b style="color:var(--text)">핀 ●</b> — 정확한 좌표</div>
+      <div><span class="sw" style="background:rgba(63,169,245,.12);border:2px dashed var(--water)"></span> <b style="color:var(--text)">점선 원 ○</b> — 대략적인 서식 범위</div>
     </div>
     <div style="font-size:12px; color:var(--dim); margin-top:8px">
       마커를 클릭하면 아래 상세 카드로 이동합니다.
+      점선 원은 서식지 설명을 바탕으로 <b>어림잡은 범위</b>라 실제와 다를 수 있습니다.
     </div>
 
     <div class="inset">
-      <h4>본섬 좌표</h4>
+      <h4>본섬 정확 좌표</h4>
       <p style="line-height:2">
         ⑤ 프로스탈리온 <span class="coord">-357, 508</span><br>
         ⑦ 시벨릭스 <span class="coord">-312, 355</span><br>
@@ -316,13 +340,26 @@
     </div>
 
     <div class="inset">
-      <h4>페이브레이크 섬 (별도 지역)</h4>
-      <p>
-        <b>넵티오스</b>, <b>크라이오링크스</b>는 본섬이 아닌 <b>페이브레이크</b>에 있어
-        본섬 지도에는 표시되지 않습니다.<br><br>
+      <h4>대략 범위로 표시 (점선 원)</h4>
+      <p style="line-height:1.9">
+        정확한 좌표가 알려지지 않아 <b>서식지 설명 기반으로 어림잡은 범위</b>입니다.<br><br>
+        ③ 아주로베 — 호수·해안 광역<br>
+        ④ 고브핀 — 고브핀의 영역<br>
+        ⑩ 맘모레스트 크리스트 — 천문산맥 서쪽 사면<br><br>
+        <span style="font-size:11px">실제 위치와 다를 수 있습니다. 정확한 지점을 아신다면
+        지도를 클릭해 좌표를 확인한 뒤 참고하세요.</span>
+      </p>
+    </div>
+
+    <div class="inset">
+      <h4>지도에 표시되지 않는 팰</h4>
+      <p style="line-height:1.9">
+        <b>① 넵티오스</b>, <b>⑨ 크라이오링크스</b> — 본섬이 아닌 <b>페이브레이크 섬</b>이라
+        이 지도의 범위(-1000~1000) 밖입니다.<br>
         · 크라이오링크스 <span class="coord">-1165, -1556</span><br>
-        <span style="font-size:11px">페이브레이크 타워 입구 순간이동 → 북동쪽</span><br><br>
-        권장 레벨대 50~60.
+        <span style="font-size:11px">페이브레이크 타워 입구 순간이동 → 북동쪽 · 권장 레벨대 50~60</span><br><br>
+        <b>⑧ 아쿠아 스자쿠</b> — 던전 내부 스폰이라 지도상 고정 서식 범위가 없습니다.
+        <span style="font-size:11px">요르문티드 × 스자쿠 교배가 훨씬 빠릅니다.</span>
       </p>
     </div>
 
@@ -410,6 +447,7 @@ const EMBEDDED_MAP = "data:image/webp;base64,UklGRqoJAgBXRUJQVlA4IJ4JAgDQkgWdASo
 const PALS = [
   { id:'nept', name:'넵티오스', eng:'Neptilius', el:['water'], core:true, idx:1,
     lv:'Lv 60 전후 · 전설급', hab:'페이브레이크(Feybreak) 섬', coord:null,
+    nomap:'페이브레이크 섬 — 본섬 지도 밖',
     note:'본섬 아님 · 권장 레벨 50~60',
     feat:'게임 내 최속 수영 탈것. 물 위 대점프로 장애물 스킵 가능 (안장 Lv61 해금)',
     skills:['타라소닉 레이저 (전용기) — 절대 빼지 마세요','하이드로 레이저 — 고위력 단일 보조','저쿨 물속성 견제기 — 딜 공백 메우기'],
@@ -422,12 +460,14 @@ const PALS = [
     tip:'알파라 포획률이 낮습니다. 레전드 구체 + 부상 상태 진입 필수.' },
   { id:'azur', name:'아주로베', eng:'Azurobe', el:['water','dragon'], core:true, idx:3,
     lv:'Lv 30~40대', hab:'호수·해안 지대에 야생으로 다수 서식', coord:null,
+    area:{ x:-20, y:-230, rx:380, ry:330, label:'호수·해안 광역' },
     note:'고정 스폰 아님 · 물가 돌아다니면 쉽게 발견',
     feat:'물/드래곤 이중 속성이라 드래곤 스킬 탑재 가능. 물 4마리 제약에서 유일하게 다른 속성 딜을 끼워넣는 편법',
     skills:['물속성 주력기 2개','드래곤 속성기 1개 — 어둠 속성 적 대응'],
     tip:'교배 재료로도 자주 쓰이니 패시브 좋은 개체를 여러 마리 모아두면 편합니다.' },
   { id:'gobf', name:'고브핀', eng:'Gobfin', el:['water'], core:true, idx:4,
     lv:'Lv 15~25 · 저레벨', hab:"고브핀의 영역(Gobfin's Turf) — 무리 지어 대량 스폰", coord:null,
+    area:{ x:210, y:-290, rx:130, ry:115, label:"고브핀의 영역" },
     note:'같은 이름의 지역에 떼로 나옵니다',
     feat:'파트너 스킬이 플레이어 본인 공격력 증가. 총기 딜링 위주라면 체감이 가장 큼',
     skills:['딜은 기대하지 않음 — 파트너 스킬 유지가 목적','저쿨 물속성 아무거나 3개면 충분'],
@@ -452,18 +492,22 @@ const PALS = [
     tip:'초중반 자유칸 대타. 프로스탈리온 확보하면 은퇴시키세요.' },
   { id:'suza', name:'아쿠아 스자쿠', eng:'Suzaku Aqua', el:['water'], core:false, idx:8,
     lv:'던전 스폰 기준 Lv 40~50대', hab:'특정 던전 내부', coord:null,
+    nomap:'던전 내부 스폰 — 고정 서식 범위 없음',
     note:'교배가 훨씬 빠름 — 요르문티드 × 스자쿠 → "거대 축축한 알"',
     feat:'물속성 비행 탈것. 자유칸을 프로스탈리온 말고 다른 걸로 쓸 때 이동 담당',
     skills:['물속성 최고위력기 2개','탑승 전투용 저쿨기 1개'],
     tip:'교체 옵션 — 고브핀 대신 넣으면 화력은 오르지만 플레이어 공격력 버프를 잃습니다.' },
   { id:'cryo', name:'크라이오링크스', eng:'Cryolinx', el:['ice'], core:false, idx:9,
     lv:'Lv 58 · 알파 보스', hab:'페이브레이크 — 타워 입구 순간이동 지점 북동쪽', coord:null,
+    nomap:'페이브레이크 섬 — 본섬 지도 밖',
     note:'페이브레이크 좌표 -1165, -1556 (테라 변종 기준)',
     feat:'순수 얼음 딜러. 이동 수단이 이미 있다면 자유칸 대안',
     skills:['얼음 고위력기 2 + 저쿨기 1 표준 배분'],
     tip:'교체 옵션 — 프로스탈리온 대신 쓰려면 비행 탈것을 따로 확보해야 합니다.' },
   { id:'mamc', name:'맘모레스트 크리스트', eng:'Mammorest Cryst', el:['ice'], core:false, idx:10,
-    lv:'Lv 40 전후', hab:'천문산맥 서쪽 사면 일대 야생', coord:null, note:'설원 서편에서 확률 높음',
+    lv:'Lv 40 전후', hab:'천문산맥 서쪽 사면 일대 야생', coord:null,
+    area:{ x:-306, y:316, rx:107, ry:125, label:'천문산맥 서쪽 사면' },
+    note:'설원 서편에서 확률 높음',
     feat:'HP·방어가 높은 탱커. 어그로 분산용',
     skills:['얼음 광역기 위주','생존이 목적이니 방어형 패시브 우선'],
     tip:'딜러가 아니라 방패입니다. 패시브를 다부진 몸 계열로 다르게 가세요.' }
@@ -476,7 +520,11 @@ const LS = {
   del(k){ try{ localStorage.removeItem(k); }catch(e){} }
 };
 const DEFAULT_CAL = {x0:-1000, x1:1000, y0:1000, y1:-1000};
-let done = LS.get('pw_done', {});
+/* 지도 표시 여부 (체크박스). 기본값 = 전부 표시, 끈 것만 false 로 저장 */
+let show = LS.get('pw_show', {});
+/* 지도에 그릴 수 있는 팰인가 (정확 좌표 또는 대략 범위가 있는 경우) */
+const mappable = p => !!(p.coord || p.area);
+const isShown  = p => mappable(p) && show[p.id] !== false;
 let cal  = LS.get('pw_cal', {...DEFAULT_CAL});
 let showLab = LS.get('pw_lab', true);
 
@@ -549,9 +597,30 @@ const invX = f => cal.x0 + f * (cal.x1 - cal.x0);
 const invY = f => cal.y0 + f * (cal.y1 - cal.y0);
 
 function renderPins(){
-  document.querySelectorAll('.pin').forEach(n=>n.remove());
+  document.querySelectorAll('.pin,.area').forEach(n=>n.remove());
   if(img.style.display === 'none') return;
-  PALS.filter(p=>p.coord).forEach(p=>{
+
+  const spanX = Math.abs(cal.x1 - cal.x0);
+  const spanY = Math.abs(cal.y1 - cal.y0);
+
+  /* 1) 대략적인 서식 범위 — 정확한 좌표가 없는 팰 (핀보다 아래에 깔림) */
+  PALS.filter(p=>!p.coord && p.area && isShown(p)).forEach(p=>{
+    const a = p.area;
+    const el = document.createElement('div');
+    el.className = 'area' + (p.el[0]==='ice' ? ' ice' : '');
+    el.style.left   = fx(a.x) * 100 + '%';
+    el.style.top    = fy(a.y) * 100 + '%';
+    el.style.width  = (a.rx * 2) / spanX * 100 + '%';
+    el.style.height = (a.ry * 2) / spanY * 100 + '%';
+    el.innerHTML = showLab
+      ? `<div class="alab">${p.idx}. ${p.name}<i>${a.label} · 대략</i></div>` : '';
+    el.title = `${p.name} · ${a.label} (대략적인 서식 범위 — 정확한 좌표 아님)`;
+    el.addEventListener('click', ev=>{ ev.stopPropagation(); focusCard(p.id); });
+    stage.appendChild(el);
+  });
+
+  /* 2) 정확한 좌표 핀 */
+  PALS.filter(p=>p.coord && isShown(p)).forEach(p=>{
     const L = fx(p.coord[0]) * 100, T = fy(p.coord[1]) * 100;
     const el = document.createElement('div');
     el.className = 'pin' + (p.el[0]==='ice' ? ' ice' : '');
@@ -610,6 +679,21 @@ document.getElementById('toggleLab').addEventListener('click', e=>{
   renderPins();
 });
 
+/* 지도 표시 일괄 토글 — 지도에 그릴 수 있는 팰만 대상 */
+function setAll(v){
+  PALS.filter(mappable).forEach(p=>{
+    show[p.id] = v;
+    const box = document.querySelector(`.chk input[data-id="${p.id}"]`);
+    if(box) box.checked = v;
+    document.getElementById('c-'+p.id)?.classList.toggle('off', !v);
+  });
+  LS.set('pw_show', show);
+  prog(); renderPins();
+  say(v ? '지도에 전체 표시' : '지도 마커 전체 숨김');
+}
+document.getElementById('showAll').addEventListener('click', ()=>setAll(true));
+document.getElementById('hideAll').addEventListener('click', ()=>setAll(false));
+
 /* ----- 2점 보정 마법사 ----- */
 const wiz = document.getElementById('wiz');
 document.getElementById('wizBtn').addEventListener('click', ()=>{
@@ -655,11 +739,15 @@ window.addEventListener('resize', renderPins);
 const EL = {water:'물', ice:'얼음', dragon:'드래곤'};
 const cards = document.getElementById('cards');
 cards.innerHTML = PALS.map(p=>`
-  <div class="card ${done[p.id]?'done':''}" id="c-${p.id}" data-el="${p.el.join(' ')}" data-core="${p.core}">
+  <div class="card ${mappable(p) ? (isShown(p)?'':'off') : 'nomap'}" id="c-${p.id}" data-el="${p.el.join(' ')}" data-core="${p.core}">
     <div class="chead">
-      <div class="idx ${p.coord?(p.el[0]==='ice'?'ice':''):'none'}">${p.idx}</div>
+      <div class="idx ${mappable(p)?(p.el[0]==='ice'?'ice':''):'none'}">${p.idx}</div>
       <div><div class="cname">${p.name}</div><div class="ceng">${p.eng}</div></div>
-      <label class="chk"><input type="checkbox" data-id="${p.id}" ${done[p.id]?'checked':''}></label>
+      ${mappable(p)
+        ? `<label class="chk" title="지도에 표시할지 결정합니다">
+             <input type="checkbox" data-id="${p.id}" ${isShown(p)?'checked':''}>지도 표시</label>`
+        : `<label class="chk dis" title="${p.nomap}">
+             <input type="checkbox" disabled>표시 불가</label>`}
     </div>
     <div class="badges">
       ${p.el.map(e=>`<span class="b ${e}">${EL[e]}</span>`).join('')}
@@ -667,6 +755,8 @@ cards.innerHTML = PALS.map(p=>`
     </div>
     <div class="row"><span class="k">서식지</span><span>${p.hab}</span></div>
     ${p.coord?`<div class="row"><span class="k">좌표</span><span><span class="coord">${p.coord[0]}, ${p.coord[1]}</span></span></div>`:''}
+    ${p.area?`<div class="row"><span class="k">지도</span><span>${p.area.label} <span style="color:var(--dim);font-size:11.5px">— 대략적인 범위 (정확한 좌표 아님)</span></span></div>`:''}
+    ${p.nomap?`<div class="row"><span class="k">지도</span><span style="color:var(--dim)">${p.nomap}</span></div>`:''}
     <div class="row"><span class="k">비고</span><span>${p.note}</span></div>
     <div class="row"><span class="k">특징</span><span>${p.feat}</span></div>
     <div class="skills"><div class="t">스킬 세팅</div>
@@ -676,17 +766,21 @@ cards.innerHTML = PALS.map(p=>`
   </div>`).join('');
 
 function prog(){
-  const n = Object.values(done).filter(Boolean).length;
-  document.getElementById('prog').textContent = `확보 ${n} / ${PALS.length}`;
+  const total = PALS.filter(mappable).length;
+  const n = PALS.filter(isShown).length;
+  const off = PALS.length - total;
+  document.getElementById('prog').textContent =
+    `지도 표시 ${n} / ${total}` + (off ? ` · 표시 불가 ${off}` : '');
 }
 prog();
 
 cards.addEventListener('change', e=>{
-  if(e.target.type!=='checkbox') return;
+  if(e.target.type!=='checkbox' || e.target.disabled) return;
   const id = e.target.dataset.id;
-  done[id] = e.target.checked;
-  document.getElementById('c-'+id).classList.toggle('done', e.target.checked);
-  LS.set('pw_done', done); prog();
+  show[id] = e.target.checked;
+  document.getElementById('c-'+id).classList.toggle('off', !e.target.checked);
+  LS.set('pw_show', show);
+  prog(); renderPins();
 });
 
 document.body.addEventListener('click', e=>{
