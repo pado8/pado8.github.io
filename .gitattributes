@@ -1,0 +1,10 @@
+# 팰월드 가이드는 base64 data URI(지도 이미지)가 인라인된 단일 HTML이다.
+# core.autocrlf 로 인한 줄바꿈 변환이 data URI를 건드리지 않도록 그대로 보존한다.
+public/palworld/index.html -text
+
+# 바이너리 자산은 어떤 경우에도 텍스트로 취급하지 않는다 (CRLF 변환 = 파일 손상)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
