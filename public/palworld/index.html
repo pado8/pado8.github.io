@@ -102,6 +102,18 @@
   #habsvg .habg:hover polygon { fill:rgba(63,169,245,.40); stroke-width:.9; }
   #habsvg .habg.ice:hover polygon { fill:rgba(126,224,232,.38); }
 
+  /* 서식 구역 번호 배지 — 핀(원)과 구별되게 둥근 사각형 */
+  .hbadge { position:absolute; transform:translate(-50%,-50%); z-index:5;
+    display:flex; flex-direction:column; align-items:center; cursor:pointer; }
+  .hbadge .hnum { width:21px; height:21px; border-radius:6px; border:2px solid #0a121d;
+    display:grid; place-items:center; font-size:11px; font-weight:800; color:#05121e;
+    background:var(--water); box-shadow:0 0 0 4px rgba(63,169,245,.28); transition:.15s; }
+  .hbadge.ice .hnum { background:var(--ice); box-shadow:0 0 0 4px rgba(126,224,232,.28); }
+  .hbadge:hover .hnum { transform:scale(1.25); }
+  .hbadge .hlab { margin-top:4px; font-size:11px; font-weight:700; white-space:nowrap;
+    background:rgba(10,18,29,.88); border:1px solid var(--line);
+    padding:1px 7px; border-radius:5px; pointer-events:none; }
+
   .probe { position:absolute; transform:translate(-50%,-50%); z-index:6; pointer-events:none; }
   .probe .x { width:16px; height:16px; border:2px solid var(--gold); border-radius:50%; }
   .probe .t { position:absolute; left:14px; top:-4px; white-space:nowrap; font-size:11px;
@@ -321,8 +333,11 @@
       <div><span class="sw" style="background:var(--ice)"></span> 얼음속성 팰</div>
       <div><span class="sw" style="background:var(--water);border:2px solid #0a121d;box-shadow:0 0 0 3px rgba(63,169,245,.25)"></span> <b style="color:var(--text)">핀 ●</b> — 정확한 좌표</div>
       <div><span class="sw" style="background:rgba(63,169,245,.25);border:1.5px solid var(--water);border-radius:3px"></span> <b style="color:var(--text)">반투명 영역</b> — 팰도감 서식 구역</div>
+      <div><span class="sw" style="background:var(--water);border-radius:4px;border:2px solid #0a121d"></span> <b style="color:var(--text)">둥근 사각 번호</b> — 구역 주인 (오른쪽 위 끝)</div>
     </div>
     <div style="font-size:12px; color:var(--dim); margin-top:8px">
+      번호 배지는 각 구역의 <b>오른쪽 위 끝</b>에 붙습니다. 구역이 겹치는 얼음 팰들은
+      배지가 세로로 나란히 쌓이니, 체크박스로 하나씩 꺼보면 어느 구역인지 바로 보입니다.<br>
       마커나 구역을 클릭하면 아래 상세 카드로 이동합니다.
       서식 구역은 <b>인게임 팰도감 서식지</b>를 이 지도에 맞춰 정렬한 것으로,
       지형 경계까지 그대로 따라갑니다.
@@ -610,8 +625,52 @@ const invY = f => cal.y0 + f * (cal.y1 - cal.y0);
 
 const SVGNS = 'http://www.w3.org/2000/svg';
 
+/* 서식 구역 번호 배지 — 구역의 오른쪽 위 끝점에 붙인다.
+   구역이 겹치는 얼음 팰들끼리 배지가 포개지지 않도록 자동으로 벌린다. */
+function renderHabBadges(list){
+  const GAP = 4.6;                                   // 배지 최소 간격(%)
+  const items = list.map(p=>{
+    let best = null;
+    HABITAT[p.hab_id].forEach(poly => poly.forEach(c=>{
+      const x = fx(c[0])*100, y = fy(c[1])*100;
+      const score = x - y;                           // 오른쪽 위일수록 큰 값
+      if(!best || score > best.score) best = {score, x, y};
+    }));
+    return { p, x: best.x, y: best.y };
+  });
+
+  /* 겹칠 땐 아래로 쌓는다. 오른쪽으로 밀면 구역 밖(바다)으로 나가버리는데,
+     구역의 오른쪽 변은 대체로 세로로 뻗어 있어 아래로 쌓으면 구역에 붙어 있는다. */
+  items.sort((a,b)=> a.y - b.y || b.x - a.x);        // 위 → 아래 순
+  items.forEach((it, i)=>{
+    for(let pass=0; pass<8; pass++){
+      let moved = false;
+      for(let j=0; j<i; j++){
+        const o = items[j];
+        if(Math.abs(it.x-o.x) < GAP && Math.abs(it.y-o.y) < GAP){
+          it.y = o.y + GAP; moved = true;            // 아래로 밀기
+        }
+      }
+      if(!moved) break;
+    }
+    it.x = Math.min(Math.max(it.x, 2), 98);
+    it.y = Math.min(Math.max(it.y, 2), 98);
+  });
+
+  items.forEach(({p,x,y})=>{
+    const el = document.createElement('div');
+    el.className = 'hbadge' + (p.el[0]==='ice' ? ' ice' : '');
+    el.style.left = x + '%'; el.style.top = y + '%';
+    el.innerHTML = `<div class="hnum">${p.idx}</div>` +
+      (showLab ? `<div class="hlab">${p.name}</div>` : '');
+    el.title = `${p.name} · ${p.habNote || '서식 구역'}`;
+    el.addEventListener('click', ev=>{ ev.stopPropagation(); focusCard(p.id); });
+    stage.appendChild(el);
+  });
+}
+
 function renderPins(){
-  document.querySelectorAll('.pin,#habsvg').forEach(n=>n.remove());
+  document.querySelectorAll('.pin,.hbadge,#habsvg').forEach(n=>n.remove());
   if(img.style.display === 'none') return;
 
   /* 1) 서식 구역 (SVG) — 팰도감 서식지에서 추출한 실제 폴리곤 */
@@ -637,6 +696,7 @@ function renderPins(){
       svg.appendChild(g);
     });
     stage.appendChild(svg);
+    renderHabBadges(withHab);
   }
 
   /* 2) 정확한 좌표 핀 */
