@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>팰월드 물덱 공략 가이드</title>
-<meta name="description" content="물속성 4 + 자유 1 · 서식지 좌표 · 스킬 세팅">
+<title>팰월드 물덱·불덱 공략 가이드</title>
+<meta name="description" content="물덱·불덱 편성 · 팰도감 서식 구역 · 스킬 세팅">
 <link rel="canonical" href="https://aquapado.com/palworld">
 
 <!-- Open Graph (카카오톡 / 디스코드 공유 미리보기) -->
-<meta property="og:title" content="팰월드 물덱 공략 가이드">
-<meta property="og:description" content="물속성 4 + 자유 1 · 서식지 좌표 · 스킬 세팅">
+<meta property="og:title" content="팰월드 물덱·불덱 공략 가이드">
+<meta property="og:description" content="물덱·불덱 편성 · 팰도감 서식 구역 · 스킬 세팅">
 <meta property="og:url" content="https://aquapado.com/palworld">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="aquapado">
@@ -21,8 +21,8 @@
 <meta property="og:image:alt" content="팰월드 전체 지도">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="팰월드 물덱 공략 가이드">
-<meta name="twitter:description" content="물속성 4 + 자유 1 · 서식지 좌표 · 스킬 세팅">
+<meta name="twitter:title" content="팰월드 물덱·불덱 공략 가이드">
+<meta name="twitter:description" content="물덱·불덱 편성 · 팰도감 서식 구역 · 스킬 세팅">
 <meta name="twitter:image" content="https://aquapado.com/palworld/og.jpg">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,6 +49,12 @@
   .notice { background:rgba(245,196,81,.08); border:1px solid rgba(245,196,81,.3);
     border-left:3px solid var(--gold); border-radius:8px; padding:12px 16px;
     font-size:13px; color:#e9d8a6; margin:20px 0; }
+
+  /* 물덱 / 불덱 전환 */
+  .decktabs { display:inline-flex; gap:6px; margin-top:14px; padding:5px;
+    background:var(--panel); border:1px solid var(--line); border-radius:999px; }
+  .decktabs .tab { border:none; background:transparent; padding:8px 22px; font-size:13.5px; }
+  .decktabs .tab.on { background:var(--water); color:#05121e; font-weight:700; }
 
   .tabs { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; align-items:center; }
   .tab { background:var(--panel); border:1px solid var(--line); color:var(--dim);
@@ -269,8 +275,9 @@
 <div class="wrap">
 
 <header>
-  <h1>팰월드 물덱 공략 가이드</h1>
-  <div class="sub">물속성 4 + 자유 1 · 서식지 좌표 · 스킬 세팅</div>
+  <h1 id="pageH1">팰월드 공략 가이드</h1>
+  <div class="sub" id="pageSub"></div>
+  <div class="decktabs" id="deckTabs"></div>
 </header>
 
 <div class="notice">
@@ -284,42 +291,12 @@
 </div>
 
 <!-- ============ 덱 ============ -->
-<h2>덱 편성 <span class="n">물속성 4마리 고정 + 자유 1칸</span></h2>
-<div class="tabs">
-  <button class="tab on" data-deck="a">추천안 A · 범용</button>
-  <button class="tab" data-deck="b">추천안 B · 얼음 컨셉</button>
-</div>
-
-<div class="deck on" id="deck-a">
-  <div class="deckgrid">
-    <div class="slot"><div class="num">물 1</div><div class="nm">넵티오스</div><div class="rl">에이스 딜러 · 최속 수영</div></div>
-    <div class="slot"><div class="num">물 2</div><div class="nm">레비드라</div><div class="rl">메인 딜러 · 하이드로 레이저</div></div>
-    <div class="slot"><div class="num">물 3</div><div class="nm">아주리비</div><div class="rl">서브딜 · 드래곤 커버</div></div>
-    <div class="slot"><div class="num">물 4</div><div class="nm">샤키드</div><div class="rl">플레이어 공격력 버프</div></div>
-    <div class="slot ice"><div class="num">자유 · 얼음</div><div class="nm">빙천마</div><div class="rl">비행 탈것 · 얼음 딜</div></div>
-  </div>
-  <div class="tip" style="margin-top:12px">
-    자유칸을 빙천마으로 쓰는 핵심 이유는 얼음 딜보다 <b>비행 이동</b>입니다.
-    물 4마리만으로는 공중 기동이 완전히 비는데, 넵티오스(수영) + 빙천마(비행)이면 이동이 전부 해결됩니다.
-  </div>
-</div>
-
-<div class="deck" id="deck-b">
-  <div class="deckgrid">
-    <div class="slot"><div class="num">물 1</div><div class="nm">넵티오스</div><div class="rl">에이스 딜러 · 최속 수영</div></div>
-    <div class="slot"><div class="num">물 2</div><div class="nm">레비드라</div><div class="rl">메인 딜러</div></div>
-    <div class="slot"><div class="num">물 3</div><div class="nm">펭킹</div><div class="rl">물/얼음 · 얼음 스킬 탑재</div></div>
-    <div class="slot"><div class="num">물 4</div><div class="nm">샤키드</div><div class="rl">플레이어 공격력 버프</div></div>
-    <div class="slot ice"><div class="num">자유 · 얼음</div><div class="nm">빙천마</div><div class="rl">비행 탈것 · 얼음 딜</div></div>
-  </div>
-  <div class="tip" style="margin-top:12px">
-    펭킹은 <b>물속성이 들어가 있어서 "물 4마리" 조건을 충족하면서 얼음 스킬도 태울 수 있습니다.</b>
-    결과적으로 물 5마리 편성인데 얼음도 굴리는 덱이 돼요. 단, 기본 레벨이 낮으니 <b>응축 4성</b>은 필수입니다.
-  </div>
-</div>
+<h2>덱 편성 <span class="n" id="slotNote"></span></h2>
+<div class="tabs" id="buildTabs"></div>
+<div id="builds"></div>
 
 <!-- ============ 지도 ============ -->
-<h2>서식지 지도 <span class="n">추천 팰 10마리 · 좌표 핀 5 · 팰도감 서식 구역 4 · 표시 불가 2</span></h2>
+<h2>서식지 지도 <span class="n" id="mapNote"></span></h2>
 <div class="maprow">
   <div class="mapbox">
     <div id="stage">
@@ -400,41 +377,7 @@
       지형 경계까지 그대로 따라갑니다.
     </div>
 
-    <div class="inset">
-      <h4>본섬 정확 좌표</h4>
-      <p style="line-height:2">
-        ⑤ 빙천마 <span class="coord">-357, 508</span><br>
-        ⑦ 실키누 <span class="coord">-312, 355</span><br>
-        ② 레비드라 <span class="coord">349, -86</span><br>
-        ⑥ 펭킹 <span class="coord">114, -352</span><br>
-        ③ 아주리비 <span class="coord">92, -717</span>
-        <span style="font-size:11px">남쪽 바다 작은 섬 · 제보</span>
-      </p>
-    </div>
-
-    <div class="inset">
-      <h4>팰도감 서식 구역 (반투명 영역)</h4>
-      <p style="line-height:1.9">
-        인게임 팰도감의 서식지 데이터를 이 지도 좌표계에 맞춰 정렬한 <b>실제 구역</b>입니다.<br><br>
-        ④ 샤키드 — 본섬 중앙 동편 (주간)<br>
-        ⑦ 실키누 — 설원 전역<br>
-        ⑨ 백랑이 — 설원 전역<br>
-        ⑩ 블리자모스 — 설원 전역<br><br>
-        <span style="font-size:11px">얼음 3종은 같은 설원 바이옴이라 구역이 거의 겹칩니다.
-        구역과 번호 배지 <b>색을 팰별로 다르게</b> 칠했으니 색으로 구분하시고,
-        그래도 헷갈리면 체크박스로 하나씩 꺼보세요.</span>
-      </p>
-    </div>
-
-    <div class="inset">
-      <h4>지도에 표시되지 않는 팰</h4>
-      <p style="line-height:1.9">
-        <b>① 넵티오스</b> — 본섬이 아닌 <b>페이브레이크 섬</b>이라 이 지도(-1000~1000) 밖입니다.
-        권장 레벨대 50~60.<br><br>
-        <b>⑧ 시바</b> — 팰도감 <b>서식지 불명</b>. 던전 스폰이라 지상 구역이 없습니다.
-        <span style="font-size:11px">레비드라 × 주작 교배가 훨씬 빠릅니다.</span>
-      </p>
-    </div>
+    <div id="sideInsets"></div>
 
     <div class="inset">
       <h4>포획 공통 팁</h4>
@@ -447,10 +390,7 @@
 <!-- ============ 카드 ============ -->
 <h2>팰별 상세 <span class="n">서식지 · 레벨 · 스킬 세팅</span></h2>
 <div class="filters">
-  <button class="tab sm on" data-f="all">전체</button>
-  <button class="tab sm" data-f="core">핵심 5마리</button>
-  <button class="tab sm" data-f="water">물</button>
-  <button class="tab sm" data-f="ice">얼음</button>
+  <span id="filterBtns"></span>
   <span class="prog" id="prog"></span>
 </div>
 <div class="cards" id="cards"></div>
@@ -469,38 +409,16 @@
   3개를 전부 긴쿨로 채우면 딜 공백이 생겨 오히려 총딜이 떨어집니다.
   전용기가 있는 팰은 전용기를 무조건 1칸 확정하세요.
   위력·쿨타임은 <a href="https://op.gg/ko/palworld/skills" target="_blank">OP.GG 스킬 DB</a>에서 현재 패치 기준 확인.<br><br>
-  전설 팰(넵티오스·빙천마)은 <b>전설</b> 패시브가 기본 부착이라 나머지 3칸만 굴리면 됩니다.
+  전설 팰(<span id="legendaryNames"></span>)은 <b>전설</b> 패시브가 기본 부착이라 나머지 3칸만 굴리면 됩니다.
 </div>
 
 <!-- ============ 상성 ============ -->
 <h2>상성 &amp; 약점 대비</h2>
-<div class="tablewrap"><table>
-  <tr><th style="width:150px">상대 속성</th><th style="width:110px">상성</th><th>대응</th></tr>
-  <tr><td>불</td><td class="good">매우 유리</td><td>물 팰 그대로 밀면 됩니다</td></tr>
-  <tr><td>풀</td><td class="good">유리</td><td>얼음 자유칸(빙천마) 투입</td></tr>
-  <tr><td>드래곤</td><td class="good">유리</td><td>얼음 스킬 + 아주리비의 드래곤기</td></tr>
-  <tr><td><b>전기</b></td><td class="bad">매우 불리</td><td>물의 약점. <b>최대 난관</b></td></tr>
-  <tr><td><b>불 (얼음 팰 기준)</b></td><td class="bad">불리</td><td>자유칸을 빼고 물 팰로 스위치</td></tr>
-</table></div>
-<div class="tip" style="margin-top:12px">
-  <b>전기 보스 대비책</b><br>
-  물 4마리 고정이라 전기 구간에서 확실히 고전합니다. 얼음도 전기를 못 잡아요.<br><br>
-  ① 레비드라나 아주리비 한 마리에 <b>무속성 고위력 스킬과일</b>을 태워두세요.
-  속성 보정은 못 받지만 <b>약점 피해는 안 받습니다.</b><br>
-  ② 컨셉을 조금 양보할 수 있다면, 전기 보스전 한정으로 자유칸을 <b>땅 속성 팰</b>로 교체하는 게 가장 확실합니다.
-</div>
+<div id="matchup"></div>
 
 <!-- ============ 순서 ============ -->
 <h2>육성 순서</h2>
-<ol class="steps">
-  <li><b>샤키드</b> — 저레벨이라 가장 먼저. 파트너 스킬 버프를 초반부터 받고 시작</li>
-  <li><b>펭킹</b> — 봉인지 보스. 응축 올려두면 중반 내내 물/얼음 겸용으로 활약</li>
-  <li><b>아주리비</b> — 호수·해안 야생. 교배 재료로도 쓰이니 여러 마리 확보</li>
-  <li><b>실키누 (Lv40)</b> — 얼음 자유칸 임시용. 빙천마 잡기 전까지</li>
-  <li><b>레비드라 (Lv55)</b> — 물 메인 딜러 확보. 여기서 화력이 확 올라감</li>
-  <li><b>빙천마 (Lv60)</b> — 자유칸 확정. 이동·딜 전부 해결</li>
-  <li><b>넵티오스</b> — 페이브레이크 진입 후 에이스 교체</li>
-</ol>
+<ol class="steps" id="steps"></ol>
 
 <footer>
   좌표·레벨은 커뮤니티 자료 기준이며 패치로 변동될 수 있습니다 ·
@@ -521,14 +439,23 @@ const EMBEDDED_MAP = "data:image/webp;base64,UklGRqoJAgBXRUJQVlA4IJ4JAgDQkgWdASo
    하이라이트 영역을 추출 → 이 지도 좌표계로 정렬(육지 실루엣 IoU 0.89)한 값.
    단위는 게임 내 좌표. 좌표 보정을 바꾸면 함께 따라 움직인다. */
 const HABITAT = {
-  gobf: [[[76,-129],[100,-129],[125,-164],[184,-156],[191,-189],[156,-246],[123,-244],[78,-195],[76,-129]]],
-  sibe: [[[-223,658],[-189,639],[-201,600],[-129,617],[-119,590],[-170,561],[-182,533],[-271,500],[-240,484],[-262,418],[-225,395],[-260,324],[-236,322],[-221,291],[-113,316],[-133,361],[-133,385],[-113,385],[-84,365],[-64,295],[-59,334],[14,320],[2,281],[-59,254],[-86,260],[-96,230],[-168,203],[-178,184],[-240,221],[-254,250],[-268,221],[-291,219],[-307,252],[-342,246],[-371,266],[-412,344],[-436,350],[-463,395],[-436,461],[-445,516],[-367,488],[-367,455],[-342,465],[-363,492],[-361,543],[-342,561],[-373,568],[-379,607],[-340,619],[-330,598],[-273,574],[-295,617],[-223,658]],[[-207,512],[-186,510],[-164,465],[-119,480],[-113,455],[-145,432],[-172,434],[-174,453],[-227,449],[-232,479],[-207,512]],[[76,445],[148,443],[156,416],[107,395],[104,377],[76,377],[55,410],[55,434],[76,445]],[[33,375],[64,375],[80,355],[76,330],[49,314],[20,318],[33,375]]],
-  mamc: [[[-219,656],[-186,637],[-197,598],[-121,613],[-115,588],[-232,502],[-258,414],[-225,404],[-221,367],[-244,359],[-256,322],[-232,320],[-215,289],[-131,303],[-107,318],[-141,385],[-113,387],[-80,363],[-59,291],[-55,332],[18,318],[4,277],[-80,258],[-92,229],[-172,184],[-229,215],[-246,250],[-262,248],[-262,219],[-289,219],[-303,246],[-336,242],[-457,389],[-451,438],[-434,447],[-436,500],[-369,490],[-357,453],[-338,461],[-350,500],[-295,502],[-307,527],[-355,518],[-338,557],[-367,566],[-373,602],[-332,613],[-270,572],[-254,586],[-287,586],[-291,613],[-219,656]],[[-201,510],[-176,502],[-158,459],[-115,479],[-107,453],[-141,430],[-162,430],[-170,449],[-223,447],[-229,477],[-201,510]],[[80,443],[152,441],[160,412],[111,396],[111,373],[86,363],[59,408],[59,432],[80,443]],[[39,373],[68,373],[86,352],[53,312],[23,318],[39,373]]],
-  cryo: [[[-219,658],[-188,643],[-197,600],[-123,617],[-115,590],[-232,504],[-258,418],[-225,406],[-219,373],[-244,361],[-256,324],[-232,322],[-215,291],[-111,320],[-115,357],[-141,363],[-141,389],[-115,393],[-80,367],[-61,295],[-51,336],[18,320],[4,279],[-80,260],[-94,229],[-174,184],[-193,184],[-248,246],[-268,219],[-289,221],[-303,250],[-336,244],[-459,395],[-432,461],[-443,514],[-367,492],[-357,455],[-338,465],[-350,502],[-307,502],[-295,518],[-355,520],[-338,561],[-367,568],[-373,604],[-336,619],[-326,598],[-270,574],[-291,615],[-219,658]],[[-201,512],[-176,504],[-160,465],[-111,477],[-107,455],[-141,432],[-162,432],[-170,453],[-223,449],[-229,479],[-201,512]],[[80,445],[152,443],[160,414],[111,395],[109,377],[80,377],[59,410],[59,434],[80,445]],[[41,391],[86,354],[51,312],[23,320],[41,391]]]
+  gobf: [[[76,-129],[102,-129],[125,-164],[184,-156],[191,-193],[168,-207],[156,-246],[123,-246],[78,-195],[76,-129]]],
+  sibe: [[[-223,658],[-189,639],[-201,600],[-129,617],[-119,590],[-174,557],[-182,533],[-271,500],[-240,484],[-262,418],[-225,395],[-260,324],[-236,322],[-221,291],[-113,316],[-135,361],[-135,387],[-115,387],[-84,365],[-64,295],[-59,334],[14,320],[0,277],[-86,260],[-96,230],[-176,186],[-197,186],[-254,250],[-268,221],[-291,219],[-307,252],[-340,244],[-373,268],[-412,344],[-436,350],[-463,395],[-436,461],[-445,516],[-369,490],[-367,455],[-342,465],[-361,490],[-361,543],[-342,561],[-373,568],[-377,605],[-340,619],[-330,598],[-273,574],[-295,617],[-223,658]],[[-207,512],[-186,510],[-164,465],[-119,480],[-113,455],[-145,432],[-168,432],[-174,453],[-227,449],[-232,479],[-207,512]],[[76,445],[148,443],[156,416],[105,377],[76,377],[55,410],[55,434],[76,445]],[[33,375],[64,375],[80,355],[76,330],[45,312],[20,318],[33,375]]],
+  mamc: [[[-219,656],[-186,637],[-197,598],[-121,613],[-115,588],[-232,502],[-258,414],[-225,404],[-221,367],[-244,359],[-256,322],[-232,320],[-215,289],[-131,303],[-107,318],[-141,385],[-113,387],[-109,369],[-80,363],[-59,291],[-51,334],[18,318],[4,277],[-80,258],[-92,229],[-172,184],[-232,217],[-246,250],[-262,219],[-289,219],[-303,246],[-336,242],[-457,389],[-451,438],[-434,447],[-436,500],[-367,490],[-357,453],[-338,461],[-350,500],[-295,502],[-307,527],[-355,518],[-338,557],[-367,566],[-373,602],[-336,617],[-326,596],[-270,572],[-291,613],[-219,656]],[[-201,510],[-176,502],[-158,459],[-115,479],[-107,451],[-141,430],[-164,430],[-170,449],[-223,447],[-229,477],[-201,510]],[[80,443],[160,434],[156,408],[109,395],[109,361],[88,361],[59,408],[59,432],[80,443]],[[39,373],[68,373],[86,352],[53,312],[23,318],[39,373]]],
+  cryo: [[[-221,658],[-188,643],[-197,600],[-123,617],[-115,590],[-232,504],[-258,418],[-225,406],[-219,373],[-244,361],[-256,324],[-232,322],[-215,291],[-111,320],[-115,357],[-141,363],[-141,389],[-115,393],[-80,367],[-61,295],[-51,336],[18,320],[4,279],[-80,260],[-94,229],[-174,184],[-193,184],[-248,246],[-268,219],[-289,221],[-303,250],[-336,244],[-459,395],[-432,461],[-443,514],[-367,492],[-357,455],[-338,465],[-350,502],[-307,502],[-295,518],[-355,520],[-338,561],[-367,568],[-373,604],[-336,619],[-270,574],[-291,615],[-221,658]],[[-201,512],[-176,504],[-160,465],[-115,480],[-107,453],[-141,432],[-162,432],[-170,453],[-223,449],[-229,479],[-201,512]],[[80,445],[152,443],[160,414],[113,395],[111,377],[80,377],[59,410],[59,434],[80,445]],[[41,391],[86,354],[51,312],[23,320],[41,391]]],
+  agni: [[[-703,-76],[-643,-104],[-670,-152],[-709,-129],[-703,-76]]],
+  suza: [[[293,539],[566,393],[574,367],[602,371],[695,318],[686,273],[703,225],[838,203],[838,166],[740,180],[676,131],[742,76],[740,29],[670,39],[674,72],[656,86],[668,125],[639,127],[607,104],[578,111],[531,74],[535,49],[564,41],[564,-6],[535,-6],[527,23],[475,14],[414,66],[424,135],[404,145],[406,180],[369,182],[357,160],[297,148],[264,174],[268,205],[232,186],[223,217],[172,205],[123,230],[156,342],[201,371],[211,406],[246,416],[244,459],[281,455],[250,479],[250,502],[293,539]],[[320,133],[381,115],[389,84],[322,100],[320,133]]],
+  blaz: [[[623,656],[674,654],[674,590],[637,590],[615,613],[623,656]]],
+  gobi: [[[-678,-238],[-650,-242],[-654,-311],[-684,-316],[-715,-357],[-820,-426],[-781,-441],[-771,-408],[-729,-412],[-746,-514],[-785,-527],[-754,-537],[-752,-561],[-777,-568],[-773,-609],[-801,-615],[-830,-568],[-807,-516],[-877,-469],[-875,-443],[-838,-418],[-857,-381],[-832,-369],[-830,-344],[-773,-330],[-785,-256],[-729,-248],[-691,-289],[-678,-238]],[[-678,-344],[-631,-346],[-629,-377],[-674,-383],[-676,-471],[-701,-477],[-721,-371],[-678,-344]]],
+  rayh: [[[-678,-236],[-650,-240],[-654,-309],[-682,-312],[-717,-357],[-820,-424],[-781,-439],[-771,-406],[-729,-408],[-746,-512],[-785,-525],[-752,-535],[-752,-561],[-775,-564],[-781,-623],[-746,-648],[-758,-574],[-707,-553],[-701,-580],[-723,-590],[-721,-611],[-678,-596],[-668,-635],[-641,-635],[-602,-693],[-703,-693],[-713,-678],[-725,-693],[-799,-693],[-830,-566],[-805,-518],[-869,-475],[-877,-445],[-838,-416],[-857,-379],[-832,-367],[-830,-342],[-775,-328],[-785,-254],[-729,-248],[-691,-287],[-678,-236]],[[-502,-590],[-455,-609],[-467,-660],[-436,-672],[-432,-693],[-588,-693],[-578,-619],[-537,-600],[-514,-627],[-502,-590]],[[-680,-342],[-631,-344],[-629,-369],[-674,-381],[-676,-467],[-701,-475],[-721,-369],[-680,-342]],[[-480,-523],[-455,-525],[-453,-551],[-510,-578],[-512,-547],[-480,-523]]],
+  bush: [[[-762,-566],[-734,-572],[-725,-609],[-688,-590],[-678,-631],[-646,-633],[-605,-693],[-713,-693],[-723,-676],[-736,-693],[-809,-693],[-822,-600],[-797,-594],[-756,-645],[-762,-566]],[[-508,-584],[-465,-604],[-477,-656],[-436,-674],[-436,-693],[-484,-693],[-490,-678],[-494,-693],[-596,-693],[-600,-652],[-576,-600],[-547,-596],[-521,-621],[-508,-584]],[[613,658],[664,658],[674,598],[629,592],[605,617],[613,658]],[[-506,-518],[-463,-523],[-463,-547],[-520,-572],[-506,-518]]],
+  fenr: [[[-508,-188],[-430,-211],[-418,-193],[-391,-199],[-393,-227],[-414,-227],[-459,-271],[-402,-271],[-381,-289],[-375,-357],[-402,-365],[-422,-346],[-441,-373],[-434,-396],[-396,-375],[-398,-438],[-365,-443],[-365,-578],[-400,-578],[-459,-525],[-475,-559],[-506,-559],[-541,-527],[-602,-551],[-623,-518],[-623,-490],[-580,-504],[-564,-475],[-600,-467],[-617,-402],[-531,-375],[-533,-334],[-564,-326],[-551,-287],[-564,-256],[-605,-309],[-660,-293],[-660,-264],[-635,-260],[-631,-238],[-660,-234],[-664,-205],[-631,-199],[-631,-225],[-602,-229],[-584,-193],[-508,-188]],[[-643,-336],[-596,-336],[-592,-365],[-648,-369],[-643,-336]]],
+  arso: [[[-78,252],[-47,244],[-70,217],[-66,191],[18,225],[20,195],[49,184],[39,113],[8,66],[-33,68],[-10,61],[-6,31],[-51,-16],[-78,-10],[-88,27],[-115,29],[-125,86],[-96,94],[-119,96],[-135,121],[-168,121],[-189,182],[-207,148],[-227,148],[-236,168],[-271,162],[-289,186],[-279,217],[-131,217],[-109,193],[-78,252]],[[-371,-88],[-309,-107],[-287,-180],[-209,-229],[-209,-307],[-291,-334],[-299,-355],[-342,-344],[-367,-299],[-355,-271],[-396,-230],[-412,-152],[-367,-137],[-400,-129],[-371,-88]],[[328,45],[367,45],[363,-78],[322,-70],[328,45]]],
+  digt: [[[-527,-184],[-430,-195],[-404,-213],[-404,-236],[-447,-268],[-398,-266],[-369,-289],[-357,-357],[-391,-400],[-387,-434],[-354,-443],[-354,-574],[-389,-574],[-447,-523],[-461,-557],[-494,-557],[-521,-527],[-590,-549],[-613,-516],[-613,-498],[-555,-496],[-557,-473],[-586,-467],[-600,-393],[-512,-375],[-521,-330],[-553,-322],[-535,-283],[-547,-256],[-596,-307],[-650,-285],[-617,-234],[-645,-232],[-652,-205],[-623,-195],[-617,-227],[-582,-225],[-572,-193],[-527,-184]],[[-641,-334],[-586,-334],[-580,-363],[-639,-365],[-641,-334]]]
 };
 
 /* =============== 데이터 =============== */
-const PALS = [
+const WATER_PALS = [
   { id:'nept', name:'넵티오스', eng:'Neptilius', el:['water'], core:true, idx:1,
     lv:'Lv 60 전후 · 전설급', hab:'페이브레이크(Feybreak) 섬', coord:null,
     nomap:'페이브레이크 섬 — 본섬 지도 밖',
@@ -598,6 +525,164 @@ const PALS = [
     tip:'딜러가 아니라 방패입니다. 패시브를 다부진 몸 계열로 다르게 가세요.' }
 ];
 
+/* =============== 불덱 =============== */
+const FIRE_PALS = [
+  { id:'agni', name:'아그니드라', eng:'Jormuntide Ignis', el:['dragon','fire'], core:true, idx:1,
+    lv:'알파 보스 · 고정 스폰', hab:'서쪽 작은 섬 (팰도감 서식 구역)',
+    hab_id:'agni', habColor:'#ff7a3c', habNote:'팰도감 서식 구역',
+    note:'레비드라의 화염 변종 · 용/화염 이중 속성',
+    feat:'불덱의 에이스. 용·화염을 동시에 태울 수 있어 화염 4마리 제약에서 다른 속성 딜을 끼워넣는 유일한 편법',
+    skills:['화염구 — 화염 최고위력(150·쿨55), 보스 딜 핵심','용의 운석 — 용 150·쿨55, 어둠/용 상대 보험','화염 폭풍 (80·쿨18) — 쿨 도는 동안 딜 유지'],
+    tip:'긴쿨 150짜리를 둘 다 넣으면 딜 공백이 생깁니다. 고위력 1 + 중간 2 배분을 지키세요.' },
+  { id:'suza', name:'주작', eng:'Suzaku', el:['fire'], core:true, idx:2,
+    lv:'사막 지대 야생', hab:'사막섬 전역',
+    hab_id:'suza', habColor:'#ffaa3c', habNote:'팰도감 서식 구역',
+    note:'물덱의 시바(Suzaku Aqua)와 같은 종의 화염 원형',
+    feat:'비행 탈것 + 탑승 중 화염 강화. 불덱의 이동과 딜을 한 마리로 해결',
+    skills:['화염구 (150·쿨55) — 주력','화염 폭풍 (80·쿨18) — 광역 유지딜','파이어 브레스 (70·쿨15) 또는 불화살 (55·쿨10)'],
+    tip:'서식 구역이 사막 전역이라 확보 난도가 낮습니다. 불덱 이동은 이 팰로 시작하세요.' },
+  { id:'blaz', name:'마그마 카이저', eng:'Blazamut', el:['fire'], core:true, idx:3,
+    lv:'알파 보스 · 고정 스폰', hab:'사막 북동쪽 (팰도감 서식 구역)',
+    hab_id:'blaz', habColor:'#ff5a5a', habNote:'팰도감 서식 구역',
+    note:'단일 지점 고정 스폰 · 포획 난도 높음',
+    feat:'순수 화염 최상위 딜러. 탑승 중 화염 강화까지 붙어 화력이 가장 높음',
+    skills:['화염구 (150·쿨55) — 주력','인페르노 (120·쿨40) — 두 번째 고위력','파이어 브레스 (70·쿨15) — 저쿨 보조'],
+    tip:'바위 창(땅 150)도 배우지만 화염 컨셉이면 빼세요. 속성 강화 패시브를 못 받습니다.' },
+  { id:'gobi', name:'샤맨더', eng:'Gobfin Ignis', el:['fire'], core:true, idx:4,
+    lv:'화산섬 서쪽 야생', hab:'화산섬 서편',
+    hab_id:'gobi', habColor:'#ff8c6e', habNote:'팰도감 서식 구역',
+    note:'물덱 샤키드의 화염 변종 — 파트너 스킬이 완전히 같은 역할',
+    feat:'파트너 스킬이 플레이어 본인 공격력 증가. 총기 위주라면 체감이 가장 큼',
+    skills:['딜보다 파트너 스킬 유지가 목적','인페르노 (120·쿨40) 1개 + 불화살 (55·쿨10) 등 저쿨 2개'],
+    tip:'스킬보다 패시브와 응축에 투자하세요. 물덱 샤키드와 똑같이 버프용입니다.' },
+  { id:'jetr', name:'제트래곤', eng:'Jetragon', el:['dragon'], core:true, idx:5,
+    lv:'전설급 · 고정 스폰', hab:'화산 지대 (팰도감 서식지 불명)', coord:null,
+    nomap:'팰도감 서식지 불명 · 고정 스폰',
+    note:'자유칸 담당 · 전설 패시브 기본 부착',
+    feat:'게임 내 최속 비행 탈것. 화염 4마리로 비는 공중 기동을 혼자 메움',
+    skills:['용의 운석 (용 150·쿨55) — 주력','유성 광선 (용 140·쿨50) 또는 화염구 (150·쿨55)','화염 폭풍 (80·쿨18) — 저쿨 유지'],
+    tip:'자유칸을 이 팰로 쓰는 이유의 절반은 이동 속도입니다. 물덱의 빙천마와 같은 역할이에요.' },
+  { id:'rayh', name:'적토조', eng:'No.074', el:['fire'], core:false, idx:6,
+    lv:'화산섬 일대 야생', hab:'화산섬 주변',
+    hab_id:'rayh', habColor:'#ffc850', habNote:'팰도감 서식 구역',
+    note:'제트래곤 확보 전 비행 담당',
+    feat:'화염 비행 탈것 + 탑승 중 화염 부여. 중반 이동의 핵심',
+    skills:['화염구 (150·쿨55)','화염 폭풍 (80·쿨18)','파이어 브레스 (70·쿨15)'],
+    tip:'모래 폭풍(땅)도 배우지만 화염 컨셉이면 뺍니다. 중반 자유칸 대타로도 씁니다.' },
+  { id:'bush', name:'불무사', eng:'No.072', el:['fire'], core:false, idx:7,
+    lv:'화산섬 남쪽 야생', hab:'화산섬 남부',
+    hab_id:'bush', habColor:'#f06e8c', habNote:'팰도감 서식 구역',
+    note:'파트너 스킬로 발도술 추가타',
+    feat:'저쿨 발도술(65·쿨9)로 딜 공백이 거의 없는 안정적 딜러',
+    skills:['인페르노 (120·쿨40) — 고위력 1','발도술 (65·쿨9) — 저쿨 주력','파이어 브레스 (70·쿨15)'],
+    tip:'번개 일격(120)도 배웁니다. 물 속성 보스 한정으로 넣으면 약점을 찌를 수 있어요.' },
+  { id:'fenr', name:'파이린', eng:'No.058', el:['fire'], core:false, idx:8,
+    lv:'화산섬 야생', hab:'화산섬',
+    hab_id:'fenr', habColor:'#ff9662', habNote:'팰도감 서식 구역',
+    note:'지상 탈것 · 탑승 중 화염 부여',
+    feat:'비행이 없을 때 지상 이동 + 화염 부여를 같이 해결',
+    skills:['화염구 (150·쿨55)','화염 돌격 (85·쿨14) — 탑승 전투용','불화살 (55·쿨10)'],
+    tip:'적토조나 제트래곤이 있으면 은퇴시켜도 됩니다. 초중반 전용입니다.' },
+  { id:'arso', name:'불페르노', eng:'No.042', el:['fire'], core:false, idx:9,
+    lv:'본섬 중앙 일대 야생', hab:'본섬 중앙',
+    hab_id:'arso', habColor:'#e68246', habNote:'팰도감 서식 구역',
+    note:'탑승 중 추위 무효 — 설원 진입용 유틸',
+    feat:'설원에서 얼어죽지 않게 해주는 탈것. 전투보다 이동·생존 유틸',
+    skills:['인페르노 (120·쿨40)','파이어 브레스 (70·쿨15)','불화살 (55·쿨10)'],
+    tip:'딜은 기대하지 마세요. 설원 구간에서만 잠깐 꺼내 쓰는 유틸입니다.' },
+  { id:'digt', name:'볼카노', eng:'No.088', el:['fire'], core:false, idx:10,
+    lv:'화산·산악 지대 야생', hab:'화산 지대',
+    hab_id:'digt', habColor:'#c88c5a', habNote:'팰도감 서식 구역',
+    note:'화염/땅 이중 속성 · 탱커 겸 채굴',
+    feat:'HP·방어가 높아 어그로 분산용. 탑승 중 광석 파괴 효율 상승',
+    skills:['화산 폭발 (100·쿨45) — 화염 광역','인페르노 (120·쿨40)','바위 대포 (70·쿨15) — 땅 대응'],
+    tip:'딜러가 아니라 방패입니다. 패시브를 다부진 몸 계열로 다르게 가세요.' }
+];
+
+/* =============== 덱 정의 =============== */
+const DECKS = {
+  water: {
+    label:'물덱', h1:'팰월드 물덱 공략 가이드',
+    sub:'물속성 4 + 자유 1 · 서식지 좌표 · 스킬 세팅',
+    slotNote:'물속성 4마리 고정 + 자유 1칸',
+    filters:[['all','전체'],['core','핵심 5마리'],['water','물'],['ice','얼음']],
+    pals: WATER_PALS,
+    builds:[
+      { name:'추천안 A · 범용', slots:[
+          ['물 1','넵티오스','에이스 딜러 · 최속 수영',''],
+          ['물 2','레비드라','메인 딜러 · 하이드로 레이저',''],
+          ['물 3','아주리비','서브딜 · 드래곤 커버',''],
+          ['물 4','샤키드','플레이어 공격력 버프',''],
+          ['자유 · 얼음','빙천마','비행 탈것 · 얼음 딜','ice']],
+        tip:'자유칸을 빙천마로 쓰는 핵심 이유는 얼음 딜보다 <b>비행 이동</b>입니다. 물 4마리만으로는 공중 기동이 완전히 비는데, 넵티오스(수영) + 빙천마(비행)이면 이동이 전부 해결됩니다.' },
+      { name:'추천안 B · 얼음 컨셉', slots:[
+          ['물 1','넵티오스','에이스 딜러 · 최속 수영',''],
+          ['물 2','레비드라','메인 딜러',''],
+          ['물 3','펭킹','물/얼음 · 얼음 스킬 탑재',''],
+          ['물 4','샤키드','플레이어 공격력 버프',''],
+          ['자유 · 얼음','빙천마','비행 탈것 · 얼음 딜','ice']],
+        tip:'펭킹은 <b>물속성이 들어가 있어서 "물 4마리" 조건을 충족하면서 얼음 스킬도 태울 수 있습니다.</b> 결과적으로 물 5마리 편성인데 얼음도 굴리는 덱이 돼요. 단, 기본 레벨이 낮으니 <b>응축 4성</b>은 필수입니다.' }
+    ],
+    matchup:{ rows:[
+        ['불','good','매우 유리','물 팰 그대로 밀면 됩니다'],
+        ['풀','good','유리','얼음 자유칸(빙천마) 투입'],
+        ['드래곤','good','유리','얼음 스킬 + 아주리비의 드래곤기'],
+        ['<b>전기</b>','bad','매우 불리','물의 약점. <b>최대 난관</b>'],
+        ['<b>불 (얼음 팰 기준)</b>','bad','불리','자유칸을 빼고 물 팰로 스위치']],
+      tip:'<b>전기 보스 대비책</b><br>물 4마리 고정이라 전기 구간에서 확실히 고전합니다. 얼음도 전기를 못 잡아요.<br><br>① 레비드라나 아주리비 한 마리에 <b>무속성 고위력 스킬과일</b>을 태워두세요. 속성 보정은 못 받지만 <b>약점 피해는 안 받습니다.</b><br>② 컨셉을 조금 양보할 수 있다면, 전기 보스전 한정으로 자유칸을 <b>땅 속성 팰</b>로 교체하는 게 가장 확실합니다.' },
+    steps:[
+      ['샤키드','저레벨이라 가장 먼저. 파트너 스킬 버프를 초반부터 받고 시작'],
+      ['펭킹','봉인지 보스. 응축 올려두면 중반 내내 물/얼음 겸용으로 활약'],
+      ['아주리비','남쪽 바다 작은 섬. 교배 재료로도 쓰이니 여러 마리 확보'],
+      ['실키누 (Lv40)','얼음 자유칸 임시용. 빙천마 잡기 전까지'],
+      ['레비드라 (Lv55)','물 메인 딜러 확보. 여기서 화력이 확 올라감'],
+      ['빙천마 (Lv60)','자유칸 확정. 이동·딜 전부 해결'],
+      ['넵티오스','페이브레이크 진입 후 에이스 교체']],
+    legendary:'넵티오스·빙천마'
+  },
+
+  fire: {
+    label:'불덱', h1:'팰월드 불덱 공략 가이드',
+    sub:'화염 4 + 자유 1 · 서식지 구역 · 스킬 세팅',
+    slotNote:'화염 4마리 고정 + 자유 1칸',
+    filters:[['all','전체'],['core','핵심 5마리'],['fire','화염'],['dragon','용']],
+    pals: FIRE_PALS,
+    builds:[
+      { name:'추천안 A · 범용', slots:[
+          ['화염 1','아그니드라','에이스 · 용/화염 겸용',''],
+          ['화염 2','주작','비행 탈것 · 화염 강화',''],
+          ['화염 3','마그마 카이저','최상위 순수 화염 딜',''],
+          ['화염 4','샤맨더','플레이어 공격력 버프',''],
+          ['자유 · 용','제트래곤','최속 비행 · 전설','dragon']],
+        tip:'물덱과 구조가 같습니다. <b>샤맨더 = 샤키드</b>(공격력 버프), <b>아그니드라 = 레비드라</b>(이중 속성 딜러)로 1:1 대응돼요. 자유칸 제트래곤은 빙천마와 같은 <b>이동 담당</b>입니다.' },
+      { name:'추천안 B · 조기 완성', slots:[
+          ['화염 1','주작','비행 + 화염 강화',''],
+          ['화염 2','적토조','비행 탈것 · 중반 주력',''],
+          ['화염 3','불무사','저쿨 발도술로 딜 공백 최소',''],
+          ['화염 4','샤맨더','플레이어 공격력 버프',''],
+          ['자유 · 화염','볼카노','화염/땅 탱커 · 어그로 분산','']],
+        tip:'알파 보스(아그니드라·마그마 카이저)와 전설(제트래곤) 없이 <b>야생 팰만으로</b> 굴리는 구성입니다. 화력은 낮지만 서식 구역이 전부 화산섬·사막이라 훨씬 일찍 완성됩니다.' }
+    ],
+    matchup:{ rows:[
+        ['풀','good','매우 유리','화염 팰 그대로 밀면 됩니다'],
+        ['얼음','good','매우 유리','설원 구간이 오히려 사냥터가 됩니다'],
+        ['어둠','good','유리','아그니드라·제트래곤의 용 스킬로 커버'],
+        ['<b>물</b>','bad','매우 불리','화염의 약점. <b>최대 난관</b>'],
+        ['<b>땅</b>','bad','불리','볼카노의 땅 스킬 또는 무속성으로 스위치']],
+      tip:'<b>물 보스 대비책</b><br>화염 4마리 고정이라 물 구간에서 확실히 고전합니다. 물덱의 전기 문제와 정확히 대칭이에요.<br><br>① 아그니드라나 제트래곤에 <b>용 속성기(용의 운석·유성 광선)</b>를 태워두세요. 물 상대로 약점을 안 내주면서 딜이 나옵니다.<br>② 불무사는 <b>번개 일격(120)</b>을 배웁니다. 물 보스전 한정으로 넣으면 오히려 약점을 찌를 수 있습니다.<br>③ 컨셉을 양보할 수 있다면 자유칸을 <b>풀 속성 팰</b>로 교체하는 게 가장 확실합니다.' },
+    steps:[
+      ['샤맨더','화산섬 서편 야생. 공격력 버프를 초반부터 받고 시작'],
+      ['불페르노','본섬 중앙 야생. 추위 무효라 설원 진입이 편해집니다'],
+      ['파이린','화산섬 야생. 지상 탈것 + 화염 부여로 중반까지 버팀'],
+      ['주작','사막 전역 야생. 비행이 열리면서 이동이 해결됨'],
+      ['적토조','화산섬 일대. 주작과 함께 중반 주력'],
+      ['마그마 카이저','사막 북동쪽 알파 보스. 화력이 확 올라감'],
+      ['아그니드라','서쪽 작은 섬 알파 보스. 에이스 확정'],
+      ['제트래곤','전설 고정 스폰. 자유칸 확정 + 이동 최상급']],
+    legendary:'제트래곤'
+  }
+};
+
 /* =============== 저장 =============== */
 const LS = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
@@ -606,7 +691,7 @@ const LS = {
 };
 const DEFAULT_CAL = {x0:-1000, x1:1000, y0:1000, y1:-1000};
 /* 지도 표시 여부 (체크박스). 기본값 = 전부 표시, 끈 것만 false 로 저장 */
-let show = LS.get('pw_show', {});
+let show = LS.get('pw_show_water', {});
 /* 지도에 그릴 수 있는 팰인가 (정확 좌표 또는 팰도감 서식 구역이 있는 경우) */
 const mappable = p => !!(p.coord || (p.hab_id && HABITAT[p.hab_id]));
 const isShown  = p => mappable(p) && show[p.id] !== false;
@@ -933,7 +1018,7 @@ function setAll(v){
     if(box) box.checked = v;
     document.getElementById('c-'+p.id)?.classList.toggle('off', !v);
   });
-  LS.set('pw_show', show);
+  LS.set('pw_show_'+deckKey, show);
   prog(); renderPins();
   say(v ? '지도에 전체 표시' : '지도 마커 전체 숨김');
 }
@@ -981,10 +1066,104 @@ document.getElementById('wizOk').addEventListener('click', ()=>{
 });
 window.addEventListener('resize', renderPins);
 
+/* =============== 덱 전환 =============== */
+const NUMS = ['','①','②','③','④','⑤','⑥','⑦','⑧','⑨','⑩'];
+let deckKey = LS.get('pw_deck','water');
+if(!DECKS[deckKey]) deckKey = 'water';
+let deck = DECKS[deckKey];
+let PALS = deck.pals;
+
+function renderDeckTabs(){
+  document.getElementById('deckTabs').innerHTML = Object.entries(DECKS)
+    .map(([k,d])=>`<button class="tab${k===deckKey?' on':''}" data-dk="${k}">${d.label}</button>`).join('');
+  document.querySelectorAll('#deckTabs .tab').forEach(b=>
+    b.addEventListener('click', ()=>switchDeck(b.dataset.dk)));
+}
+
+function renderBuilds(){
+  document.getElementById('buildTabs').innerHTML = deck.builds
+    .map((b,i)=>`<button class="tab${i===0?' on':''}" data-b="${i}">${b.name}</button>`).join('');
+  document.getElementById('builds').innerHTML = deck.builds.map((b,i)=>`
+    <div class="deck${i===0?' on':''}" data-b="${i}">
+      <div class="deckgrid">${b.slots.map(s=>
+        `<div class="slot ${s[3]}"><div class="num">${s[0]}</div><div class="nm">${s[1]}</div><div class="rl">${s[2]}</div></div>`).join('')}</div>
+      <div class="tip" style="margin-top:12px">${b.tip}</div>
+    </div>`).join('');
+  document.querySelectorAll('#buildTabs .tab').forEach(btn=>
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#buildTabs .tab').forEach(x=>x.classList.toggle('on', x===btn));
+      document.querySelectorAll('#builds .deck').forEach(d=>
+        d.classList.toggle('on', d.dataset.b===btn.dataset.b));
+    }));
+}
+
+function renderFilters(){
+  document.getElementById('filterBtns').innerHTML = deck.filters
+    .map(([f,l],i)=>`<button class="tab sm${i===0?' on':''}" data-f="${f}">${l}</button>`).join('');
+}
+
+function renderMatchup(){
+  const m = deck.matchup;
+  document.getElementById('matchup').innerHTML =
+    `<div class="tablewrap"><table>
+      <tr><th style="width:150px">상대 속성</th><th style="width:110px">상성</th><th>대응</th></tr>
+      ${m.rows.map(r=>`<tr><td>${r[0]}</td><td class="${r[1]}">${r[2]}</td><td>${r[3]}</td></tr>`).join('')}
+    </table></div>
+    <div class="tip" style="margin-top:12px">${m.tip}</div>`;
+}
+
+function renderSteps(){
+  document.getElementById('steps').innerHTML =
+    deck.steps.map(s=>`<li><b>${s[0]}</b> — ${s[1]}</li>`).join('');
+}
+
+/* 사이드 패널은 팰 데이터에서 자동 생성한다 (수동 동기화 실수 방지) */
+function renderSideInsets(){
+  const pins = PALS.filter(p=>p.coord);
+  const habs = PALS.filter(p=>p.hab_id && HABITAT[p.hab_id]);
+  const none = PALS.filter(p=>!mappable(p));
+  let out = '';
+  if(pins.length) out += `<div class="inset"><h4>좌표 핀</h4><p style="line-height:2">` +
+    pins.map(p=>`${NUMS[p.idx]} ${p.name} <span class="coord">${p.coord[0]}, ${p.coord[1]}</span>` +
+      (p.coordSrc?` <span style="font-size:11px">${p.coordSrc}</span>`:'')).join('<br>') + `</p></div>`;
+  if(habs.length) out += `<div class="inset"><h4>팰도감 서식 구역</h4><p style="line-height:1.9">` +
+    `인게임 팰도감의 서식지 데이터를 이 지도 좌표계에 맞춰 정렬한 <b>실제 구역</b>입니다.<br><br>` +
+    habs.map(p=>`<span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${p.habColor};margin-right:5px"></span>${NUMS[p.idx]} ${p.name} — ${p.hab}`).join('<br>') +
+    `<br><br><span style="font-size:11px">구역과 번호 배지 색이 팰별로 다릅니다. 겹쳐 보이면 체크박스로 하나씩 꺼보세요.</span></p></div>`;
+  if(none.length) out += `<div class="inset"><h4>지도에 표시되지 않는 팰</h4><p style="line-height:1.9">` +
+    none.map(p=>`<b>${NUMS[p.idx]} ${p.name}</b> — ${p.nomap}`).join('<br><br>') + `</p></div>`;
+  document.getElementById('sideInsets').innerHTML = out;
+}
+
+function renderDeckChrome(){
+  document.getElementById('pageH1').textContent = deck.h1;
+  document.getElementById('pageSub').textContent = deck.sub;
+  document.title = deck.h1;
+  document.getElementById('slotNote').textContent = deck.slotNote;
+  document.getElementById('legendaryNames').textContent = deck.legendary;
+  const pins = PALS.filter(p=>p.coord).length;
+  const habs = PALS.filter(p=>p.hab_id && HABITAT[p.hab_id]).length;
+  const off  = PALS.filter(p=>!mappable(p)).length;
+  document.getElementById('mapNote').textContent =
+    `추천 팰 ${PALS.length}마리 · 좌표 핀 ${pins} · 팰도감 서식 구역 ${habs} · 표시 불가 ${off}`;
+  renderBuilds(); renderFilters(); renderMatchup(); renderSteps(); renderSideInsets();
+}
+
+function switchDeck(k){
+  if(!DECKS[k] || k===deckKey) return;
+  deckKey = k; deck = DECKS[k]; PALS = deck.pals;
+  LS.set('pw_deck', k);
+  show = LS.get('pw_show_'+k, {});
+  document.querySelectorAll('#deckTabs .tab').forEach(b=>b.classList.toggle('on', b.dataset.dk===k));
+  renderDeckChrome(); renderCards(); prog(); renderPins();
+  say(deck.label + '으로 전환');
+}
+
 /* =============== 카드 =============== */
 const EL = {water:'물', ice:'얼음', dragon:'드래곤'};
 const cards = document.getElementById('cards');
-cards.innerHTML = PALS.map(p=>`
+function renderCards(){
+  cards.innerHTML = PALS.map(p=>`
   <div class="card ${mappable(p) && !isShown(p) ? 'off' : ''}" id="c-${p.id}" data-el="${p.el.join(' ')}" data-core="${p.core}">
     <div class="chead">
       <div class="idx ${mappable(p)?(p.el[0]==='ice'?'ice':''):'none'}">${p.idx}</div>
@@ -1010,6 +1189,8 @@ cards.innerHTML = PALS.map(p=>`
     </div>
     <div class="tip">${p.tip}</div>
   </div>`).join('');
+  applyFilter(activeFilter);
+}
 
 function prog(){
   const total = PALS.filter(mappable).length;
@@ -1018,14 +1199,13 @@ function prog(){
   document.getElementById('prog').textContent =
     `지도 표시 ${n} / ${total}` + (off ? ` · 표시 불가 ${off}` : '');
 }
-prog();
 
 cards.addEventListener('change', e=>{
   if(e.target.type!=='checkbox' || e.target.disabled) return;
   const id = e.target.dataset.id;
   show[id] = e.target.checked;
   document.getElementById('c-'+id).classList.toggle('off', !e.target.checked);
-  LS.set('pw_show', show);
+  LS.set('pw_show_'+deckKey, show);
   prog(); renderPins();
 });
 
@@ -1045,28 +1225,28 @@ function focusCard(id){
   setTimeout(()=>el.classList.remove('flash'), 2200);
 }
 
-document.querySelectorAll('[data-f]').forEach(b=>{
-  b.addEventListener('click', ()=>{
-    document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    const f = b.dataset.f;
-    document.querySelectorAll('.card').forEach(c=>{
-      let show = true;
-      if(f==='core') show = c.dataset.core==='true';
-      else if(f!=='all') show = c.dataset.el.includes(f);
-      c.style.display = show ? '' : 'none';
-    });
+let activeFilter = 'all';
+function applyFilter(f){
+  activeFilter = f;
+  document.querySelectorAll('#filterBtns .tab').forEach(x=>x.classList.toggle('on', x.dataset.f===f));
+  document.querySelectorAll('.card').forEach(c=>{
+    let ok = true;
+    if(f==='core') ok = c.dataset.core==='true';
+    else if(f!=='all') ok = c.dataset.el.includes(f);
+    c.style.display = ok ? '' : 'none';
   });
+}
+document.getElementById('filterBtns').addEventListener('click', e=>{
+  const b = e.target.closest('[data-f]'); if(b) applyFilter(b.dataset.f);
 });
 
-document.querySelectorAll('[data-deck]').forEach(b=>{
-  b.addEventListener('click', ()=>{
-    document.querySelectorAll('[data-deck]').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    document.querySelectorAll('.deck').forEach(d=>d.classList.remove('on'));
-    document.getElementById('deck-'+b.dataset.deck).classList.add('on');
-  });
-});
+/* =============== 부팅 =============== */
+show = LS.get('pw_show_' + deckKey, {});   // 저장된 덱의 표시 상태로 맞춘다
+renderDeckTabs();
+renderDeckChrome();
+renderCards();
+prog();
+renderPins();
 </script>
 </body>
 </html>
