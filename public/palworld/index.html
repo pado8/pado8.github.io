@@ -629,32 +629,31 @@ const SVGNS = 'http://www.w3.org/2000/svg';
    구역이 겹치는 얼음 팰들끼리 배지가 포개지지 않도록 자동으로 벌린다. */
 function renderHabBadges(list){
   const GAP = 4.6;                                   // 배지 최소 간격(%)
+  const far = (a, b) => Math.abs(a.x-b.x) >= GAP || Math.abs(a.y-b.y) >= GAP;
+
+  /* 각 구역의 꼭짓점을 '오른쪽 위' 순으로 정렬해 후보로 둔다.
+     구역이 겹치는 얼음 팰들은 앞 배지와 부딪히면 같은 구역 외곽선의
+     다음 꼭짓점으로 물러난다 — 바다로 밀어내지 않고 구역 위에 남는다. */
   const items = list.map(p=>{
-    let best = null;
+    const cand = [];
     HABITAT[p.hab_id].forEach(poly => poly.forEach(c=>{
-      const x = fx(c[0])*100, y = fy(c[1])*100;
-      const score = x - y;                           // 오른쪽 위일수록 큰 값
-      if(!best || score > best.score) best = {score, x, y};
+      cand.push({ x: fx(c[0])*100, y: fy(c[1])*100, score: fx(c[0])*100 - fy(c[1])*100 });
     }));
-    return { p, x: best.x, y: best.y };
+    cand.sort((a,b)=> b.score - a.score);
+    return { p, cand };
   });
 
-  /* 겹칠 땐 아래로 쌓는다. 오른쪽으로 밀면 구역 밖(바다)으로 나가버리는데,
-     구역의 오른쪽 변은 대체로 세로로 뻗어 있어 아래로 쌓으면 구역에 붙어 있는다. */
-  items.sort((a,b)=> a.y - b.y || b.x - a.x);        // 위 → 아래 순
-  items.forEach((it, i)=>{
-    for(let pass=0; pass<8; pass++){
-      let moved = false;
-      for(let j=0; j<i; j++){
-        const o = items[j];
-        if(Math.abs(it.x-o.x) < GAP && Math.abs(it.y-o.y) < GAP){
-          it.y = o.y + GAP; moved = true;            // 아래로 밀기
-        }
-      }
-      if(!moved) break;
+  const placed = [];
+  items.forEach(it=>{
+    let spot = it.cand.find(c => placed.every(o => far(c, o)));
+    if(!spot){                                       // 남는 꼭짓점이 없으면 아래로
+      spot = { ...it.cand[0] };
+      while(placed.some(o => !far(spot, o))) spot.y += GAP;
     }
-    it.x = Math.min(Math.max(it.x, 2), 98);
-    it.y = Math.min(Math.max(it.y, 2), 98);
+    spot.x = Math.min(Math.max(spot.x, 2), 98);
+    spot.y = Math.min(Math.max(spot.y, 2), 98);
+    it.x = spot.x; it.y = spot.y;
+    placed.push(spot);
   });
 
   items.forEach(({p,x,y})=>{
