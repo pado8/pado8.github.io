@@ -79,8 +79,10 @@
     border:1px solid var(--line); border-radius:8px; padding:11px 14px; width:150px;
     letter-spacing:.3em; }
   input[type=password]:focus { outline:none; border-color:var(--water); }
-  #restartBtn { background:#3a2020; border-color:#6b3030; color:#ffb0b0; }
-  #restartBtn:hover:not(:disabled) { border-color:var(--danger); }
+  #restartBtn, #stopBtn { background:#3a2020; border-color:#6b3030; color:#ffb0b0; }
+  #restartBtn:hover:not(:disabled), #stopBtn:hover:not(:disabled) { border-color:var(--danger); }
+  #startBtn { background:#1d3025; border-color:#2c6b45; color:#a8e6c0; }
+  #startBtn:hover:not(:disabled) { border-color:var(--ok); }
   #msg { margin-top:10px; font-size:13.5px; min-height:20px; }
   #msg.ok  { color:var(--ok); }
   #msg.err { color:var(--danger); }
@@ -104,6 +106,7 @@
   </div>
   <div class="stats">
     <div class="stat"><div class="k">접속자</div><div class="v" id="players">–</div></div>
+    <div class="stat"><div class="k">게임 내 일수</div><div class="v" id="days">–</div></div>
     <div class="stat"><div class="k">서버 FPS</div><div class="v" id="fps">–</div></div>
     <div class="stat"><div class="k">가동 시간</div><div class="v" id="uptime">–</div></div>
   </div>
@@ -123,15 +126,19 @@
 </div>
 
 <div class="panel">
-  <h2>서버 재시작</h2>
+  <h2>서버 전원</h2>
   <div class="restart">
     <input type="password" id="pin" inputmode="numeric" autocomplete="off"
            maxlength="12" placeholder="PIN">
-    <button id="restartBtn" type="button">재시작 요청</button>
+    <button id="restartBtn" type="button" data-action="restart">재시작</button>
+    <button id="stopBtn"    type="button" data-action="stop">끄기</button>
+    <button id="startBtn"   type="button" data-action="start">켜기</button>
   </div>
   <div class="note">
-    요청하면 집 PC가 최대 1분 안에 받아서 재시작합니다. 재시작에는 1~2분 걸리고,
-    접속 중인 사람은 모두 튕깁니다. <b>세이브는 정상 종료로 먼저 저장됩니다.</b>
+    집 PC가 최대 1분 안에 받아서 처리합니다. 켜고 끄는 데 1~2분 걸리고,
+    접속 중인 사람은 모두 튕깁니다. <b>세이브는 정상 종료로 먼저 저장됩니다.</b><br>
+    <b>끄기</b>를 누르면 <b>켜기</b>를 누를 때까지 꺼진 채로 유지됩니다
+    (집 PC를 재부팅해도 그대로 꺼져 있습니다).
   </div>
   <div id="msg"></div>
 </div>
@@ -177,6 +184,9 @@ function paintLog(events){
 }
 
 let lastConnect = null;
+let lastPlayers = 0;
+
+const ACTION_LABEL = { restart: '재시작', stop: '끄기', start: '켜기' };
 
 async function refresh(){
   try {
@@ -195,18 +205,25 @@ async function refresh(){
       $('staleNote').textContent =
         `집 PC에서 ${Math.round(d.age_sec/60)}분째 소식이 없습니다 (PC가 꺼졌거나 인터넷이 끊긴 상태).`;
     } else if (d.restart_pending) {
-      setBadge('wait', '재시작 대기 중');
-      $('staleNote').textContent = '재시작 요청이 접수됐습니다. 곧 처리됩니다.';
+      const label = ACTION_LABEL[d.pending_action] || '처리';
+      setBadge('wait', label + ' 대기 중');
+      $('staleNote').textContent = `${label} 요청이 접수됐습니다. 곧 처리됩니다.`;
     } else if (d.online) {
       setBadge('on', '온라인');
       $('staleNote').textContent = '';
+    } else if (d.stopped_by_request) {
+      // 자동 복구를 기다리는 상태가 아니다. 사람이 켜야 켜진다.
+      setBadge('off', '꺼둠');
+      $('staleNote').textContent = '누군가 끄기를 눌러서 꺼둔 상태입니다. 켜기를 누르면 다시 시작됩니다.';
     } else {
       setBadge('off', '오프라인');
       $('staleNote').textContent = '서버가 내려가 있습니다. 감시 프로그램이 곧 다시 띄웁니다.';
     }
 
+    lastPlayers = d.players_online || 0;
     $('players').textContent = d.players_online === null || d.players_online === undefined
       ? '–' : d.players_online + '명';
+    $('days').textContent   = d.days === null || d.days === undefined ? '–' : d.days + '일차';
     $('fps').textContent    = d.server_fps ?? '–';
     $('uptime').textContent = fmtUptime(d.uptime_h);
     $('updated').textContent = d.age_sec < 90 ? '방금 갱신' : Math.round(d.age_sec/60) + '분 전';
@@ -235,28 +252,36 @@ $('copyBtn').addEventListener('click', async () => {
   setTimeout(() => { $('copyBtn').textContent = '복사'; }, 1600);
 });
 
-$('restartBtn').addEventListener('click', async () => {
+const POWER_BTNS = ['restartBtn', 'stopBtn', 'startBtn'];
+
+async function sendPower(action) {
   const pin = $('pin').value.trim();
   const msg = $('msg');
+  const label = ACTION_LABEL[action];
   if (!pin) { msg.className = 'err'; msg.textContent = 'PIN을 입력하세요.'; return; }
 
-  $('restartBtn').disabled = true;
+  // 사람이 붙어 있는데 끄거나 재시작하면 전부 튕긴다. 한 번 물어본다.
+  if (action !== 'start' && lastPlayers > 0) {
+    if (!confirm(`지금 ${lastPlayers}명이 접속 중입니다. ${label} 하면 모두 튕깁니다. 계속할까요?`)) return;
+  }
+
+  POWER_BTNS.forEach(b => { $(b).disabled = true; });
   msg.className = 'info';
-  msg.textContent = '요청 보내는 중…';
+  msg.textContent = `${label} 요청 보내는 중…`;
 
   try {
     const r = await fetch(API + '/restart', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pin }),
+      body: JSON.stringify({ pin, action }),
     });
     const d = await r.json().catch(() => ({}));
 
     if (r.ok) {
       msg.className = 'ok';
       msg.textContent = d.already_pending
-        ? '이미 처리 대기 중인 재시작 요청이 있습니다.'
-        : '요청 접수. 1분 안에 재시작이 시작됩니다.';
+        ? `이미 처리 대기 중인 요청이 있습니다 (${ACTION_LABEL[d.action] || d.action}).`
+        : `${label} 요청 접수. 1분 안에 시작됩니다.`;
       $('pin').value = '';
       refresh();
     } else if (r.status === 403) {
@@ -269,18 +294,21 @@ $('restartBtn').addEventListener('click', async () => {
       msg.textContent = `PIN을 여러 번 틀려서 잠겼습니다. ${Math.ceil((d.retry_after_sec ?? 900)/60)}분 뒤에 다시 시도하세요.`;
     } else if (r.status === 429) {
       msg.className = 'err';
-      msg.textContent = `방금 재시작했습니다. ${d.retry_after_sec ?? 60}초 뒤에 다시 시도하세요.`;
+      msg.textContent = `방금 같은 요청을 보냈습니다. ${d.retry_after_sec ?? 60}초 뒤에 다시 시도하세요.`;
     } else {
       msg.className = 'err'; msg.textContent = '요청 실패 (' + r.status + ')';
     }
   } catch {
     msg.className = 'err'; msg.textContent = '요청을 보내지 못했습니다.';
   } finally {
-    $('restartBtn').disabled = false;
+    POWER_BTNS.forEach(b => { $(b).disabled = false; });
   }
-});
+}
 
-$('pin').addEventListener('keydown', e => { if (e.key === 'Enter') $('restartBtn').click(); });
+POWER_BTNS.forEach(id =>
+  $(id).addEventListener('click', () => sendPower($(id).dataset.action)));
+
+$('pin').addEventListener('keydown', e => { if (e.key === 'Enter') sendPower('restart'); });
 
 refresh();
 setInterval(refresh, 15000);
