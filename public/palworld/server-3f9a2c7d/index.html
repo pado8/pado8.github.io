@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PADOPALWORLD 서버 상태</title>
+
+<!--
+  링크를 아는 사람만 보는 페이지다. 검색엔진에 잡히면 집 공인 IP가 색인되므로
+  noindex + robots.txt Disallow + 어디에서도 링크하지 않음, 3중으로 막아둔다.
+  경로에 붙은 랜덤 문자열(server-3f9a2c7d)도 같은 목적이다.
+-->
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#0d1520; --panel:#16202e; --panel2:#1d2938; --line:#2a3a4d;
+    --text:#e6eef7; --dim:#8ba0b8;
+    --water:#3fa9f5; --gold:#f5c451; --danger:#ff6b6b; --ok:#4ade80;
+  }
+  body { background:var(--bg); color:var(--text);
+    font-family:-apple-system,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+    line-height:1.65; padding:24px 16px 80px; }
+  .wrap { max-width:760px; margin:0 auto; }
+
+  header { text-align:center; margin-bottom:22px; }
+  h1 { font-size:22px; letter-spacing:-.02em; }
+  header .sub { color:var(--dim); font-size:13px; margin-top:4px; }
+
+  .panel { background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; padding:18px; margin-bottom:14px; }
+  h2 { font-size:15px; margin-bottom:12px; color:var(--dim);
+    text-transform:uppercase; letter-spacing:.06em; }
+
+  .statusrow { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .badge { display:inline-flex; align-items:center; gap:8px;
+    font-weight:700; font-size:17px; padding:8px 16px; border-radius:999px;
+    background:var(--panel2); border:1px solid var(--line); }
+  .dot { width:11px; height:11px; border-radius:50%; background:var(--dim); flex:none; }
+  .badge.on   { color:var(--ok);     border-color:#2c6b45; }
+  .badge.on .dot   { background:var(--ok); box-shadow:0 0 10px var(--ok); }
+  .badge.off  { color:var(--danger); border-color:#6b3030; }
+  .badge.off .dot  { background:var(--danger); }
+  .badge.wait { color:var(--gold);   border-color:#6b5a2c; }
+  .badge.wait .dot { background:var(--gold); }
+
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:10px; margin-top:14px; }
+  .stat { background:var(--panel2); border-radius:9px; padding:10px 12px; }
+  .stat .k { color:var(--dim); font-size:11px; letter-spacing:.04em; }
+  .stat .v { font-size:19px; font-weight:700; margin-top:2px; }
+
+  .addr { display:flex; gap:8px; align-items:stretch; flex-wrap:wrap; }
+  .addr code { flex:1; min-width:200px; background:var(--panel2); border:1px solid var(--line);
+    border-radius:8px; padding:11px 14px; font-size:17px; font-weight:700;
+    color:var(--water); font-family:ui-monospace,Consolas,monospace; }
+  button { font:inherit; cursor:pointer; border-radius:8px; border:1px solid var(--line);
+    background:var(--panel2); color:var(--text); padding:11px 18px; font-weight:600; }
+  button:hover:not(:disabled) { border-color:var(--water); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  .note { color:var(--dim); font-size:12.5px; margin-top:10px; }
+
+  .players { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+  .player { background:var(--panel2); border:1px solid var(--line); border-radius:999px;
+    padding:5px 13px; font-size:14px; }
+
+  pre.log { background:#0a1017; border:1px solid var(--line); border-radius:9px;
+    padding:12px; font-size:12px; line-height:1.6; overflow-x:auto; max-height:340px;
+    overflow-y:auto; font-family:ui-monospace,Consolas,monospace; color:#b9cbe0;
+    white-space:pre-wrap; word-break:break-all; }
+  pre.log .a { color:var(--gold); }
+  pre.log .p { color:var(--ok); }
+  pre.log .e { color:var(--danger); }
+
+  .restart { display:flex; gap:8px; flex-wrap:wrap; align-items:stretch; }
+  input[type=password] { font:inherit; background:var(--panel2); color:var(--text);
+    border:1px solid var(--line); border-radius:8px; padding:11px 14px; width:150px;
+    letter-spacing:.3em; }
+  input[type=password]:focus { outline:none; border-color:var(--water); }
+  #restartBtn { background:#3a2020; border-color:#6b3030; color:#ffb0b0; }
+  #restartBtn:hover:not(:disabled) { border-color:var(--danger); }
+  #msg { margin-top:10px; font-size:13.5px; min-height:20px; }
+  #msg.ok  { color:var(--ok); }
+  #msg.err { color:var(--danger); }
+  #msg.info{ color:var(--gold); }
+
+  footer { text-align:center; color:var(--dim); font-size:12px; margin-top:22px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>PADOPALWORLD</h1>
+  <div class="sub">전용서버 상태 · <span id="updated">불러오는 중…</span></div>
+</header>
+
+<div class="panel">
+  <div class="statusrow">
+    <span class="badge wait" id="badge"><span class="dot"></span><span id="badgeText">확인 중</span></span>
+    <span class="note" id="staleNote" style="margin-top:0"></span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="k">접속자</div><div class="v" id="players">–</div></div>
+    <div class="stat"><div class="k">서버 FPS</div><div class="v" id="fps">–</div></div>
+    <div class="stat"><div class="k">가동 시간</div><div class="v" id="uptime">–</div></div>
+  </div>
+  <div class="players" id="playerList"></div>
+</div>
+
+<div class="panel">
+  <h2>접속 주소</h2>
+  <div class="addr">
+    <code id="connect">–</code>
+    <button id="copyBtn" type="button">복사</button>
+  </div>
+  <div class="note">
+    팰월드 → <b>멀티플레이(전용 서버)</b> → 하단 주소창에 붙여넣기 → 참가.
+    서버 비밀번호는 따로 물어보세요 (이 페이지에는 올리지 않습니다).
+  </div>
+</div>
+
+<div class="panel">
+  <h2>서버 재시작</h2>
+  <div class="restart">
+    <input type="password" id="pin" inputmode="numeric" autocomplete="off"
+           maxlength="12" placeholder="PIN">
+    <button id="restartBtn" type="button">재시작 요청</button>
+  </div>
+  <div class="note">
+    요청하면 집 PC가 최대 1분 안에 받아서 재시작합니다. 재시작에는 1~2분 걸리고,
+    접속 중인 사람은 모두 튕깁니다. <b>세이브는 정상 종료로 먼저 저장됩니다.</b>
+  </div>
+  <div id="msg"></div>
+</div>
+
+<div class="panel">
+  <h2>서버 로그</h2>
+  <pre class="log" id="log">불러오는 중…</pre>
+  <div class="note">최근 사건만 표시됩니다. IP는 가려져 있습니다.</div>
+</div>
+
+<footer>15초마다 자동 갱신 · aquapado</footer>
+
+</div>
+
+<script>
+const API = 'https://api.aquapado.com/palworld';
+const $ = id => document.getElementById(id);
+
+function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function fmtUptime(h){
+  if (h === null || h === undefined) return '–';
+  const mins = Math.round(h * 60);
+  if (mins < 60) return mins + '분';
+  return Math.floor(mins/60) + '시간 ' + (mins%60) + '분';
+}
+
+function setBadge(cls, text){
+  $('badge').className = 'badge ' + cls;
+  $('badgeText').textContent = text;
+}
+
+function paintLog(events){
+  if (!events || !events.length) { $('log').textContent = '기록 없음'; return; }
+  // 최신이 위로 오게 뒤집는다 — 스크롤 없이 방금 무슨 일이 있었는지 바로 보이도록.
+  $('log').innerHTML = events.slice().reverse().map(l => {
+    let cls = '';
+    if (l.includes('[PLAYER]')) cls = 'p';
+    else if (l.includes('[ERROR]')) cls = 'e';
+    else if (l.includes('[ALERT]') || l.includes('[ACTION]')) cls = 'a';
+    return cls ? `<span class="${cls}">${esc(l)}</span>` : esc(l);
+  }).join('\n');
+}
+
+let lastConnect = null;
+
+async function refresh(){
+  try {
+    const r = await fetch(API + '/status', { cache: 'no-store' });
+    const d = await r.json();
+
+    if (d.never_reported) {
+      setBadge('off', '보고 없음');
+      $('staleNote').textContent = '집 PC의 감시 프로그램이 아직 한 번도 보고하지 않았습니다.';
+      $('updated').textContent = '–';
+      return;
+    }
+
+    if (d.stale) {
+      setBadge('off', '연결 끊김');
+      $('staleNote').textContent =
+        `집 PC에서 ${Math.round(d.age_sec/60)}분째 소식이 없습니다 (PC가 꺼졌거나 인터넷이 끊긴 상태).`;
+    } else if (d.restart_pending) {
+      setBadge('wait', '재시작 대기 중');
+      $('staleNote').textContent = '재시작 요청이 접수됐습니다. 곧 처리됩니다.';
+    } else if (d.online) {
+      setBadge('on', '온라인');
+      $('staleNote').textContent = '';
+    } else {
+      setBadge('off', '오프라인');
+      $('staleNote').textContent = '서버가 내려가 있습니다. 감시 프로그램이 곧 다시 띄웁니다.';
+    }
+
+    $('players').textContent = d.players_online === null || d.players_online === undefined
+      ? '–' : d.players_online + '명';
+    $('fps').textContent    = d.server_fps ?? '–';
+    $('uptime').textContent = fmtUptime(d.uptime_h);
+    $('updated').textContent = d.age_sec < 90 ? '방금 갱신' : Math.round(d.age_sec/60) + '분 전';
+
+    $('playerList').innerHTML = (d.player_names || [])
+      .map(n => `<span class="player">${esc(n)}</span>`).join('');
+
+    lastConnect = d.connect || null;
+    $('connect').textContent = lastConnect || '–';
+
+    paintLog(d.events);
+  } catch (e) {
+    setBadge('off', '조회 실패');
+    $('staleNote').textContent = '상태 서버에 연결하지 못했습니다.';
+  }
+}
+
+$('copyBtn').addEventListener('click', async () => {
+  if (!lastConnect) return;
+  try {
+    await navigator.clipboard.writeText(lastConnect);
+    $('copyBtn').textContent = '복사됨';
+  } catch {
+    $('copyBtn').textContent = '복사 실패';
+  }
+  setTimeout(() => { $('copyBtn').textContent = '복사'; }, 1600);
+});
+
+$('restartBtn').addEventListener('click', async () => {
+  const pin = $('pin').value.trim();
+  const msg = $('msg');
+  if (!pin) { msg.className = 'err'; msg.textContent = 'PIN을 입력하세요.'; return; }
+
+  $('restartBtn').disabled = true;
+  msg.className = 'info';
+  msg.textContent = '요청 보내는 중…';
+
+  try {
+    const r = await fetch(API + '/restart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin }),
+    });
+    const d = await r.json().catch(() => ({}));
+
+    if (r.ok) {
+      msg.className = 'ok';
+      msg.textContent = d.already_pending
+        ? '이미 처리 대기 중인 재시작 요청이 있습니다.'
+        : '요청 접수. 1분 안에 재시작이 시작됩니다.';
+      $('pin').value = '';
+      refresh();
+    } else if (r.status === 403) {
+      msg.className = 'err'; msg.textContent = 'PIN이 틀렸습니다.';
+    } else if (r.status === 429) {
+      msg.className = 'err';
+      msg.textContent = `방금 재시작했습니다. ${d.retry_after_sec ?? 60}초 뒤에 다시 시도하세요.`;
+    } else {
+      msg.className = 'err'; msg.textContent = '요청 실패 (' + r.status + ')';
+    }
+  } catch {
+    msg.className = 'err'; msg.textContent = '요청을 보내지 못했습니다.';
+  } finally {
+    $('restartBtn').disabled = false;
+  }
+});
+
+$('pin').addEventListener('keydown', e => { if (e.key === 'Enter') $('restartBtn').click(); });
+
+refresh();
+setInterval(refresh, 15000);
+</script>
+</body>
+</html>

@@ -2,8 +2,13 @@
 User-agent: *
 Allow: /
 
+# 팰월드 전용서버 상태 페이지 — 링크를 아는 사람만 보는 곳.
+# 집 공인 IP가 적혀 있어서 색인되면 안 된다 (페이지 자체에도 noindex 있음).
+Disallow: /palworld/server-3f9a2c7d/
+
 # Naver search robot (explicitly allowed)
 User-agent: Yeti
 Allow: /
+Disallow: /palworld/server-3f9a2c7d/
 
 Sitemap: https://aquapado.com/sitemap.xml
