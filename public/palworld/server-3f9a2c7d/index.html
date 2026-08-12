@@ -260,7 +260,13 @@ $('restartBtn').addEventListener('click', async () => {
       $('pin').value = '';
       refresh();
     } else if (r.status === 403) {
-      msg.className = 'err'; msg.textContent = 'PIN이 틀렸습니다.';
+      msg.className = 'err';
+      msg.textContent = d.remaining === 0
+        ? 'PIN이 틀렸습니다. 시도 횟수를 모두 썼습니다.'
+        : `PIN이 틀렸습니다. (남은 시도 ${d.remaining ?? '?'}회)`;
+    } else if (r.status === 429 && d.error === 'locked_out') {
+      msg.className = 'err';
+      msg.textContent = `PIN을 여러 번 틀려서 잠겼습니다. ${Math.ceil((d.retry_after_sec ?? 900)/60)}분 뒤에 다시 시도하세요.`;
     } else if (r.status === 429) {
       msg.className = 'err';
       msg.textContent = `방금 재시작했습니다. ${d.retry_after_sec ?? 60}초 뒤에 다시 시도하세요.`;
