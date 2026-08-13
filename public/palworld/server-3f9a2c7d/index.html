@@ -102,8 +102,9 @@
 <div class="panel">
   <div class="statusrow">
     <span class="badge wait" id="badge"><span class="dot"></span><span id="badgeText">확인 중</span></span>
-    <span class="note" id="staleNote" style="margin-top:0"></span>
+    <span class="badge wait" id="pcBadge"><span class="dot"></span><span id="pcBadgeText">집 PC 확인 중</span></span>
   </div>
+  <div class="note" id="staleNote"></div>
   <div class="stats">
     <div class="stat"><div class="k">접속자</div><div class="v" id="players">–</div></div>
     <div class="stat"><div class="k">게임 내 일수</div><div class="v" id="days">–</div></div>
@@ -138,7 +139,10 @@
     집 PC가 최대 1분 안에 받아서 처리합니다. 켜고 끄는 데 1~2분 걸리고,
     접속 중인 사람은 모두 튕깁니다. <b>세이브는 정상 종료로 먼저 저장됩니다.</b><br>
     <b>끄기</b>를 누르면 <b>켜기</b>를 누를 때까지 꺼진 채로 유지됩니다
-    (집 PC를 재부팅해도 그대로 꺼져 있습니다).
+    (집 PC를 재부팅해도 그대로 꺼져 있습니다).<br>
+    <b>집 PC가 꺼져 있으면</b> 요청은 저장만 되고, PC가 켜지는 순간 실행됩니다.
+    켜기 요청은 12시간, 재시작·끄기 요청은 30분이 지나면 자동으로 취소됩니다 —
+    한참 전에 눌러둔 재시작이 부팅하자마자 터지는 걸 막기 위해서입니다.
   </div>
   <div id="msg"></div>
 </div>
@@ -171,6 +175,18 @@ function setBadge(cls, text){
   $('badgeText').textContent = text;
 }
 
+function setPcBadge(cls, text){
+  $('pcBadge').className = 'badge ' + cls;
+  $('pcBadgeText').textContent = text;
+}
+
+function fmtMins(sec){
+  if (sec === null || sec === undefined) return '';
+  const m = Math.round(sec / 60);
+  if (m < 60) return m + '분';
+  return Math.floor(m / 60) + '시간 ' + (m % 60) + '분';
+}
+
 function paintLog(events){
   if (!events || !events.length) { $('log').textContent = '기록 없음'; return; }
   // 최신이 위로 오게 뒤집는다 — 스크롤 없이 방금 무슨 일이 있었는지 바로 보이도록.
@@ -185,6 +201,7 @@ function paintLog(events){
 
 let lastConnect = null;
 let lastPlayers = 0;
+let lastPcOnline = true;
 
 const ACTION_LABEL = { restart: '재시작', stop: '끄기', start: '켜기' };
 
@@ -195,30 +212,49 @@ async function refresh(){
 
     if (d.never_reported) {
       setBadge('off', '보고 없음');
+      setPcBadge('off', '집 PC 상태 모름');
       $('staleNote').textContent = '집 PC의 감시 프로그램이 아직 한 번도 보고하지 않았습니다.';
       $('updated').textContent = '–';
       return;
     }
 
-    if (d.stale) {
-      setBadge('off', '연결 끊김');
-      $('staleNote').textContent =
-        `집 PC에서 ${Math.round(d.age_sec/60)}분째 소식이 없습니다 (PC가 꺼졌거나 인터넷이 끊긴 상태).`;
+    // 집 PC와 서버는 다른 축이다. "PC는 켜져 있는데 서버만 꺼짐"과
+    // "PC가 아예 꺼짐"은 눌러야 할 버튼이 다르므로 따로 보여준다.
+    lastPcOnline = Boolean(d.pc_online);
+    setPcBadge(d.pc_online ? 'on' : 'off', d.pc_online ? '집 PC 켜짐' : '집 PC 꺼짐');
+
+    const notes = [];
+
+    if (!d.pc_online) {
+      setBadge('off', '확인 불가');
+      notes.push(`집 PC에서 ${Math.round(d.age_sec/60)}분째 소식이 없습니다. PC가 꺼져 있거나 인터넷이 끊긴 상태예요.`);
+      notes.push('<b>지금 버튼을 눌러도 즉시 실행되지 않습니다.</b> 요청은 저장돼 있다가 집 PC가 켜지는 순간 실행됩니다.');
     } else if (d.restart_pending) {
       const label = ACTION_LABEL[d.pending_action] || '처리';
       setBadge('wait', label + ' 대기 중');
-      $('staleNote').textContent = `${label} 요청이 접수됐습니다. 곧 처리됩니다.`;
+      notes.push(`${label} 요청이 접수됐습니다. 1분 안에 처리됩니다.`);
     } else if (d.online) {
       setBadge('on', '온라인');
-      $('staleNote').textContent = '';
     } else if (d.stopped_by_request) {
       // 자동 복구를 기다리는 상태가 아니다. 사람이 켜야 켜진다.
       setBadge('off', '꺼둠');
-      $('staleNote').textContent = '누군가 끄기를 눌러서 꺼둔 상태입니다. 켜기를 누르면 다시 시작됩니다.';
+      notes.push('누군가 끄기를 눌러서 꺼둔 상태입니다. <b>켜기</b>를 누르면 다시 시작됩니다.');
     } else {
       setBadge('off', '오프라인');
-      $('staleNote').textContent = '서버가 내려가 있습니다. 감시 프로그램이 곧 다시 띄웁니다.';
+      notes.push('집 PC는 켜져 있는데 서버가 내려가 있습니다. <b>켜기</b>를 눌러주세요.');
     }
+
+    // PC가 꺼진 동안 눌러둔 요청. 언제까지 유효한지 알려준다.
+    if (d.restart_pending && !d.pc_online) {
+      const label = ACTION_LABEL[d.pending_action] || '요청';
+      notes.push(`대기 중인 <b>${label}</b> 요청이 있습니다 — 앞으로 ${fmtMins(d.pending_expires_in_sec)} 안에 PC가 켜지면 실행되고, 그 뒤엔 취소됩니다.`);
+    }
+    if (d.pending_expired) {
+      const label = ACTION_LABEL[d.expired_action] || '요청';
+      notes.push(`이전 <b>${label}</b> 요청은 시간이 지나 취소됐습니다. 필요하면 다시 눌러주세요.`);
+    }
+
+    $('staleNote').innerHTML = notes.join('<br>');
 
     lastPlayers = d.players_online || 0;
     $('players').textContent = d.players_online === null || d.players_online === undefined
@@ -237,7 +273,8 @@ async function refresh(){
     paintLog(d.events);
   } catch (e) {
     setBadge('off', '조회 실패');
-    $('staleNote').textContent = '상태 서버에 연결하지 못했습니다.';
+    setPcBadge('off', '집 PC 상태 모름');
+    $('staleNote').textContent = '상태 서버에 연결하지 못했습니다. 이건 집 PC가 아니라 이 페이지의 문제입니다.';
   }
 }
 
@@ -279,9 +316,15 @@ async function sendPower(action) {
 
     if (r.ok) {
       msg.className = 'ok';
-      msg.textContent = d.already_pending
-        ? `이미 처리 대기 중인 요청이 있습니다 (${ACTION_LABEL[d.action] || d.action}).`
-        : `${label} 요청 접수. 1분 안에 시작됩니다.`;
+      if (d.already_pending) {
+        msg.textContent = `이미 처리 대기 중인 요청이 있습니다 (${ACTION_LABEL[d.action] || d.action}).`;
+      } else if (!lastPcOnline) {
+        // 집 PC가 꺼져 있으면 지금은 아무 일도 일어나지 않는다. 그 사실을 숨기지 않는다.
+        msg.textContent = `${label} 요청을 저장했습니다. 집 PC가 꺼져 있어서 지금은 실행되지 않고, `
+          + `PC가 켜지는 순간 실행됩니다.`;
+      } else {
+        msg.textContent = `${label} 요청 접수. 1분 안에 시작됩니다.`;
+      }
       $('pin').value = '';
       refresh();
     } else if (r.status === 403) {
