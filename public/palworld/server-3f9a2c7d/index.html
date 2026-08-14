@@ -298,8 +298,11 @@ async function refresh(){
     $('playerList').innerHTML = (d.player_names || [])
       .map(n => `<span class="player">${esc(n)}</span>`).join('');
 
-    lastConnect = d.connect || null;
-    $('connect').textContent = lastConnect || '–';
+    // DDNS 를 안 쓰기로 해서, 집 PC가 알려주는 현재 공인 IP로 주소와 공유기
+    // 링크를 매번 갱신한다. IP 가 바뀌어도 페이지가 알아서 따라간다.
+    if (d.connect) { lastConnect = d.connect; }
+    $('connect').textContent = lastConnect;
+    if (d.router_url) { $('wakeBtn').setAttribute('href', d.router_url); }
 
     paintLog(d.events);
   } catch (e) {
