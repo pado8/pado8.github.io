@@ -94,6 +94,10 @@
   #msg.ok  { color:var(--ok); }
   #msg.err { color:var(--danger); }
   #msg.info{ color:var(--gold); }
+  .note.ok  { color:var(--ok); }
+  .note.err { color:var(--danger); }
+  .note.info{ color:var(--gold); }
+  #refreshBtn { padding:7px 14px; font-size:13px; }
 
   footer { text-align:center; color:var(--dim); font-size:12px; margin-top:22px; }
 </style>
@@ -110,8 +114,10 @@
   <div class="statusrow">
     <span class="badge wait" id="badge"><span class="dot"></span><span id="badgeText">확인 중</span></span>
     <span class="badge wait" id="pcBadge"><span class="dot"></span><span id="pcBadgeText">집 PC 확인 중</span></span>
+    <button id="refreshBtn" type="button">지금 확인</button>
   </div>
   <div class="note" id="staleNote"></div>
+  <div class="note" id="refreshNote"></div>
   <div class="stats">
     <div class="stat"><div class="k">접속자</div><div class="v" id="players">–</div></div>
     <div class="stat"><div class="k">게임 내 일수</div><div class="v" id="days">–</div></div>
@@ -225,12 +231,14 @@ function paintLog(events){
 let lastConnect = '112.144.6.6:8211';
 let lastPlayers = 0;
 let lastPcOnline = true;
+// 「지금 확인」이 실제로 반영됐는지 판단하는 기준값.
+let lastReceivedAt = 0;
 
 const ACTION_LABEL = { restart: '재시작', stop: '끄기', start: '켜기' };
 
-async function refresh(){
+async function refresh(qs){
   try {
-    const r = await fetch(API + '/status', { cache: 'no-store' });
+    const r = await fetch(API + '/status' + (qs || ''), { cache: 'no-store' });
     const d = await r.json();
 
     if (d.never_reported) {
@@ -249,6 +257,7 @@ async function refresh(){
 
     // 집 PC와 서버는 다른 축이다. "PC는 켜져 있는데 서버만 꺼짐"과
     // "PC가 아예 꺼짐"은 눌러야 할 버튼이 다르므로 따로 보여준다.
+    lastReceivedAt = d.received_at || 0;
     lastPcOnline = Boolean(d.pc_online);
     setPcBadge(d.pc_online ? 'on' : 'off', d.pc_online ? '집 PC 켜짐' : '집 PC 꺼짐');
     // PC가 꺼져 있을 때만 켜기 패널을 강조한다.
@@ -386,6 +395,59 @@ POWER_BTNS.forEach(id =>
   $(id).addEventListener('click', () => sendPower($(id).dataset.action)));
 
 $('pin').addEventListener('keydown', e => { if (e.key === 'Enter') sendPower('restart'); });
+
+/*
+  「지금 확인」 — 평소 상태 기록은 10분에 한 번만 갱신된다(저장소 호출을 아끼려고).
+  이 버튼은 집 PC에게 "다음에 올 때 주기 무시하고 지금 상태를 적어달라"고 남긴다.
+
+  집 PC가 60초마다 나가서 묻는 구조라 **즉시가 아니라 최대 1분**이다.
+  그래서 눌러놓고 결과가 올 때까지 5초 간격으로 확인하며, 기다리는 중이라는 걸
+  화면에 계속 보여준다. 아무 표시가 없으면 고장 난 걸로 오해한다.
+*/
+let refreshTimer = null;
+
+async function requestRefresh(){
+  const btn = $('refreshBtn'), note = $('refreshNote');
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+  btn.disabled = true;
+  note.className = 'note info';
+  note.textContent = '집 PC에 확인 요청을 보냈습니다. 최대 1분 걸립니다…';
+
+  try {
+    const r = await fetch(API + '/refresh', { method: 'POST' });
+    if (!r.ok) throw new Error('http ' + r.status);
+  } catch {
+    note.className = 'note err';
+    note.textContent = '확인 요청을 보내지 못했습니다.';
+    btn.disabled = false;
+    return;
+  }
+
+  const startedAt = Date.now();
+  let waited = 0;
+  refreshTimer = setInterval(async () => {
+    waited += 5;
+    // CDN 캐시(20초)를 건너뛰려고 매번 다른 쿼리를 붙인다.
+    await refresh('?t=' + Date.now());
+    const fresh = lastReceivedAt && lastReceivedAt > startedAt - 5000;
+    if (fresh) {
+      clearInterval(refreshTimer); refreshTimer = null;
+      note.className = 'note ok';
+      note.textContent = `방금 확인했습니다 (${waited}초 걸림).`;
+      btn.disabled = false;
+      setTimeout(() => { if (!refreshTimer) note.textContent = ''; }, 8000);
+    } else if (waited >= 90) {
+      clearInterval(refreshTimer); refreshTimer = null;
+      note.className = 'note err';
+      note.textContent = '1분 30초를 기다렸는데 응답이 없습니다. 집 PC가 꺼져 있거나 감시 프로그램이 멈춘 상태일 수 있습니다.';
+      btn.disabled = false;
+    } else {
+      note.textContent = `집 PC 응답을 기다리는 중… (${waited}초)`;
+    }
+  }, 5000);
+}
+
+$('refreshBtn').addEventListener('click', requestRefresh);
 
 refresh();
 setInterval(refresh, 15000);
