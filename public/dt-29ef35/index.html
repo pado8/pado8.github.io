@@ -85,7 +85,13 @@
 
   /* ── 본문 분할 ── */
   #main { display: flex; height: calc(100% - 27px - 24px); }
-  #treeWrap { flex: 1; min-width: 200px; overflow: auto; padding: 2px 0 40px; font-size: var(--fs, 13px); }
+  #leftcol { flex: 1; min-width: 200px; display: flex; flex-direction: column; min-height: 0; }
+  #treeWrap { flex: 1; overflow: auto; padding: 2px 0 40px; font-size: var(--fs, 13px); }
+  /* 반페이지 모드 — 위쪽은 영어 마크업만 보여 한글 분량을 절반으로 줄인다 */
+  #fakeWrap { display: none; overflow: hidden; padding: 2px 0;
+              border-bottom: 1px solid var(--line); font-size: var(--fs, 13px); }
+  #leftcol.half #fakeWrap { display: block; flex: 1 1 50%; min-height: 0; }
+  #leftcol.half #treeWrap { flex: 1 1 50%; min-height: 0; }
   #dragbar { width: 1px; background: var(--line); cursor: col-resize; position: relative; }
   #dragbar::after { content: ""; position: absolute; left: -3px; right: -3px; top: 0; bottom: 0; }
   #styles {
@@ -182,7 +188,10 @@
 </div>
 
 <div id="main">
-  <div id="treeWrap"><div id="tree"></div></div>
+  <div id="leftcol">
+    <div id="fakeWrap"><div id="fake"></div></div>
+    <div id="treeWrap"><div id="tree"></div></div>
+  </div>
   <div id="dragbar"></div>
   <div id="styles">
     <div class="stabs">
@@ -227,6 +236,7 @@ let curUrl = "";
 // 예전엔 클릭이 그 문단으로 점프하는 동작이었는데, 접혔다 펼쳐졌다 해서 헷갈렸다.
 let mask = false;
 let clickMask = localStorage.getItem("dtclick") !== "off";   // 클릭으로 가릴지
+let half = localStorage.getItem("dthalf") === "on";          // 반페이지 모드
 const MASK_TEXT = [
   "요청이 들어오면 미들웨어가 등록된 순서대로 실행된다.",
   "캐시 키는 경로와 쿼리스트링을 합쳐 만든다.",
@@ -291,6 +301,8 @@ function chunk(t, width) {
 function render() {
   document.documentElement.style.setProperty("--fs", fs + "px");
   document.documentElement.dataset.theme = theme;
+  $("leftcol").classList.toggle("half", half);
+  if (half && !$("fake").innerHTML) renderFake();
   document.querySelectorAll("[data-view]").forEach((t) => t.classList.toggle("on", t.dataset.view === mode));
   if (mode === "lib") return renderLib();
   if (mode === "set") return renderSet();
@@ -352,7 +364,7 @@ function render() {
 }
 
 function renderRules() {
-  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -432,6 +444,53 @@ async function load(url) {
 }
 
 
+
+/* ---------- 반페이지 모드 상단 ---------- */
+
+// 흔한 SPA 의 겉모습. 곁눈질에는 그냥 남의 사이트를 뜯어보는 화면으로 읽힌다.
+const FAKE_DOM = [
+  [1, "▶", "head", "", true],
+  [1, "▼", "body", attr("class", "app-shell"), false],
+  [2, "▼", "div", attr("id", "root") + attr("data-reactroot", ""), false],
+  [3, "▼", "header", attr("class", "navbar navbar--sticky"), false],
+  [4, "▶", "a", attr("class", "brand") + attr("href", "/"), true],
+  [4, "▼", "nav", attr("class", "nav") + attr("aria-label", "Main"), false],
+  [5, "▶", "ul", attr("class", "nav__list"), true],
+  [5, "▶", "button", attr("class", "nav__toggle") + attr("type", "button"), true],
+  [4, "/", "nav", "", false],
+  [3, "/", "header", "", false],
+  [3, "▼", "div", attr("class", "container container--wide"), false],
+  [4, "▶", "section", attr("class", "hero") + attr("data-testid", "hero"), true],
+  [4, "▼", "section", attr("class", "grid grid--cards"), false],
+  [5, "▶", "article", attr("class", "card") + attr("data-id", "a19f"), true],
+  [5, "▶", "article", attr("class", "card") + attr("data-id", "b73c"), true],
+  [5, "▶", "article", attr("class", "card") + attr("data-id", "c04e"), true],
+  [4, "/", "section", "", false],
+  [4, "▶", "aside", attr("class", "panel panel--muted"), true],
+  [3, "/", "div", "", false],
+  [3, "▶", "footer", attr("class", "footer"), true],
+  [2, "/", "div", "", false],
+  [2, "▶", "div", attr("id", "modal-root"), true],
+  [2, "s", "script", attr("src", "/static/js/runtime.8c1d4a.js"), false],
+  [2, "s", "script", attr("src", "/static/js/vendors.31f0be.js"), false],
+  [2, "s", "script", attr("src", "/static/js/main.7ae925.js"), false],
+  [1, "/", "body", "", false],
+  [0, "/", "html", "", false],
+];
+
+function renderFake() {
+  const out = [];
+  out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
+  out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "en"))));
+  for (const [ind, kind, tag, a, folded] of FAKE_DOM) {
+    if (kind === "/") { out.push(line(ind, close(tag))); continue; }
+    if (kind === "s") { out.push(line(ind, open(tag, a) + close(tag))); continue; }
+    out.push(line(ind, `<span class="arrow">${kind}</span>` + open(tag, a) +
+      (folded ? `<span class="dots">…</span>` + close(tag) : "")));
+  }
+  $("fake").innerHTML = out.join("");
+}
+
 /* ---------- 서재 ---------- */
 
 // 북마클릿이 집에서 저장해둔 것을 여기서 꺼내 읽는다. 목록도 DOM 트리 모양으로
@@ -503,6 +562,7 @@ const SETS = [
   ["wrap", "줄바꿈 폭",    () => wrapAt + "자"],
   ["theme", "테마",        () => (theme === "light" ? "라이트" : "다크")],
   ["click", "클릭으로 가리기", () => (clickMask ? "켬" : "끔")],
+  ["half",  "반페이지 모드",   () => (half ? "켬" : "끔")],
 ];
 
 function bump(what, d) {
@@ -510,6 +570,7 @@ function bump(what, d) {
   if (what === "fs")   { fs = Math.max(10, Math.min(26, fs + d)); localStorage.setItem("dtfont", fs); }
   if (what === "wrap") { wrapAt = Math.max(20, Math.min(200, wrapAt + d * 4)); localStorage.setItem("dtwrap", wrapAt); }
   if (what === "theme") { theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); }
+  if (what === "half") { half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); }
   if (what === "click") {
     clickMask = !clickMask;
     localStorage.setItem("dtclick", clickMask ? "on" : "off");
@@ -532,7 +593,7 @@ function renderSet() {
     `<div class="sethint">o URL 입력 &nbsp;·&nbsp; l 서재 목록<br>` +
     `숫자 1~9 · 0(10) · a(전부) — 펼칠 문단 수<br>` +
     `&minus; + 글자 크기 &nbsp;·&nbsp; , . 줄바꿈 폭<br>` +
-    `본문 클릭 — 전체 가리기 (설정에서 끌 수 있음)<br>` +
+    `h 반페이지 모드 &nbsp;·&nbsp; 본문 클릭 — 전체 가리기<br>` +
     `t 다크/라이트 &nbsp;·&nbsp; j k 문단 이동 &nbsp;·&nbsp; r 다시 불러오기 &nbsp;·&nbsp; 백틱 전부 접기</div>`;
   $("crumbs").innerHTML = `Preferences <span class="gt">&gt;</span> <b>Reader</b>`;
 }
@@ -571,6 +632,7 @@ document.addEventListener("keydown", (e) => {
     case "]": win++; clamp(); render(); break;
     case "[": win--; clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
+    case "h": half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); render(); break;
     case "t": theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); render(); break;
     case "g": mode = mode === "set" ? "read" : "set"; render(); e.preventDefault(); break;
     case "l": if (mode === "lib") { mode = "read"; render(); } else openLib(); e.preventDefault(); break;
