@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>DevTools</title>
+<title>DevTools - localhost:3000</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%239aa0a6' stroke-width='2'/%3E%3C/svg%3E">
 <style>
   /* Chrome DevTools 다크 테마를 그대로 흉내낸다. */
@@ -257,22 +257,57 @@ function renderRules() {
 
 /* ---------- 로드 ---------- */
 
+// 프록시 두 벌을 순서대로 시도한다.
+//   원격: Vercel 함수(미국 리전). "한국 IP만 허용" 규칙을 건 사이트에서는 403.
+//   로컬: 이 PC 의 server.mjs. 집 회선 IP 라 브라우저로 직접 여는 것과 같은 조건.
+// 그래서 원격이 막히면 로컬로 넘긴다. 로컬 프록시가 안 떠 있으면 그냥 실패한다.
+const REMOTE = "https://api.aquapado.com/reader/fetch?k=831fdbe3964d54871e8e2d4a084d279e20ffa4ba&url=";
+const LOCAL  = "http://127.0.0.1:4488/fetch?url=";
+const CHAIN  = [["원격", REMOTE], ["로컬", LOCAL]];
+
+async function via(base, url) {
+  const r = await fetch(base + encodeURIComponent(url));
+  const d = await r.json();
+  if (!d.ok) throw new Error(d.error || "불러오기 실패");
+  // 프록시는 차단 페이지도 200 으로 돌려준다 — 대상 사이트의 실제 코드로 판정한다.
+  if (d.status && d.status >= 400) throw new Error("대상 사이트가 거부 (HTTP " + d.status + ")");
+  return d;
+}
+
 async function load(url) {
   curUrl = url;
-  document.title = "DevTools - " + url.replace(/^https?:\/\//, "");
+  // 탭 제목은 절대 읽는 URL을 담지 않는다 — 화면을 접어도(보스키) 탭 스트립·
+  // 작업표시줄·Alt+Tab 미리보기에는 제목이 남기 때문. 개발자 탭으로 자연스러운
+  // 고정값을 쓴다.
   paras = []; idx = 0; render();
-  try {
-    const r = await fetch("https://api.aquapado.com/reader/fetch?k=831fdbe3964d54871e8e2d4a084d279e20ffa4ba&url=" + encodeURIComponent(url));
-    const d = await r.json();
-    if (!d.ok) { paras = ["불러오기 실패: " + d.error]; render(); return; }
-    paras = d.paras;
+
+  const fails = [];
+  for (const [name, base] of CHAIN) {
+    let d;
+    try { d = await via(base, url); }
+    catch (e) { fails.push(name + ": " + (e && e.message || e)); continue; }
+
+    if (d.note === "js-rendered") {
+      // 본문을 자바스크립트로 나중에 꽂는 사이트. 첫 HTML 에는 자리표시자뿐이라
+      // 메뉴 몇 줄을 본문인 척 보여주는 대신 사실대로 알린다.
+      paras = [
+        "본문을 가져오지 못했다. 이 사이트는 첫 HTML 에 본문이 없고 자바스크립트가 나중에 채운다.",
+        "텍스트만 받아오는 이 방식으로는 닿지 않는다. 아래는 껍데기에서 건진 것 — 대개 메뉴다.",
+        ...d.paras,
+      ];
+    } else {
+      paras = d.paras;
+    }
+
     const saved = LS.get("pos:" + url, null);
     if (saved) { idx = Math.min(saved.idx, paras.length - 1); win = saved.win || win; }
     LS.set("lastUrl", url);
     render();
-  } catch (e) {
-    paras = ["서버 오류: " + e]; render();
+    return;
   }
+
+  paras = ["불러오기 실패", ...fails];
+  render();
 }
 
 /* ---------- 입력 ---------- */
