@@ -27,6 +27,21 @@
   #topbar .sep { width: 1px; height: 16px; background: #3c4043; margin: 0 4px; }
   .tab { padding: 0 10px; line-height: 26px; cursor: default; white-space: nowrap; }
   .tab.on { color: #e8eaed; box-shadow: inset 0 -2px 0 #8ab4f8; }
+  .gear { width: 24px; text-align: center; font-size: 13px; cursor: default; }
+  .gear.on { color: #e8eaed; }
+  .setgrp { color: #9aa0a6; font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
+            text-transform: uppercase; letter-spacing: .04em; padding: 14px 0 6px 12px; }
+  .setrow { display: flex; align-items: center; gap: 10px; padding: 5px 12px;
+            font-family: "Segoe UI", system-ui, sans-serif; font-size: 12px; color: #e8eaed; }
+  .setrow:hover { background: #2b2c2f; }
+  .setlab { flex: 1; }
+  .setval { min-width: 62px; text-align: center; color: #f29766; font-family: Consolas, monospace; }
+  .setbtn { width: 22px; height: 20px; line-height: 18px; text-align: center; border: 1px solid #3c4043;
+            border-radius: 4px; background: #292a2d; color: #e8eaed; cursor: default; }
+  .setbtn:hover { border-color: #8ab4f8; }
+  .sethint { color: #6e7175; font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
+             padding: 10px 12px 0; line-height: 1.7; }
+
   #topbar .grow { flex: 1; }
   .warnbadge { color: #f28b82; margin-right: 6px; font-size: 11px; }
   .kebab { width: 26px; text-align: center; letter-spacing: 1px; }
@@ -111,8 +126,8 @@
   <span class="ticon active" title="">⌖</span>
   <span class="ticon">▤</span>
   <span class="sep"></span>
-  <span class="tab on">Elements</span>
-  <span class="tab">Console</span>
+  <span class="tab" data-view="read">Elements</span>
+  <span class="tab" data-view="lib">Console</span>
   <span class="tab">Sources</span>
   <span class="tab">Network</span>
   <span class="tab">Performance</span>
@@ -121,7 +136,7 @@
   <span class="tab">Security</span>
   <span class="grow"></span>
   <span class="warnbadge">▲ 2</span>
-  <span class="kebab">⋮</span>
+  <span class="gear" data-view="set">⚙</span><span class="kebab">⋮</span>
 </div>
 
 <div id="findbar">
@@ -212,7 +227,9 @@ function chunk(t, width) {
 
 function render() {
   document.documentElement.style.setProperty("--fs", fs + "px");
+  document.querySelectorAll("[data-view]").forEach((t) => t.classList.toggle("on", t.dataset.view === mode));
   if (mode === "lib") return renderLib();
+  if (mode === "set") return renderSet();
   const out = [];
   out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
   out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "ko"))));
@@ -270,7 +287,7 @@ function render() {
 }
 
 function renderRules() {
-  $("rules").innerHTML = `
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -412,6 +429,47 @@ async function openDoc(id) {
   }
 }
 
+
+/* ---------- 설정(기어 탭) ---------- */
+
+const SETS = [
+  ["win",  "펼칠 문단 수", () => Math.min(win, Math.max(1, paras.length)) + " / " + paras.length],
+  ["fs",   "글자 크기",    () => fs + "px"],
+  ["wrap", "줄바꿈 폭",    () => wrapAt + "자"],
+];
+
+function bump(what, d) {
+  if (what === "win")  { win = Math.max(1, Math.min(Math.max(1, paras.length), win + d)); boss = false; }
+  if (what === "fs")   { fs = Math.max(10, Math.min(26, fs + d)); localStorage.setItem("dtfont", fs); }
+  if (what === "wrap") { wrapAt = Math.max(20, Math.min(200, wrapAt + d * 4)); localStorage.setItem("dtwrap", wrapAt); }
+  render();
+}
+
+function renderSet() {
+  const rows = SETS.map(([k, label, val]) => `
+    <div class="setrow">
+      <span class="setlab">${label}</span>
+      <span class="setbtn" data-set="${k}" data-d="-1">&minus;</span>
+      <span class="setval">${val()}</span>
+      <span class="setbtn" data-set="${k}" data-d="1">+</span>
+    </div>`).join("");
+  $("tree").innerHTML =
+    `<div class="setgrp">Reader</div>${rows}` +
+    `<div class="setgrp">Shortcuts</div>` +
+    `<div class="sethint">o URL 입력 &nbsp;·&nbsp; l 서재 목록<br>` +
+    `숫자 1~9 · 0(10) · a(전부) — 펼칠 문단 수<br>` +
+    `&minus; + 글자 크기 &nbsp;·&nbsp; , . 줄바꿈 폭<br>` +
+    `j k 문단 이동 &nbsp;·&nbsp; r 다시 불러오기 &nbsp;·&nbsp; 백틱 전부 접기</div>`;
+  $("crumbs").innerHTML = `Preferences <span class="gt">&gt;</span> <b>Reader</b>`;
+}
+
+$("topbar").addEventListener("click", (e) => {
+  const t = e.target.closest("[data-view]");
+  if (!t) return;
+  if (t.dataset.view === "lib") { openLib(); return; }
+  mode = t.dataset.view; render();
+});
+
 /* ---------- 입력 ---------- */
 
 function clamp() {
@@ -439,6 +497,7 @@ document.addEventListener("keydown", (e) => {
     case "]": win++; clamp(); render(); break;
     case "[": win--; clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
+    case "g": mode = mode === "set" ? "read" : "set"; render(); e.preventDefault(); break;
     case "l": if (mode === "lib") { mode = "read"; render(); } else openLib(); e.preventDefault(); break;
     case "1": case "2": case "3": case "4": case "5":
     case "6": case "7": case "8": case "9":
@@ -453,6 +512,8 @@ document.addEventListener("keydown", (e) => {
 });
 
 $("tree").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-set]");
+  if (b) { bump(b.dataset.set, +b.dataset.d); return; }
   const doc = e.target.closest("[data-lib]");
   if (doc) { openDoc(doc.dataset.lib); return; }
   const row = e.target.closest("[data-i]");
