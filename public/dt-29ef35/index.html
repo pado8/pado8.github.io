@@ -65,6 +65,10 @@
   .tab { padding: 0 10px; line-height: 26px; cursor: default; white-space: nowrap; }
   .tab.on { color: var(--fg); box-shadow: inset 0 -2px 0 var(--accent); }
   .gear { width: 24px; text-align: center; font-size: 13px; cursor: default; }
+  .savebtn { width: 24px; text-align: center; font-size: 13px; cursor: default; color: var(--muted); }
+  .savebtn:hover { color: var(--accent); }
+  .savemsg { color: var(--accent); font-size: 11px; margin-right: 8px; white-space: nowrap;
+             font-family: "Segoe UI", system-ui, sans-serif; }
   .gear.on { color: var(--fg); }
   .setgrp { color: var(--muted); font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
             text-transform: uppercase; letter-spacing: .04em; padding: 14px 0 6px 12px; }
@@ -178,7 +182,9 @@
   <span class="tab">Application</span>
   <span class="tab" data-view="set">Security</span>
   <span class="grow"></span>
+  <span class="savemsg" id="savemsg"></span>
   <span class="warnbadge">▲ 2</span>
+  <span class="savebtn" data-act="save" title="Export">⭳</span>
   <span class="gear" data-view="set">⚙</span><span class="kebab">⋮</span>
 </div>
 
@@ -364,7 +370,7 @@ function render() {
 }
 
 function renderRules() {
-  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -491,6 +497,42 @@ function renderFake() {
   $("fake").innerHTML = out.join("");
 }
 
+
+/* ---------- 서재에 저장 ---------- */
+
+// 리더 페이지는 프록시로 받아온 본문을 그대로 서재에 넣는다.
+let saveMsg = "", msgTimer = 0;
+
+function setMsg(t) {
+  saveMsg = t;
+  const el = $("savemsg");
+  if (el) el.textContent = t;
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(() => { saveMsg = ""; const e2 = $("savemsg"); if (e2) e2.textContent = ""; }, 8000);
+}
+
+async function saveDoc() {
+  if (!curUrl || !paras.length) { setMsg("저장할 본문이 없다"); return; }
+  setMsg("저장 중…");
+  try {
+    const r = await fetch(LIBAPI + "save", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ url: curUrl, title: document.title, paras }),
+    });
+    let d = null;
+    try { d = await r.json(); } catch { /* JSON 이 아닌 응답 */ }
+    if (d && d.ok) setMsg("저장됨 " + d.chars + "자");
+    else setMsg("저장 실패 · HTTP " + r.status + ((d && d.error) ? " · " + d.error : ""));
+  } catch (err) {
+    setMsg("저장 실패 · " + ((err && err.message) || err));
+  }
+}
+
+$("topbar").addEventListener("click", (e) => {
+  if (e.target.closest('[data-act="save"]')) { saveDoc(); return; }
+});
+
 /* ---------- 서재 ---------- */
 
 // 북마클릿이 집에서 저장해둔 것을 여기서 꺼내 읽는다. 목록도 DOM 트리 모양으로
@@ -589,6 +631,10 @@ function renderSet() {
     </div>`).join("");
   $("tree").innerHTML =
     `<div class="setgrp">Reader</div>${rows}` +
+    `<div class="setgrp">Library</div>` +
+    `<div class="setrow"><span class="setlab">지금 문서 저장</span>` +
+    `<span class="setbtn" data-act="save" style="width:auto;padding:0 10px">저장</span></div>` +
+    `<div class="sethint">${esc(saveMsg || "상단바의 ⭳ 또는 s 키로도 저장한다")}</div>` +
     `<div class="setgrp">Shortcuts</div>` +
     `<div class="sethint">o URL 입력 &nbsp;·&nbsp; l 서재 목록<br>` +
     `숫자 1~9 · 0(10) · a(전부) — 펼칠 문단 수<br>` +
@@ -633,6 +679,7 @@ document.addEventListener("keydown", (e) => {
     case "[": win--; clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
     case "h": half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); render(); break;
+    case "s": saveDoc(); e.preventDefault(); break;
     case "t": theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); render(); break;
     case "g": mode = mode === "set" ? "read" : "set"; render(); e.preventDefault(); break;
     case "l": if (mode === "lib") { mode = "read"; render(); } else openLib(); e.preventDefault(); break;
@@ -649,6 +696,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 $("tree").addEventListener("click", (e) => {
+  if (e.target.closest('[data-act="save"]')) { saveDoc(); render(); return; }
   const b = e.target.closest("[data-set]");
   if (b) { bump(b.dataset.set, +b.dataset.d); return; }
   const doc = e.target.closest("[data-lib]");
