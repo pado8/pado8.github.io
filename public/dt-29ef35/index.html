@@ -239,7 +239,7 @@ function render() {
     if (parts.length === 1) {
       out.push(line(4,
         `<span class="arrow">▼</span>` + open("p", attr("class", "para")) +
-        `<span class="txt">"${esc(parts[0])}"</span>` + close("p"),
+        `<span class="txt">${esc(parts[0])}</span>` + close("p"),
         i === idx ? "sel" : "", `data-i="${i}"`));
       continue;
     }
@@ -247,7 +247,7 @@ function render() {
     out.push(line(4, `<span class="arrow">▼</span>` + open("p", attr("class", "para")),
       i === idx ? "sel" : "", `data-i="${i}"`));
     for (const part of parts) {
-      out.push(line(5, `<span class="txt">"${esc(part)}"</span>`, "", `data-i="${i}"`));
+      out.push(line(5, `<span class="txt">${esc(part)}</span>`, "", `data-i="${i}"`));
     }
     out.push(line(4, close("p")));
   }
@@ -367,7 +367,7 @@ function renderLib() {
   }
   lib.forEach((it, i) => {
     const when = String(it.updated_at || "").slice(0, 10);
-    const label = boss ? "…" : `"${esc(it.title || it.url)}"`;
+    const label = boss ? "…" : esc(it.title || it.url);
     out.push(line(3,
       `<span class="arrow">${boss ? "▶" : "▼"}</span>` + open("li", attr("data-id", it.id)) +
       `<span class="txt">${label}</span>` +
