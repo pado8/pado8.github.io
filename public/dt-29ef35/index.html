@@ -6,11 +6,48 @@
 <title>DevTools - localhost:3000</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%239aa0a6' stroke-width='2'/%3E%3C/svg%3E">
 <style>
+  /* 진짜 DevTools 도 두 테마를 다 쓴다. 라이트 쪽 구문 색(태그 보라·속성명
+     갈색·속성값 파랑)은 크롬이 실제로 쓰는 조합 그대로다. */
+  :root {
+    --bg: #202124;
+    --fg: #e8eaed;
+    --panel: #292a2d;
+    --line: #3c4043;
+    --line2: #35363a;
+    --muted: #9aa0a6;
+    --dim: #6e7175;
+    --accent: #8ab4f8;
+    --tag: #5db0d7;
+    --attr: #9bbbdc;
+    --val: #f29766;
+    --hover: #2b2c2f;
+    --sel: #1f3d5c;
+    --sels: #d7d7db;
+    --warn: #f28b82;
+  }
+  :root[data-theme="light"] {
+    --bg: #ffffff;
+    --fg: #333333;
+    --panel: #f3f3f3;
+    --line: #cdcdcd;
+    --line2: #e0e0e0;
+    --muted: #5f6368;
+    --dim: #80868b;
+    --accent: #1a73e8;
+    --tag: #881280;
+    --attr: #994500;
+    --val: #1a1aa6;
+    --hover: #f0f0f0;
+    --sel: #cfe8fc;
+    --sels: #222222;
+    --warn: #d93025;
+  }
+
   /* Chrome DevTools 다크 테마를 그대로 흉내낸다. */
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body {
-    background: #202124; color: #e8eaed;
+    background: var(--bg); color: var(--fg);
     font: 12px/1.5 Consolas, "Courier New", monospace;
     overflow: hidden; user-select: none;
   }
@@ -18,106 +55,106 @@
   /* ── 상단 탭바 ── */
   #topbar {
     display: flex; align-items: center; height: 27px;
-    background: #292a2d; border-bottom: 1px solid #3c4043;
+    background: var(--panel); border-bottom: 1px solid var(--line);
     font-family: "Segoe UI", system-ui, sans-serif; font-size: 12px;
-    color: #9aa0a6; flex-shrink: 0;
+    color: var(--muted); flex-shrink: 0;
   }
   .ticon { width: 26px; text-align: center; font-size: 13px; cursor: default; }
-  .ticon.active { color: #8ab4f8; }
-  #topbar .sep { width: 1px; height: 16px; background: #3c4043; margin: 0 4px; }
+  .ticon.active { color: var(--accent); }
+  #topbar .sep { width: 1px; height: 16px; background: var(--line); margin: 0 4px; }
   .tab { padding: 0 10px; line-height: 26px; cursor: default; white-space: nowrap; }
-  .tab.on { color: #e8eaed; box-shadow: inset 0 -2px 0 #8ab4f8; }
+  .tab.on { color: var(--fg); box-shadow: inset 0 -2px 0 var(--accent); }
   .gear { width: 24px; text-align: center; font-size: 13px; cursor: default; }
-  .gear.on { color: #e8eaed; }
-  .setgrp { color: #9aa0a6; font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
+  .gear.on { color: var(--fg); }
+  .setgrp { color: var(--muted); font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
             text-transform: uppercase; letter-spacing: .04em; padding: 14px 0 6px 12px; }
   .setrow { display: flex; align-items: center; gap: 10px; padding: 5px 12px;
-            font-family: "Segoe UI", system-ui, sans-serif; font-size: 12px; color: #e8eaed; }
-  .setrow:hover { background: #2b2c2f; }
+            font-family: "Segoe UI", system-ui, sans-serif; font-size: 12px; color: var(--fg); }
+  .setrow:hover { background: var(--hover); }
   .setlab { flex: 1; }
-  .setval { min-width: 62px; text-align: center; color: #f29766; font-family: Consolas, monospace; }
-  .setbtn { width: 22px; height: 20px; line-height: 18px; text-align: center; border: 1px solid #3c4043;
-            border-radius: 4px; background: #292a2d; color: #e8eaed; cursor: default; }
-  .setbtn:hover { border-color: #8ab4f8; }
-  .sethint { color: #6e7175; font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
+  .setval { min-width: 62px; text-align: center; color: var(--val); font-family: Consolas, monospace; }
+  .setbtn { width: 22px; height: 20px; line-height: 18px; text-align: center; border: 1px solid var(--line);
+            border-radius: 4px; background: var(--panel); color: var(--fg); cursor: default; }
+  .setbtn:hover { border-color: var(--accent); }
+  .sethint { color: var(--dim); font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
              padding: 10px 12px 0; line-height: 1.7; }
 
   #topbar .grow { flex: 1; }
-  .warnbadge { color: #f28b82; margin-right: 6px; font-size: 11px; }
+  .warnbadge { color: var(--warn); margin-right: 6px; font-size: 11px; }
   .kebab { width: 26px; text-align: center; letter-spacing: 1px; }
 
   /* ── 본문 분할 ── */
   #main { display: flex; height: calc(100% - 27px - 24px); }
   #treeWrap { flex: 1; min-width: 200px; overflow: auto; padding: 2px 0 40px; font-size: var(--fs, 13px); }
-  #dragbar { width: 1px; background: #3c4043; cursor: col-resize; position: relative; }
+  #dragbar { width: 1px; background: var(--line); cursor: col-resize; position: relative; }
   #dragbar::after { content: ""; position: absolute; left: -3px; right: -3px; top: 0; bottom: 0; }
   #styles {
     width: 320px; min-width: 120px; max-width: 70vw; flex-shrink: 0;
-    border-left: 1px solid #3c4043; overflow: auto;
+    border-left: 1px solid var(--line); overflow: auto;
     font-family: Consolas, monospace;
   }
 
   /* ── DOM 트리 ── */
   .row { padding: 0 4px 0 0; white-space: pre-wrap; word-break: break-all; cursor: default; }
-  .row:hover { background: #2b2c2f; }
-  .row.sel { background: #1f3d5c; }
-  .arrow { display: inline-block; width: 11px; color: #9aa0a6; font-size: 9px; }
-  .tagname { color: #5db0d7; }
-  .attr { color: #9bbbdc; }
-  .attrval { color: #f29766; }
-  .brak { color: #9aa0a6; }
-  .txt { color: #e8eaed; }
-  .dots { color: #9aa0a6; }
-  .doctype { color: #9aa0a6; }
+  .row:hover { background: var(--hover); }
+  .row.sel { background: var(--sel); }
+  .arrow { display: inline-block; width: 11px; color: var(--muted); font-size: 9px; }
+  .tagname { color: var(--tag); }
+  .attr { color: var(--attr); }
+  .attrval { color: var(--val); }
+  .brak { color: var(--muted); }
+  .txt { color: var(--fg); }
+  .dots { color: var(--muted); }
+  .doctype { color: var(--muted); }
 
   /* ── Styles 패널 ── */
   #styles .stabs {
     display: flex; height: 27px; align-items: center;
-    border-bottom: 1px solid #3c4043; background: #292a2d;
-    font-family: "Segoe UI", system-ui, sans-serif; color: #9aa0a6;
+    border-bottom: 1px solid var(--line); background: var(--panel);
+    font-family: "Segoe UI", system-ui, sans-serif; color: var(--muted);
     position: sticky; top: 0;
   }
   #styles .stabs .tab { padding: 0 8px; font-size: 12px; }
   #styles .sfilter {
     display: flex; align-items: center; gap: 8px; padding: 3px 6px;
-    border-bottom: 1px solid #3c4043; color: #9aa0a6;
+    border-bottom: 1px solid var(--line); color: var(--muted);
     font-family: "Segoe UI", system-ui, sans-serif; font-size: 11px;
   }
   #styles .sfilter .box {
-    flex: 1; border: 1px solid #3c4043; border-radius: 8px;
-    padding: 1px 8px; color: #6e7175;
+    flex: 1; border: 1px solid var(--line); border-radius: 8px;
+    padding: 1px 8px; color: var(--dim);
   }
-  .rule { padding: 4px 8px 6px; border-bottom: 1px solid #35363a; }
-  .rule .src { float: right; color: #9aa0a6; font-size: 11px; }
-  .sels { color: #d7d7db; }
-  .prop { color: #9bbbdc; padding-left: 16px; }
-  .pval { color: #f29766; }
+  .rule { padding: 4px 8px 6px; border-bottom: 1px solid var(--line2); }
+  .rule .src { float: right; color: var(--muted); font-size: 11px; }
+  .sels { color: var(--sels); }
+  .prop { color: var(--attr); padding-left: 16px; }
+  .pval { color: var(--val); }
   .rule .cb { display: inline-block; width: 10px; }
 
   /* ── 하단 breadcrumb ── */
   #crumbs {
-    height: 24px; line-height: 23px; background: #292a2d;
-    border-top: 1px solid #3c4043; padding: 0 8px; color: #9aa0a6;
+    height: 24px; line-height: 23px; background: var(--panel);
+    border-top: 1px solid var(--line); padding: 0 8px; color: var(--muted);
     font-family: "Segoe UI", system-ui, sans-serif; font-size: 12px;
     white-space: nowrap; overflow: hidden; flex-shrink: 0;
   }
-  #crumbs b { color: #e8eaed; font-weight: normal; }
-  #crumbs .gt { margin: 0 5px; color: #6e7175; }
+  #crumbs b { color: var(--fg); font-weight: normal; }
+  #crumbs .gt { margin: 0 5px; color: var(--dim); }
 
   /* ── URL 입력(검색바처럼 위장) ── */
   #findbar {
     display: none; position: absolute; top: 27px; right: 340px; z-index: 5;
-    background: #292a2d; border: 1px solid #3c4043; border-top: none;
+    background: var(--panel); border: 1px solid var(--line); border-top: none;
     padding: 4px 6px; box-shadow: 0 2px 6px rgba(0,0,0,.4);
     font-family: "Segoe UI", system-ui, sans-serif;
   }
   #findbar input {
-    width: 420px; background: #202124; color: #e8eaed;
-    border: 1px solid #3c4043; padding: 3px 8px; font: 12px Consolas, monospace;
+    width: 420px; background: var(--bg); color: var(--fg);
+    border: 1px solid var(--line); padding: 3px 8px; font: 12px Consolas, monospace;
     outline: none;
   }
-  #findbar input:focus { border-color: #8ab4f8; }
-  #findbar .hint { color: #6e7175; font-size: 11px; margin-left: 6px; }
+  #findbar input:focus { border-color: var(--accent); }
+  #findbar .hint { color: var(--dim); font-size: 11px; margin-left: 6px; }
 </style>
 </head>
 <body>
@@ -218,6 +255,7 @@ const numLS = (k, d, lo, hi) => {
   const v = parseInt(localStorage.getItem(k) || "", 10);
   return Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d;
 };
+let theme = localStorage.getItem("dttheme") === "light" ? "light" : "dark";
 let fs = numLS("dtfont", 13, 10, 26);
 let wrapAt = numLS("dtwrap", 46, 20, 200);
 
@@ -251,6 +289,7 @@ function chunk(t, width) {
 
 function render() {
   document.documentElement.style.setProperty("--fs", fs + "px");
+  document.documentElement.dataset.theme = theme;
   document.querySelectorAll("[data-view]").forEach((t) => t.classList.toggle("on", t.dataset.view === mode));
   if (mode === "lib") return renderLib();
   if (mode === "set") return renderSet();
@@ -312,7 +351,7 @@ function render() {
 }
 
 function renderRules() {
-  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -461,12 +500,14 @@ const SETS = [
   ["win",  "펼칠 문단 수", () => Math.min(win, Math.max(1, paras.length)) + " / " + paras.length],
   ["fs",   "글자 크기",    () => fs + "px"],
   ["wrap", "줄바꿈 폭",    () => wrapAt + "자"],
+  ["theme", "테마",        () => (theme === "light" ? "라이트" : "다크")],
 ];
 
 function bump(what, d) {
   if (what === "win")  { win = Math.max(1, Math.min(Math.max(1, paras.length), win + d)); boss = false; }
   if (what === "fs")   { fs = Math.max(10, Math.min(26, fs + d)); localStorage.setItem("dtfont", fs); }
   if (what === "wrap") { wrapAt = Math.max(20, Math.min(200, wrapAt + d * 4)); localStorage.setItem("dtwrap", wrapAt); }
+  if (what === "theme") { theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); }
   render();
 }
 
@@ -484,7 +525,7 @@ function renderSet() {
     `<div class="sethint">o URL 입력 &nbsp;·&nbsp; l 서재 목록<br>` +
     `숫자 1~9 · 0(10) · a(전부) — 펼칠 문단 수<br>` +
     `&minus; + 글자 크기 &nbsp;·&nbsp; , . 줄바꿈 폭<br>` +
-    `j k 문단 이동 &nbsp;·&nbsp; r 다시 불러오기 &nbsp;·&nbsp; 백틱 전부 접기</div>`;
+    `t 다크/라이트 &nbsp;·&nbsp; j k 문단 이동 &nbsp;·&nbsp; r 다시 불러오기 &nbsp;·&nbsp; 백틱 전부 접기</div>`;
   $("crumbs").innerHTML = `Preferences <span class="gt">&gt;</span> <b>Reader</b>`;
 }
 
@@ -522,6 +563,7 @@ document.addEventListener("keydown", (e) => {
     case "]": win++; clamp(); render(); break;
     case "[": win--; clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
+    case "t": theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); render(); break;
     case "g": mode = mode === "set" ? "read" : "set"; render(); e.preventDefault(); break;
     case "l": if (mode === "lib") { mode = "read"; render(); } else openLib(); e.preventDefault(); break;
     case "1": case "2": case "3": case "4": case "5":
