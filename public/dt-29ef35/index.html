@@ -168,7 +168,7 @@ const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, 
 
 let paras = [];      // 문단들
 let idx = 0;         // 현재 창 시작
-let win = 3;         // 펼칠 문단 수
+let win = Infinity;  // 펼칠 문단 수 — 기본은 전부. [ 로 줄이면 창 모드가 된다
 let boss = false;    // 전부 접힘
 let curUrl = "";
 
@@ -229,7 +229,7 @@ function render() {
   const sel = $("tree").querySelector(".row.sel") || $("tree").querySelector(`[data-i="${idx}"]`);
   if (sel) sel.scrollIntoView({ block: "center" });
 
-  if (curUrl) LS.set("pos:" + curUrl, { idx, win });
+  if (curUrl) LS.set("pos2:" + curUrl, { idx, win });
 }
 
 function renderRules() {
@@ -299,7 +299,9 @@ async function load(url) {
       paras = d.paras;
     }
 
-    const saved = LS.get("pos:" + url, null);
+    // 기본값 Infinity 를 실제 문단 수로 확정한다 — 그래야 [ 가 첫 입력부터 먹는다.
+    if (!Number.isFinite(win)) win = Math.max(1, paras.length);
+    const saved = LS.get("pos2:" + url, null);
     if (saved) { idx = Math.min(saved.idx, paras.length - 1); win = saved.win || win; }
     LS.set("lastUrl", url);
     render();
@@ -314,7 +316,7 @@ async function load(url) {
 
 function clamp() {
   idx = Math.max(0, Math.min(idx, Math.max(0, paras.length - 1)));
-  win = Math.max(1, Math.min(20, win));
+  win = Math.max(1, Math.min(Math.max(1, paras.length), win));
 }
 
 document.addEventListener("keydown", (e) => {
