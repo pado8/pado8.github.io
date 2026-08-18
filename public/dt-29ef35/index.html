@@ -186,6 +186,30 @@ let idx = 0;         // 현재 창 시작
 let win = Infinity;  // 펼칠 문단 수 — 기본은 전부. [ 로 줄이면 창 모드가 된다
 let boss = false;    // 전부 접힘
 let curUrl = "";
+// 트리를 클릭하면 본문을 통째로 가리고 개발 문서처럼 보이는 문장으로 바꾼다.
+// 예전엔 클릭이 그 문단으로 점프하는 동작이었는데, 접혔다 펼쳐졌다 해서 헷갈렸다.
+let mask = false;
+const MASK_TEXT = [
+  "요청이 들어오면 미들웨어가 등록된 순서대로 실행된다.",
+  "캐시 키는 경로와 쿼리스트링을 합쳐 만든다.",
+  "빌드 산출물은 내용 해시가 붙은 파일명으로 배포한다.",
+  "의존성이 순환하면 번들러가 경고를 남기고 넘어간다.",
+  "테스트는 단위·통합·종단 세 갈래로 나누어 돌린다.",
+  "마이그레이션은 되돌릴 수 있는 형태로 작성한다.",
+  "인덱스가 없으면 정렬 단계에서 비용이 급격히 커진다.",
+  "토큰은 만료 시각을 함께 저장해 두어야 한다.",
+  "로그 레벨은 코드가 아니라 환경 변수로 조절한다.",
+  "재시도 간격은 지수 백오프로 늘려 나간다.",
+  "큐가 밀리면 소비자 수부터 확인하는 편이 빠르다.",
+  "정적 자산은 CDN 으로 넘기고 원본 접근은 잠근다.",
+  "스키마 변경은 배포보다 한 단계 먼저 적용한다.",
+  "타임아웃은 상위 호출보다 짧게 잡아야 의미가 있다.",
+  "에러를 삼키지 말고 처리할 수 있는 경계까지 올린다.",
+  "설정 기본값은 코드에 두고 비밀은 환경에 둔다.",
+  "동시성 문제는 재현 조건을 좁히는 것부터 시작한다.",
+  "릴리즈 노트는 구현이 아니라 사용자 관점으로 적는다."
+];
+
 let mode = "read";   // "read" | "lib" — 서재 목록을 보는 중인지
 let lib = [];        // 서재 항목들
 
@@ -230,6 +254,7 @@ function render() {
   document.querySelectorAll("[data-view]").forEach((t) => t.classList.toggle("on", t.dataset.view === mode));
   if (mode === "lib") return renderLib();
   if (mode === "set") return renderSet();
+  const src = mask ? MASK_TEXT : paras;
   const out = [];
   out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
   out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "ko"))));
@@ -238,13 +263,13 @@ function render() {
   out.push(line(2, `<span class="arrow">▼</span>` + open("div", attr("id", "app"))));
   out.push(line(3, `<span class="arrow">▼</span>` + open("div", attr("class", "content"))));
 
-  if (!paras.length) {
+  if (!src.length) {
     out.push(line(4, `<span class="dots">${boss ? "" : "(o 를 눌러 URL 입력)"}</span>`));
   }
 
-  const end = Math.min(paras.length, idx + win);
-  for (let i = 0; i < paras.length; i++) {
-    const expanded = !boss && i >= idx && i < end;
+  const end = mask ? src.length : Math.min(src.length, idx + win);
+  for (let i = 0; i < src.length; i++) {
+    const expanded = !boss && i >= (mask ? 0 : idx) && i < end;
     if (!expanded) {
       out.push(line(4,
         `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
@@ -252,17 +277,17 @@ function render() {
         "", `data-i="${i}"`));
       continue;
     }
-    const parts = chunk(paras[i], wrapAt);
+    const parts = chunk(src[i], wrapAt);
     if (parts.length === 1) {
       out.push(line(4,
         `<span class="arrow">▼</span>` + open("p", attr("class", "para")) +
         `<span class="txt">${esc(parts[0])}</span>` + close("p"),
-        i === idx ? "sel" : "", `data-i="${i}"`));
+        !mask && i === idx ? "sel" : "", `data-i="${i}"`));
       continue;
     }
     // 여러 줄로 끊길 땐 여는·닫는 태그를 따로 세워 진짜 트리처럼 보이게 한다.
     out.push(line(4, `<span class="arrow">▼</span>` + open("p", attr("class", "para")),
-      i === idx ? "sel" : "", `data-i="${i}"`));
+      !mask && i === idx ? "sel" : "", `data-i="${i}"`));
     for (const part of parts) {
       out.push(line(5, `<span class="txt">${esc(part)}</span>`, "", `data-i="${i}"`));
     }
@@ -516,10 +541,9 @@ $("tree").addEventListener("click", (e) => {
   if (b) { bump(b.dataset.set, +b.dataset.d); return; }
   const doc = e.target.closest("[data-lib]");
   if (doc) { openDoc(doc.dataset.lib); return; }
-  const row = e.target.closest("[data-i]");
-  if (!row) return;
-  idx = parseInt(row.dataset.i, 10);
-  boss = false; clamp(); render();
+  if (mode !== "read") return;
+  mask = !mask;          // 본문 가리기 토글 — 클릭이 하는 유일한 일이다
+  render();
 });
 
 function toggleFind(show) {
