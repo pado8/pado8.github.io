@@ -33,7 +33,7 @@
 
   /* ── 본문 분할 ── */
   #main { display: flex; height: calc(100% - 27px - 24px); }
-  #treeWrap { flex: 1; min-width: 200px; overflow: auto; padding: 2px 0 40px; }
+  #treeWrap { flex: 1; min-width: 200px; overflow: auto; padding: 2px 0 40px; font-size: var(--fs, 13px); }
   #dragbar { width: 1px; background: #3c4043; cursor: col-resize; position: relative; }
   #dragbar::after { content: ""; position: absolute; left: -3px; right: -3px; top: 0; bottom: 0; }
   #styles {
@@ -171,6 +171,18 @@ let idx = 0;         // 현재 창 시작
 let win = Infinity;  // 펼칠 문단 수 — 기본은 전부. [ 로 줄이면 창 모드가 된다
 let boss = false;    // 전부 접힘
 let curUrl = "";
+let mode = "read";   // "read" | "lib" — 서재 목록을 보는 중인지
+let lib = [];        // 서재 항목들
+
+// 글자 크기·줄바꿈 폭은 사이트와 무관한 취향이라 전역으로 기억한다.
+const numLS = (k, d, lo, hi) => {
+  const v = parseInt(localStorage.getItem(k) || "", 10);
+  return Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d;
+};
+let fs = numLS("dtfont", 13, 10, 26);
+let wrapAt = numLS("dtwrap", 46, 20, 200);
+
+const LIBAPI = "https://api.aquapado.com/reader/library?k=831fdbe3964d54871e8e2d4a084d279e20ffa4ba&do=";
 
 const LS = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
@@ -186,7 +198,21 @@ const open  = (t, a = "") => `<span class="brak">&lt;</span><span class="tagname
 const close = (t) => `<span class="brak">&lt;/</span><span class="tagname">${t}</span><span class="brak">&gt;</span>`;
 const attr  = (n, v) => ` <span class="attr">${n}</span><span class="brak">=</span><span class="attrval">"${v}"</span>`;
 
+function chunk(t, width) {
+  if (t.length <= width) return [t];
+  const out = [];
+  let cur = "";
+  for (const w of t.split(/(\s+)/)) {
+    if (cur.trim() && (cur + w).trim().length > width) { out.push(cur.trim()); cur = ""; }
+    cur += w;
+  }
+  if (cur.trim()) out.push(cur.trim());
+  return out;
+}
+
 function render() {
+  document.documentElement.style.setProperty("--fs", fs + "px");
+  if (mode === "lib") return renderLib();
   const out = [];
   out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
   out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "ko"))));
@@ -202,17 +228,28 @@ function render() {
   const end = Math.min(paras.length, idx + win);
   for (let i = 0; i < paras.length; i++) {
     const expanded = !boss && i >= idx && i < end;
-    if (expanded) {
-      out.push(line(4,
-        `<span class="arrow">▼</span>` + open("p", attr("class", "para")) +
-        `<span class="txt">"${esc(paras[i])}"</span>` + close("p"),
-        i === idx ? "sel" : "", `data-i="${i}"`));
-    } else {
+    if (!expanded) {
       out.push(line(4,
         `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
         `<span class="dots">…</span>` + close("p"),
         "", `data-i="${i}"`));
+      continue;
     }
+    const parts = chunk(paras[i], wrapAt);
+    if (parts.length === 1) {
+      out.push(line(4,
+        `<span class="arrow">▼</span>` + open("p", attr("class", "para")) +
+        `<span class="txt">"${esc(parts[0])}"</span>` + close("p"),
+        i === idx ? "sel" : "", `data-i="${i}"`));
+      continue;
+    }
+    // 여러 줄로 끊길 땐 여는·닫는 태그를 따로 세워 진짜 트리처럼 보이게 한다.
+    out.push(line(4, `<span class="arrow">▼</span>` + open("p", attr("class", "para")),
+      i === idx ? "sel" : "", `data-i="${i}"`));
+    for (const part of parts) {
+      out.push(line(5, `<span class="txt">"${esc(part)}"</span>`, "", `data-i="${i}"`));
+    }
+    out.push(line(4, close("p")));
   }
 
   out.push(line(3, close("div")));
@@ -312,6 +349,69 @@ async function load(url) {
   render();
 }
 
+
+/* ---------- 서재 ---------- */
+
+// 북마클릿이 집에서 저장해둔 것을 여기서 꺼내 읽는다. 목록도 DOM 트리 모양으로
+// 그려서 화면이 갑자기 딴 물건이 되지 않게 한다.
+function renderLib() {
+  const out = [];
+  out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
+  out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "ko"))));
+  out.push(line(1, `<span class="arrow">▶</span>` + open("head") + `<span class="dots">…</span>` + close("head")));
+  out.push(line(1, `<span class="arrow">▼</span>` + open("body")));
+  out.push(line(2, `<span class="arrow">▼</span>` + open("ul", attr("class", "doc-list"))));
+
+  if (!lib.length) {
+    out.push(line(3, `<span class="dots">${boss ? "" : "(비어 있음 — 북마클릿에서 s 로 저장)"}</span>`));
+  }
+  lib.forEach((it, i) => {
+    const when = String(it.updated_at || "").slice(0, 10);
+    const label = boss ? "…" : `"${esc(it.title || it.url)}"`;
+    out.push(line(3,
+      `<span class="arrow">${boss ? "▶" : "▼"}</span>` + open("li", attr("data-id", it.id)) +
+      `<span class="txt">${label}</span>` +
+      (boss ? "" : `<span class="dots"> ${when} · ${it.chars}자</span>`) + close("li"),
+      i === idx ? "sel" : "", `data-lib="${it.id}"`));
+  });
+
+  out.push(line(2, close("ul")));
+  out.push(line(1, close("body")));
+  out.push(line(0, close("html")));
+  $("tree").innerHTML = out.join("");
+  $("crumbs").innerHTML =
+    `html <span class="gt">&gt;</span> body <span class="gt">&gt;</span> ul.doc-list ` +
+    `<span class="gt">&gt;</span> <b>li</b> <span class="gt">·</span> ${lib.length}개`;
+}
+
+async function openLib() {
+  mode = "lib"; idx = 0; lib = []; render();
+  try {
+    const r = await fetch(LIBAPI + "list");
+    const d = await r.json();
+    lib = d.ok ? d.items : [];
+    if (!d.ok) lib = [];
+  } catch { lib = []; }
+  render();
+}
+
+async function openDoc(id) {
+  try {
+    const r = await fetch(LIBAPI + "get&id=" + encodeURIComponent(id));
+    const d = await r.json();
+    if (!d.ok) { paras = ["불러오기 실패: " + (d.error || "")]; mode = "read"; render(); return; }
+    curUrl = d.doc.url;
+    paras = d.doc.paras || [];
+    mode = "read"; idx = 0;
+    if (!Number.isFinite(win)) win = Math.max(1, paras.length);
+    const saved = LS.get("pos2:" + curUrl, null);
+    if (saved) { idx = Math.min(saved.idx, paras.length - 1); win = saved.win || win; }
+    clamp(); render();
+  } catch (e) {
+    paras = ["불러오기 실패: " + e]; mode = "read"; render();
+  }
+}
+
 /* ---------- 입력 ---------- */
 
 function clamp() {
@@ -339,10 +439,22 @@ document.addEventListener("keydown", (e) => {
     case "]": win++; clamp(); render(); break;
     case "[": win--; clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
+    case "l": if (mode === "lib") { mode = "read"; render(); } else openLib(); e.preventDefault(); break;
+    case "1": case "2": case "3": case "4": case "5":
+    case "6": case "7": case "8": case "9":
+      win = +e.key; boss = false; clamp(); render(); break;
+    case "0": win = 10; boss = false; clamp(); render(); break;
+    case "a": win = Math.max(1, paras.length); boss = false; clamp(); render(); break;
+    case "-": case "_": fs = Math.max(10, fs - 1); localStorage.setItem("dtfont", fs); render(); break;
+    case "+": case "=": fs = Math.min(26, fs + 1); localStorage.setItem("dtfont", fs); render(); break;
+    case ",": case "<": wrapAt = Math.max(20, wrapAt - 4); localStorage.setItem("dtwrap", wrapAt); render(); break;
+    case ".": case ">": wrapAt = Math.min(200, wrapAt + 4); localStorage.setItem("dtwrap", wrapAt); render(); break;
   }
 });
 
 $("tree").addEventListener("click", (e) => {
+  const doc = e.target.closest("[data-lib]");
+  if (doc) { openDoc(doc.dataset.lib); return; }
   const row = e.target.closest("[data-i]");
   if (!row) return;
   idx = parseInt(row.dataset.i, 10);
