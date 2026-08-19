@@ -772,9 +772,9 @@
   function updateNav() {
     const p = $("btnPrev"), n = $("btnNext");
     if (libMode && libPos >= 0 && libItems.length) {
-      // 서재 보기 모드: ‹ › 는 서재 목록의 앞뒤 항목으로 이동
-      if (p) p.classList.toggle("off", libPos <= 0);
-      if (n) n.classList.toggle("off", libPos >= libItems.length - 1);
+      // 서재 보기 모드: ‹ 이전화=아래(오래된), › 다음화=위(최신). 목록은 최신이 인덱스 0.
+      if (p) p.classList.toggle("off", libPos >= libItems.length - 1);
+      if (n) n.classList.toggle("off", libPos <= 0);
     } else {
       if (p) p.classList.toggle("off", !prevUrl);
       if (n) n.classList.toggle("off", !nextUrl);
@@ -973,12 +973,14 @@
   S.querySelector(".topbar").addEventListener("click", (e) => {
     if (e.target.closest('[data-act="save"]')) { saveDoc(); return; }
     if (e.target.closest("#btnPrev")) {
-      if (libMode && libPos > 0 && libItems.length) openDoc(libItems[libPos - 1].id);
+      // 서재는 최신 저장이 위(인덱스 0). '이전화'는 더 아래(오래된) = libPos+1
+      if (libMode && libPos >= 0 && libPos < libItems.length - 1) openDoc(libItems[libPos + 1].id);
       else gotoChapter(prevUrl);
       return;
     }
     if (e.target.closest("#btnNext")) {
-      if (libMode && libPos >= 0 && libPos < libItems.length - 1) openDoc(libItems[libPos + 1].id);
+      // '다음화'는 더 위(최신) = libPos-1
+      if (libMode && libPos > 0 && libItems.length) openDoc(libItems[libPos - 1].id);
       else gotoChapter(nextUrl);
       return;
     }
