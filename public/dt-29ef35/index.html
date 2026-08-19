@@ -67,6 +67,12 @@
   .gear { width: 24px; text-align: center; font-size: 13px; cursor: default; }
   .savebtn { width: 24px; text-align: center; font-size: 13px; cursor: default; color: var(--muted); }
   .savebtn:hover { color: var(--accent); }
+  .navbtn { min-width: 22px; height: 20px; line-height: 18px; text-align: center; padding: 0 7px;
+            border: 1px solid var(--line); border-radius: 4px; background: var(--panel);
+            color: var(--fg); cursor: pointer; margin: 0 2px; font-size: 13px; user-select: none; }
+  .navbtn:hover { border-color: var(--accent); color: var(--accent); }
+  .navbtn.off { color: var(--dim); opacity: .4; cursor: default; }
+  .navbtn.off:hover { border-color: var(--line); color: var(--dim); }
   .savemsg { color: var(--accent); font-size: 11px; margin-right: 8px; white-space: nowrap;
              font-family: "Segoe UI", system-ui, sans-serif; }
   .gear.on { color: var(--fg); }
@@ -181,6 +187,10 @@
   <span class="tab">Memory</span>
   <span class="tab">Application</span>
   <span class="tab" data-view="set">Security</span>
+  <span class="sep"></span>
+  <span class="navbtn off" id="btnPrev" title="이전화">‹</span>
+  <span class="navbtn" id="btnSave" data-act="save" title="저장">▣</span>
+  <span class="navbtn off" id="btnNext" title="다음화">›</span>
   <span class="grow"></span>
   <span class="savemsg" id="savemsg"></span>
   <span class="warnbadge">▲ 2</span>
@@ -237,6 +247,7 @@ let paras = [];      // 문단들
 let idx = 0;         // 현재 창 시작
 let win = Infinity;  // 펼칠 문단 수 — 기본은 전부. [ 로 줄이면 창 모드가 된다
 let nextUrl = null;  // 프록시가 찾아준 "다음화" URL (없으면 null)
+let prevUrl = null;  // 프록시가 찾아준 "이전화" URL (없으면 null)
 let boss = false;    // 전부 접힘
 let curUrl = "";
 // 트리를 클릭하면 본문을 통째로 가리고 개발 문서처럼 보이는 문장으로 바꾼다.
@@ -417,7 +428,7 @@ async function load(url) {
   // 탭 제목은 절대 읽는 URL을 담지 않는다 — 화면을 접어도(보스키) 탭 스트립·
   // 작업표시줄·Alt+Tab 미리보기에는 제목이 남기 때문. 개발자 탭으로 자연스러운
   // 고정값을 쓴다.
-  paras = []; idx = 0; nextUrl = null; render();
+  paras = []; idx = 0; nextUrl = null; prevUrl = null; updateNav(); render();
 
   const fails = [];
   for (const [name, base] of CHAIN) {
@@ -442,6 +453,8 @@ async function load(url) {
     const saved = LS.get("pos2:" + url, null);
     if (saved) { idx = Math.min(saved.idx, paras.length - 1); win = saved.win || win; }
     nextUrl = d.nextUrl || null;
+    prevUrl = d.prevUrl || null;
+    updateNav();
     LS.set("lastUrl", url);
     render();
     return;
@@ -531,8 +544,18 @@ async function saveDoc() {
   }
 }
 
+// 이전/다음 버튼의 활성 상태를 URL 유무로 갱신한다. topbar 는 render() 가 다시
+// 그리지 않으므로 버튼 요소를 직접 만진다.
+function updateNav() {
+  const p = $("btnPrev"), n = $("btnNext");
+  if (p) p.classList.toggle("off", !prevUrl);
+  if (n) n.classList.toggle("off", !nextUrl);
+}
+
 $("topbar").addEventListener("click", (e) => {
   if (e.target.closest('[data-act="save"]')) { saveDoc(); return; }
+  if (e.target.closest("#btnPrev")) { if (prevUrl) load(prevUrl); return; }
+  if (e.target.closest("#btnNext")) { if (nextUrl) load(nextUrl); return; }
 });
 
 /* ---------- 서재 ---------- */
