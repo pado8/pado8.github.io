@@ -638,6 +638,16 @@
     } catch { saveMsg = "불러오기 실패"; render(); }
   }
 
+  // 저장 시각(UTC)을 한국 시간 "월/일 시:분" 으로.
+  function fmtWhen(ts) {
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return String(ts || "").slice(0, 10);
+    const p = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul",
+      month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(d);
+    const g = (t) => (p.find((x) => x.type === t) || {}).value || "";
+    return `${g("month")}/${g("day")} ${g("hour")}:${g("minute")}`;
+  }
+
   function renderLib() {
     const out = [];
     out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
@@ -649,7 +659,7 @@
       out.push(line(3, `<span class="dots">${boss ? "…" : "(비어 있음 — 읽는 중에 s 로 저장)"}</span>`));
     }
     libItems.forEach((it, i) => {
-      const when = String(it.updated_at || "").slice(0, 10);
+      const when = fmtWhen(it.updated_at);
       out.push(line(3,
         `<span class="arrow">${boss ? "▶" : "▼"}</span>` + open("li", attr("data-id", it.id)) +
         (boss ? `<span class="dots">…</span>`

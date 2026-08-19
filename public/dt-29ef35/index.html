@@ -270,6 +270,15 @@ function markRead(id) {
   readSet.add(id);
   try { localStorage.setItem("dtread", JSON.stringify([...readSet])); } catch { /* 무시 */ }
 }
+// 저장 시각(UTC)을 한국 시간 "월/일 시:분" 으로. updated_at 은 "2026-08-19T08:26:35Z" 꼴.
+function fmtWhen(ts) {
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return String(ts || "").slice(0, 10);
+  const p = new Intl.DateTimeFormat("ko-KR", { timeZone: "Asia/Seoul",
+    month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).formatToParts(d);
+  const g = (t) => (p.find((x) => x.type === t) || {}).value || "";
+  return `${g("month")}/${g("day")} ${g("hour")}:${g("minute")}`;
+}
 let boss = false;    // 전부 접힘
 let curUrl = "";
 // 트리를 클릭하면 본문을 통째로 가리고 개발 문서처럼 보이는 문장으로 바꾼다.
@@ -619,7 +628,7 @@ function renderLib() {
     out.push(line(3, `<span class="dots">${boss ? "" : "(비어 있음 — 북마클릿에서 s 로 저장)"}</span>`));
   }
   lib.forEach((it, i) => {
-    const when = String(it.updated_at || "").slice(0, 10);
+    const when = fmtWhen(it.updated_at);
     const label = boss ? "…" : esc(it.title || it.url);
     out.push(line(3,
       `<span class="arrow">${boss ? "▶" : "▼"}</span>` + open("li", attr("data-id", it.id)) +
