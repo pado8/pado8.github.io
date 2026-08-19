@@ -236,6 +236,7 @@ const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, 
 let paras = [];      // 문단들
 let idx = 0;         // 현재 창 시작
 let win = Infinity;  // 펼칠 문단 수 — 기본은 전부. [ 로 줄이면 창 모드가 된다
+let nextUrl = null;  // 프록시가 찾아준 "다음화" URL (없으면 null)
 let boss = false;    // 전부 접힘
 let curUrl = "";
 // 트리를 클릭하면 본문을 통째로 가리고 개발 문서처럼 보이는 문장으로 바꾼다.
@@ -370,7 +371,7 @@ function render() {
 }
 
 function renderRules() {
-  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음화</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -416,7 +417,7 @@ async function load(url) {
   // 탭 제목은 절대 읽는 URL을 담지 않는다 — 화면을 접어도(보스키) 탭 스트립·
   // 작업표시줄·Alt+Tab 미리보기에는 제목이 남기 때문. 개발자 탭으로 자연스러운
   // 고정값을 쓴다.
-  paras = []; idx = 0; render();
+  paras = []; idx = 0; nextUrl = null; render();
 
   const fails = [];
   for (const [name, base] of CHAIN) {
@@ -440,6 +441,7 @@ async function load(url) {
     if (!Number.isFinite(win)) win = Math.max(1, paras.length);
     const saved = LS.get("pos2:" + url, null);
     if (saved) { idx = Math.min(saved.idx, paras.length - 1); win = saved.win || win; }
+    nextUrl = d.nextUrl || null;
     LS.set("lastUrl", url);
     render();
     return;
@@ -640,7 +642,7 @@ function renderSet() {
     `숫자 1~9 · 0(10) · a(전부) — 펼칠 문단 수<br>` +
     `&minus; + 글자 크기 &nbsp;·&nbsp; , . 줄바꿈 폭<br>` +
     `h 반페이지 모드 &nbsp;·&nbsp; 본문 클릭 — 전체 가리기<br>` +
-    `t 다크/라이트 &nbsp;·&nbsp; j k 문단 이동 &nbsp;·&nbsp; r 다시 불러오기 &nbsp;·&nbsp; 백틱 전부 접기</div>`;
+    `t 다크/라이트 &nbsp;·&nbsp; j k 문단 이동 &nbsp;·&nbsp; n 다음화 &nbsp;·&nbsp; r 다시 불러오기 &nbsp;·&nbsp; 백틱 전부 접기</div>`;
   $("crumbs").innerHTML = `Preferences <span class="gt">&gt;</span> <b>Reader</b>`;
 }
 
@@ -675,9 +677,14 @@ function onKey(e) {
   switch (e.key) {
     case "o": toggleFind(true); e.preventDefault(); break;
     case "`": boss = !boss; render(); e.preventDefault(); break;
-    case "j": case "ArrowDown": idx++; clamp(); render(); e.preventDefault(); break;
+    case "j": case "ArrowDown":
+      if (idx >= paras.length - 1 && nextUrl) { load(nextUrl); e.preventDefault(); break; }
+      idx++; clamp(); render(); e.preventDefault(); break;
     case "k": case "ArrowUp": idx--; clamp(); render(); e.preventDefault(); break;
-    case "PageDown": idx += win; clamp(); render(); e.preventDefault(); break;
+    case "n": if (nextUrl) load(nextUrl); e.preventDefault(); break;
+    case "PageDown":
+      if (idx + win >= paras.length && nextUrl) { load(nextUrl); e.preventDefault(); break; }
+      idx += win; clamp(); render(); e.preventDefault(); break;
     case "PageUp": idx -= win; clamp(); render(); e.preventDefault(); break;
     case "]": win++; clamp(); render(); break;
     case "[": win--; clamp(); render(); break;
