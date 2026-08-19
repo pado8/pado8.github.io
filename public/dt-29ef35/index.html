@@ -192,6 +192,7 @@
   <span class="navbtn off" id="btnPrev" title="이전화">‹</span>
   <span class="navbtn" id="btnSave" data-act="save" title="저장">▣</span>
   <span class="navbtn off" id="btnNext" title="다음화">›</span>
+  <span class="navbtn off" id="btnSrc" title="원문 페이지 열기">↗</span>
   <span class="grow"></span>
   <span class="savemsg" id="savemsg"></span>
   <span class="warnbadge">▲ 2</span>
@@ -566,6 +567,8 @@ function updateNav() {
     if (p) p.classList.toggle("off", !prevUrl);
     if (n) n.classList.toggle("off", !nextUrl);
   }
+  const s = $("btnSrc");
+  if (s) s.classList.toggle("off", !(curUrl && /^https?:/i.test(curUrl)));
 }
 
 $("topbar").addEventListener("click", (e) => {
@@ -580,6 +583,10 @@ $("topbar").addEventListener("click", (e) => {
     // '다음화'는 목록에서 더 위(최신) = libPos-1
     if (libMode && libPos > 0 && lib.length) openDoc(lib[libPos - 1].id);
     else if (nextUrl) load(nextUrl);
+    return;
+  }
+  if (e.target.closest("#btnSrc")) {
+    if (curUrl && /^https?:/i.test(curUrl)) window.open(curUrl, "_blank", "noopener");
     return;
   }
 });

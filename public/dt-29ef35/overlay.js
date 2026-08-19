@@ -245,6 +245,7 @@
   let libItems = [];
   let libIdx = 0;
   let libPos = -1;     // 서재에서 연 문서의 목록 내 위치(-1 = 서재 경유 아님)
+  let srcUrl = location.href;   // '원문 열기' 대상 — 서재 문서면 저장 당시 원본 URL
   let libMode = localStorage.getItem("dtlibmode") === "on"; // 서재 보기 모드: ‹ › 로 서재 앞뒤 항목 이동
   const readSet = new Set(JSON.parse(localStorage.getItem("dtread") || "[]")); // 한 번 연 서재 문서 id
   const markRead = (id) => { if (id && !readSet.has(id)) { readSet.add(id); try { localStorage.setItem("dtread", JSON.stringify([...readSet])); } catch { /* 무시 */ } } };
@@ -418,6 +419,7 @@
     <span class="navbtn off" id="btnPrev" title="이전화">‹</span>
     <span class="navbtn" id="btnSave" data-act="save" title="저장">▣</span>
     <span class="navbtn off" id="btnNext" title="다음화">›</span>
+    <span class="navbtn" id="btnSrc" title="원문 페이지 열기">↗</span>
     <span class="grow"></span><span class="savemsg" id="savemsg"></span>
     <span class="warnbadge">▲ 2</span>
     <span class="savebtn" data-act="save" title="Export">⭳</span>
@@ -618,6 +620,7 @@
       const d = await r.json();
       if (!d.ok) { saveMsg = "불러오기 실패"; render(); return; }
       paras = d.doc.paras || [];
+      srcUrl = d.doc.url || location.href;
       idx = 0; win = Math.max(1, paras.length); boss = false;
       view = "read"; render(); updateNav();
     } catch { saveMsg = "불러오기 실패"; render(); }
@@ -982,6 +985,10 @@
       // '다음화'는 더 위(최신) = libPos-1
       if (libMode && libPos > 0 && libItems.length) openDoc(libItems[libPos - 1].id);
       else gotoChapter(nextUrl);
+      return;
+    }
+    if (e.target.closest("#btnSrc")) {
+      if (srcUrl && /^https?:/i.test(srcUrl)) window.open(srcUrl, "_blank", "noopener");
       return;
     }
     const t = e.target.closest("[data-view]");
