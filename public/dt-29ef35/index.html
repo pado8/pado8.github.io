@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>DevTools - localhost:3000</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='none' stroke='%239aa0a6' stroke-width='2'/%3E%3C/svg%3E">
@@ -74,6 +75,17 @@
   .navbtn.off { color: var(--dim); opacity: .4; cursor: default; }
   .navbtn.off:hover { border-color: var(--line); color: var(--dim); }
   .row.read .txt { color: var(--dim); }   /* 서재에서 한 번 읽은 항목 — 회색 */
+
+  /* ── 모바일(좁은 화면) — Styles 패널·가짜 탭 숨겨 본문에 전체폭. 문단은 기본 전체 펼침이라 스크롤로 읽음. ── */
+  @media (max-width: 640px) {
+    #styles, #dragbar { display: none; }
+    #topbar { overflow-x: auto; }
+    #topbar .tab:not([data-view]) { display: none; }
+    .ticon, .warnbadge, .kebab { display: none; }
+    .navbtn { min-width: 32px; height: 26px; line-height: 24px; padding: 0 10px; font-size: 15px; }
+    .savebtn, .gear { width: 30px; font-size: 15px; }
+    #treeWrap { padding: 4px 0 64px; -webkit-overflow-scrolling: touch; }
+  }
   .savemsg { color: var(--accent); font-size: 11px; margin-right: 8px; white-space: nowrap;
              font-family: "Segoe UI", system-ui, sans-serif; }
   .gear.on { color: var(--fg); }

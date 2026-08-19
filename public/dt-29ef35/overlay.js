@@ -408,6 +408,18 @@
   }
   .crumbs b { color: var(--fg); font-weight: normal; }
   .crumbs .gt { margin: 0 5px; color: var(--dim); }
+
+  /* ── 모바일(좁은 화면) — 폰에선 개발자도구 패널·가짜 탭을 숨겨 본문에 전체폭을 준다.
+       문단은 기본이 전체 펼침이라 키보드 없이 스크롤로 읽고, ‹ ▣ › ↗ 버튼은 터치로. ── */
+  @media (max-width: 640px) {
+    .styles, .dragbar { display: none; }               /* 오른쪽 Styles 패널 숨김 */
+    .topbar { overflow-x: auto; }
+    .topbar .tab:not([data-view]) { display: none; }   /* Sources/Network 등 가짜 탭 숨김 */
+    .ticon, .warnbadge, .kebab { display: none; }
+    .navbtn { min-width: 32px; height: 26px; line-height: 24px; padding: 0 10px; font-size: 15px; }
+    .savebtn, .gear { width: 30px; font-size: 15px; }
+    .treeWrap { padding: 4px 0 64px; -webkit-overflow-scrolling: touch; }
+  }
 </style>
 <div class="wrap">
   <div class="topbar">
