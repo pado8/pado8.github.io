@@ -377,7 +377,7 @@
     border-left: 1px solid var(--line); overflow: auto; font-family: Consolas, monospace;
   }
   .row { padding: 0 4px 0 0; white-space: pre-wrap; word-break: break-all; }
-  .row:hover { background: var(--hover); }
+  /* 줄 호버 강조는 두지 않는다 — 읽는 중에 마우스가 지나가면 시선을 뺏긴다 */
   .row.sel { background: var(--sel); }
   .arrow { display: inline-block; width: 11px; color: var(--muted); font-size: 9px; }
   .tagname { color: var(--tag); }
