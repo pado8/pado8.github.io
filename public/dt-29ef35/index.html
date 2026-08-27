@@ -113,8 +113,11 @@
   /* 반페이지 모드 — 위쪽은 영어 마크업만 보여 한글 분량을 절반으로 줄인다 */
   #fakeWrap { display: none; overflow: hidden; padding: 2px 0;
               border-bottom: 1px solid var(--line); font-size: var(--fs, 13px); }
-  #leftcol.half #fakeWrap { display: block; flex: 1 1 50%; min-height: 0; }
-  #leftcol.half #treeWrap { flex: 1 1 50%; min-height: 0; }
+  #leftcol.half #fakeWrap { display: block; flex: 1 1 50%; min-height: 0; order: 0; }
+  #leftcol.half #treeWrap { flex: 1 1 50%; min-height: 0; order: 1; }
+  /* 읽는 영역을 위로 — 순서를 바꾸고 경계선도 반대쪽으로 옮긴다 */
+  #leftcol.half.readtop #fakeWrap { order: 1; border-bottom: none; border-top: 1px solid var(--line); }
+  #leftcol.half.readtop #treeWrap { order: 0; }
   #dragbar { width: 1px; background: var(--line); cursor: col-resize; position: relative; }
   #dragbar::after { content: ""; position: absolute; left: -3px; right: -3px; top: 0; bottom: 0; }
   #styles {
@@ -286,6 +289,7 @@ let curUrl = "";
 let mask = false;
 let clickMask = localStorage.getItem("dtclick") !== "off";   // 클릭으로 가릴지
 let half = localStorage.getItem("dthalf") === "on";          // 반페이지 모드
+let halfPos = localStorage.getItem("dthalfpos") === "top" ? "top" : "bottom"; // 읽는 영역 위치
 const MASK_TEXT = [
   "요청이 들어오면 미들웨어가 등록된 순서대로 실행된다.",
   "캐시 키는 경로와 쿼리스트링을 합쳐 만든다.",
@@ -351,6 +355,7 @@ function render() {
   document.documentElement.style.setProperty("--fs", fs + "px");
   document.documentElement.dataset.theme = theme;
   $("leftcol").classList.toggle("half", half);
+  $("leftcol").classList.toggle("readtop", halfPos === "top");
   if (half && !$("fake").innerHTML) renderFake();
   document.querySelectorAll("[data-view]").forEach((t) => t.classList.toggle("on", t.dataset.view === mode));
   if (mode === "lib") return renderLib();
@@ -414,7 +419,7 @@ function render() {
 }
 
 function renderRules() {
-  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음화</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음화</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">Shift+H<span class="brak">:</span> <span class="pval">읽는 영역 위 / 아래</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -686,6 +691,7 @@ const SETS = [
   ["theme", "테마",        () => (theme === "light" ? "라이트" : "다크")],
   ["click", "클릭으로 가리기", () => (clickMask ? "켬" : "끔")],
   ["half",  "반페이지 모드",   () => (half ? "켬" : "끔")],
+  ["halfpos", "읽는 영역 위치", () => (halfPos === "top" ? "위" : "아래")],
   ["libmode", "서재 보기 모드", () => (libMode ? "켬" : "끔")],
 ];
 
@@ -695,6 +701,10 @@ function bump(what, d) {
   if (what === "wrap") { wrapAt = Math.max(20, Math.min(200, wrapAt + d * 4)); localStorage.setItem("dtwrap", wrapAt); }
   if (what === "theme") { theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); }
   if (what === "half") { half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); }
+  if (what === "halfpos") {
+    halfPos = halfPos === "top" ? "bottom" : "top";
+    localStorage.setItem("dthalfpos", halfPos);
+  }
   if (what === "libmode") { libMode = !libMode; localStorage.setItem("dtlibmode", libMode ? "on" : "off"); }
   if (what === "click") {
     clickMask = !clickMask;
@@ -791,6 +801,9 @@ function onKey(e) {
     case "[": win--; clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
     case "h": half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); render(); break;
+    case "H":
+      halfPos = halfPos === "top" ? "bottom" : "top";
+      localStorage.setItem("dthalfpos", halfPos); render(); break;
     case "s": saveDoc(); e.preventDefault(); break;
     case "t": theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); render(); break;
     case "g": mode = mode === "set" ? "read" : "set"; render(); e.preventDefault(); break;
