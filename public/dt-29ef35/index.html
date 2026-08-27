@@ -337,7 +337,7 @@ function line(indent, html, cls = "", data = "") {
 }
 const open  = (t, a = "") => `<span class="brak">&lt;</span><span class="tagname">${t}</span>${a}<span class="brak">&gt;</span>`;
 const close = (t) => `<span class="brak">&lt;/</span><span class="tagname">${t}</span><span class="brak">&gt;</span>`;
-const attr  = (n, v) => ` <span class="attr">${n}</span><span class="brak">=</span><span class="attrval">"${v}"</span>`;
+const attr  = (n, v) => ` <span class="attr">${n}</span><span class="brak">=</span><span class="attrval">${v}</span>`;
 
 function chunk(t, width) {
   if (t.length <= width) return [t];
@@ -509,22 +509,22 @@ async function load(url) {
 const FAKE_DOM = [
   [1, "▶", "head", "", true],
   [1, "▼", "body", attr("class", "app-shell"), false],
-  [2, "▼", "div", attr("id", "root") + attr("data-reactroot", ""), false],
-  [3, "▼", "header", attr("class", "navbar navbar--sticky"), false],
+  [2, "▼", "div", attr("id", "root") + attr("data-v-app", "1"), false],
+  [3, "▼", "header", attr("class", "navbar--sticky"), false],
   [4, "▶", "a", attr("class", "brand") + attr("href", "/"), true],
-  [4, "▼", "nav", attr("class", "nav") + attr("aria-label", "Main"), false],
+  [4, "▼", "nav", attr("class", "nav-main"), false],
   [5, "▶", "ul", attr("class", "nav__list"), true],
   [5, "▶", "button", attr("class", "nav__toggle") + attr("type", "button"), true],
   [4, "/", "nav", "", false],
   [3, "/", "header", "", false],
-  [3, "▼", "div", attr("class", "container container--wide"), false],
+  [3, "▼", "div", attr("class", "container--wide"), false],
   [4, "▶", "section", attr("class", "hero") + attr("data-testid", "hero"), true],
-  [4, "▼", "section", attr("class", "grid grid--cards"), false],
+  [4, "▼", "section", attr("class", "grid--cards"), false],
   [5, "▶", "article", attr("class", "card") + attr("data-id", "a19f"), true],
   [5, "▶", "article", attr("class", "card") + attr("data-id", "b73c"), true],
   [5, "▶", "article", attr("class", "card") + attr("data-id", "c04e"), true],
   [4, "/", "section", "", false],
-  [4, "▶", "aside", attr("class", "panel panel--muted"), true],
+  [4, "▶", "aside", attr("class", "panel--muted"), true],
   [3, "/", "div", "", false],
   [3, "▶", "footer", attr("class", "footer"), true],
   [2, "/", "div", "", false],

@@ -461,7 +461,7 @@
     `<div class="row ${cls}" ${data} style="padding-left:${8 + ind * 14}px">${html}</div>`;
   const open = (t, a = "") => `<span class="brak">&lt;</span><span class="tagname">${t}</span>${a}<span class="brak">&gt;</span>`;
   const close = (t) => `<span class="brak">&lt;/</span><span class="tagname">${t}</span><span class="brak">&gt;</span>`;
-  const attr = (n, v) => ` <span class="attr">${n}</span><span class="brak">=</span><span class="attrval">"${v}"</span>`;
+  const attr = (n, v) => ` <span class="attr">${n}</span><span class="brak">=</span><span class="attrval">${v}</span>`;
 
   // 진짜 문단만 덜렁 있으면 화면이 휑해서 오히려 눈에 띈다. 실제 페이지가
   // 가질 법한 구조를 둘러 세워 트리를 채운다 — 전부 접힌 노드라 내용은 없다.
@@ -471,7 +471,7 @@
     [2, "▼", "div", attr("id", "app") + attr("data-v", "8f2a1c"), false],
     [3, "▶", "header", attr("class", "site-header"), true],
     [3, "▶", "nav", attr("class", "gnb") + attr("role", "navigation"), true],
-    [3, "▼", "div", attr("class", "layout layout--doc"), false],
+    [3, "▼", "div", attr("class", "layout--doc"), false],
     [4, "▶", "aside", attr("class", "sidebar"), true],
     [4, "▼", "main", attr("class", "content") + attr("role", "main"), false],
     [5, "▶", "h1", attr("class", "title"), true],
@@ -519,22 +519,22 @@
   const FAKE_DOM = [
     [1, "▶", "head", "", true],
     [1, "▼", "body", attr("class", "app-shell"), false],
-    [2, "▼", "div", attr("id", "root") + attr("data-reactroot", ""), false],
-    [3, "▼", "header", attr("class", "navbar navbar--sticky"), false],
+    [2, "▼", "div", attr("id", "root") + attr("data-v-app", "1"), false],
+    [3, "▼", "header", attr("class", "navbar--sticky"), false],
     [4, "▶", "a", attr("class", "brand") + attr("href", "/"), true],
-    [4, "▼", "nav", attr("class", "nav") + attr("aria-label", "Main"), false],
+    [4, "▼", "nav", attr("class", "nav-main"), false],
     [5, "▶", "ul", attr("class", "nav__list"), true],
     [5, "▶", "button", attr("class", "nav__toggle") + attr("type", "button"), true],
     [4, "/", "nav", "", false],
     [3, "/", "header", "", false],
-    [3, "▼", "div", attr("class", "container container--wide"), false],
+    [3, "▼", "div", attr("class", "container--wide"), false],
     [4, "▶", "section", attr("class", "hero") + attr("data-testid", "hero"), true],
-    [4, "▼", "section", attr("class", "grid grid--cards"), false],
+    [4, "▼", "section", attr("class", "grid--cards"), false],
     [5, "▶", "article", attr("class", "card") + attr("data-id", "a19f"), true],
     [5, "▶", "article", attr("class", "card") + attr("data-id", "b73c"), true],
     [5, "▶", "article", attr("class", "card") + attr("data-id", "c04e"), true],
     [4, "/", "section", "", false],
-    [4, "▶", "aside", attr("class", "panel panel--muted"), true],
+    [4, "▶", "aside", attr("class", "panel--muted"), true],
     [3, "/", "div", "", false],
     [3, "▶", "footer", attr("class", "footer"), true],
     [2, "/", "div", "", false],
