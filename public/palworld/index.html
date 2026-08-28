@@ -807,13 +807,65 @@
   <span style="color:var(--gold)">3호 · 금속 + 석탄</span> : <b>푸른 시냇물의 수호자의 봉역 근처 (180, −39)</b> 추천.
   <b>금속 광석과 석탄이 한 자리에</b> 있어서, <b>채굴 거점을 더 만들지 않아도 제련 시설을 돌릴 만큼</b> 나옵니다 —
   <b>거점 3개 제한에서는 이 자리가 사실상 정답</b>입니다.
-  <span style="color:var(--dim);font-size:12px">⚠ 고지대라도 <b>비행 습격자는 막히지 않습니다.</b> 방어 시설을 따로 챙기세요.</span>
+  <span style="color:var(--dim);font-size:12px">⚠ 고지대라도 <b>비행 습격자는 막히지 않습니다</b> — 방어 시설을 따로 챙기세요. <b>전용 서버라면 <span class="coord">bEnableInvaderEnemy</span> 가 False 인지 먼저 확인</b>하세요. 꺼져 있으면 습격 자체가 없어 방어를 지을 필요가 없습니다.</span>
   <br><br>
   <b>세계수·천양향에 거점을 따로 둘 필요는 대체로 없습니다.</b>
   <b>기술 레벨 72 에서 채굴장 시설이 해금</b>되면 별도 거점 없이도 자원이 들어옵니다.
   천양향 솔라이트를 굳이 거점으로 캐고 싶다면 <b>운니 습지 (−305, −1410)</b> 에 광맥이 최대 6개 몰려 있지만,
   <b>맨바위 지형이라 목재가 전혀 없고</b> 맹약단이 순찰합니다(천양향 진입 자체가 <b>천락의 탑 보스</b> 선행).
   <span style="color:var(--dim);font-size:12px">세계수 지역 내부에 거점을 세울 수 있는지는 확인된 자료를 찾지 못했습니다 — 단정하지 않겠습니다.</span>
+</div>
+
+
+<h3 style="font-size:15px;margin:26px 0 10px;color:var(--gold)">저장 공간 · 거점 범위를 늘리고 싶다면</h3>
+<div class="notice warnver" style="margin:0 0 12px">
+  <b>먼저 「설정으로 되는 것」과 「모드가 필요한 것」을 구분해야 합니다.</b>
+  전용 서버 설정 파일(<span class="coord">PalWorldSettings.ini</span>)의 옵션 <b>119개를 전수 확인</b>한 결과,
+  <b>길드 상자 칸수와 거점 반경을 바꾸는 옵션은 존재하지 않습니다.</b>
+</div>
+<div class="tablewrap"><table>
+  <tr><th style="width:150px">늘리고 싶은 것</th><th style="width:230px">방법</th><th>메모</th></tr>
+  <tr>
+    <td><b>거점 개수</b></td>
+    <td class="good">서버 설정 <span class="coord">BaseCampMaxNumInGuild</span></td>
+    <td><b>기본 4 · 최대 10.</b> 서버를 직접 돌린다면 한 줄이면 끝납니다.
+      <b>「거점이 3개뿐」이라면 게임 제한이 아니라 그 서버가 3으로 설정해 둔 것</b>일 가능성이 높습니다</td>
+  </tr>
+  <tr>
+    <td><b>거점당 팰 수</b></td>
+    <td class="good">서버 설정 <span class="coord">BaseCampWorkerMaxNum</span></td>
+    <td>기본 15 · <b>최대 50</b></td>
+  </tr>
+  <tr>
+    <td><b>길드 상자 칸수</b></td>
+    <td class="bad">서버 설정 <b>없음</b> → <b>모드</b></td>
+    <td><b>길드 상자는 54칸 고정</b>(기술 Lv41 · 제련 주괴 50 + 팰지움 파편 100 + 고대 문명의 부품 10).
+      <b>거점당 1개만</b> 지어지고 <b>상위 등급도 없습니다.</b>
+      ⚠ 각 거점의 길드 상자는 <b>내용물을 공유</b>하므로 <b>거점을 늘려도 칸수는 그대로</b>고 접근 지점만 늘어납니다</td>
+  </tr>
+  <tr>
+    <td><b>거점 범위(반경)</b></td>
+    <td class="bad">서버 설정 <b>없음</b> → <b>모드</b></td>
+    <td>「Base Camp Construction Area ×1.5 / ×2」 같은 모드가 있습니다</td>
+  </tr>
+</table></div>
+<div class="tip" style="margin-top:12px">
+  <b>모드는 1.0 에서 공식 지원됩니다.</b>
+  게임·서버 폴더의 <span class="coord">Mods/PalModSettings.ini</span> 에
+  <span class="coord">bGlobalEnableMod</span> 항목이 있고 <b>기본값이 False</b>입니다.
+  이걸 <b>True</b> 로 바꾸고 스팀 창작마당에서 모드를 구독하는 구조예요.
+  상자 확장은 <b>「Bigger Chest and Fridge」</b> 계열이 대표적입니다(일반 저장소 48칸 등).
+  <br><br>
+  ⚠ <b>다만 전용 서버에 모드를 넣기 전에 두 가지를 감안하세요.</b><br>
+  ① <b>서버와 접속자 양쪽에 같은 모드가 필요할 수 있습니다.</b> 친구들도 설치해야 하면 관리 비용이 커집니다.<br>
+  ② <b>게임 업데이트 때 모드가 깨지면 서버가 안 뜨거나 접속이 막힐 수 있습니다.</b>
+  접속 문제로 이미 고생한 적이 있는 서버라면 <b>모드는 마지막 수단</b>으로 두는 편이 안전합니다.
+  <br><br>
+  <b>모드 없이 저장 공간을 늘리는 현실적인 방법 —</b>
+  <b>거점 개수를 늘리는 것</b>이 사실상 유일합니다.
+  길드 상자는 공유라 안 늘지만, <b>일반 보관함은 거점마다 얼마든지 더 지을 수 있습니다</b>
+  (<span class="coord">MaxBuildingLimitNum=0</span> 이면 건축물 수 제한도 없습니다).
+  <b>설정 한 줄로 되고 모드 리스크가 없으니 여기부터 시도하세요.</b>
 </div>
 
 <h3 style="font-size:15px;margin:26px 0 10px;color:var(--ice)">레벨 로드맵 — 이 순서로 채우면 됩니다</h3>
