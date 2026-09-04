@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0e0f13">
+<title>여행 도시에</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="여행">
+<style>
+  :root{--bg:#0e0f13;--card:#171922;--card2:#1f2230;--line:#2b2f3d;--ink:#e9ebf2;--dim:#98a0b4;
+        --accent:#7c9cff;--ok:#4ade80;--warn:#fbbf24;--gold:#f59e0b}
+  @media(prefers-color-scheme:light){:root{--bg:#f6f7fb;--card:#fff;--card2:#eef0f6;--line:#dde1ec;
+        --ink:#15171e;--dim:#5a6076;--accent:#3b5bdb;--ok:#15803d;--warn:#b45309;--gold:#b45309}}
+  *{box-sizing:border-box}
+  body{margin:0;padding:40px 18px 60px;background:var(--bg);color:var(--ink);
+       font:16px/1.7 -apple-system,BlinkMacSystemFont,"Pretendard","Malgun Gothic",sans-serif}
+  .wrap{max-width:760px;margin:0 auto}
+  header{margin-bottom:30px}
+  h1{font-size:1.9rem;margin:0 0 8px;letter-spacing:-.03em}
+  .lead{color:var(--dim);margin:0;font-size:14.5px}
+  h2{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);
+     margin:34px 0 12px;font-weight:800}
+  a.trip{display:block;text-decoration:none;color:inherit;background:var(--card);
+         border:1px solid var(--line);border-radius:15px;padding:20px 22px;margin-bottom:12px;
+         transition:border-color .15s,transform .15s}
+  a.trip:hover{border-color:var(--accent);transform:translateY(-2px)}
+  a.trip:active{transform:translateY(0)}
+  .top{display:flex;align-items:flex-start;gap:13px}
+  .flag{font-size:2rem;line-height:1;flex:0 0 auto;margin-top:2px}
+  .ttl{flex:1;min-width:0}
+  .ttl b{display:block;font-size:1.22rem;letter-spacing:-.02em}
+  .ttl span{display:block;color:var(--dim);font-size:13.5px;margin-top:2px}
+  .dday{flex:0 0 auto;text-align:right}
+  .dday b{display:block;font-size:1.15rem;color:var(--accent);letter-spacing:-.02em}
+  .dday span{font-size:11.5px;color:var(--dim)}
+  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:15px}
+  .tag{font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 10px;
+       border:1px solid var(--line);background:var(--card2);color:var(--dim)}
+  .tag.on{color:var(--ok);border-color:currentColor;background:transparent}
+  .tag.off{color:var(--gold);border-color:currentColor;background:transparent}
+  .soon{background:var(--card2);border:1px dashed var(--line);border-radius:15px;
+        padding:22px;color:var(--dim);font-size:13.5px;text-align:center}
+  .tips{background:var(--card);border:1px solid var(--line);border-radius:13px;
+        padding:17px 20px;margin-top:14px;font-size:13.5px;color:var(--dim)}
+  .tips b{color:var(--ink)}
+  .tips ol{margin:9px 0 0;padding-left:20px}
+  .tips li{margin:5px 0}
+  footer{margin-top:38px;color:var(--dim);font-size:12px;text-align:center}
+  footer a{color:var(--dim)}
+</style>
+</head>
+<body><div class="wrap">
+
+<header>
+  <h1>여행 도시에</h1>
+  <p class="lead">일정·항공·예산·지도를 한 문서에 모아둔 곳. 각 도시에는 <b>데이터가 없어도</b> 열립니다.</p>
+</header>
+
+<h2>예정된 여행</h2>
+
+<a class="trip" href="kaohsiung/">
+  <div class="top">
+    <div class="flag">🇹🇼</div>
+    <div class="ttl">
+      <b>가오슝 3박4일</b>
+      <span>대만 · 2026.10.29(목) – 11.01(일) · 성인 4명(부부 2쌍)</span>
+    </div>
+    <div class="dday"><b id="dd">D-</b><span>출발까지</span></div>
+  </div>
+  <div class="meta">
+    <span class="tag on">일정 확정</span>
+    <span class="tag off">오프라인 지원</span>
+    <span class="tag off">GPS 지도</span>
+    <span class="tag">항공 · 숙소 · 예산</span>
+  </div>
+</a>
+
+<h2>다음 여행</h2>
+<div class="soon">아직 없습니다. 날짜와 목적지가 정해지면 여기에 추가됩니다.</div>
+
+<h2>현지에서 쓰는 법</h2>
+<div class="tips">
+  <b>출국 전에 이 세 가지만 해두세요.</b>
+  <ol>
+    <li>각 도시에를 <b>한 번 열어서 홈 화면에 추가</b> — 그래야 비행기모드에서도 열립니다</li>
+    <li>구글 지도 앱에서 <b>해당 도시 오프라인 지도 다운로드</b> — 길찾기는 이쪽이 담당합니다</li>
+    <li>구글 번역 <b>오프라인 언어팩</b> 내려받기 — 메뉴판 카메라 번역용</li>
+  </ol>
+</div>
+
+<footer>aquapado.com · 개인 여행 기록</footer>
+
+</div>
+<script>
+  // D-day (한국시간 기준 자정 차이로 계산)
+  (function () {
+    var el = document.getElementById('dd');
+    if (!el) return;
+    var go = new Date(2026, 9, 29); // 2026-10-29
+    var now = new Date();
+    var d = Math.round((go - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+    var sub = el.nextElementSibling;
+    el.textContent = d > 0 ? 'D-' + d : (d === 0 ? 'D-DAY' : '다녀옴');
+    if (sub) sub.textContent = d > 0 ? '출발까지' : (d === 0 ? '오늘 출발' : '');
+  })();
+  if ('serviceWorker' in navigator) {
+    addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+</script>
+</body>
+</html>
