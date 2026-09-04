@@ -352,9 +352,38 @@
         setTimeout(function () { btn.textContent = '보내기'; }, 2000);
       })
       .catch(function () {
+        // 브라우저가 공개 페이지 → localhost 요청을 막는 경우가 있다.
+        // 그때는 파일로 떨어뜨린다 — 작업 세션이 다운로드 폴더에서 주워간다.
+        saveFile();
+        btn.textContent = '파일로 보냄 ✓';
+        setTimeout(function () { btn.textContent = '보내기'; }, 2200);
+        return;
+      })
+      .catch(function () {
         btn.textContent = '보내기';
         if (confirm('수집기에 닿지 않았습니다. 작업 세션에서 수집기가 켜져 있어야 합니다.\n\n대신 클립보드로 복사할까요?')) copy();
       });
+  }
+
+  // 다운로드 폴더로 떨어뜨리기 — 네트워크 정책과 무관하게 항상 통한다
+  function saveFile() {
+    var now = new Date();
+    var p2 = function (v) { return ('0' + v).slice(-2); };
+    var name = 'pick-' + now.getFullYear() + p2(now.getMonth() + 1) + p2(now.getDate()) +
+               '-' + p2(now.getHours()) + p2(now.getMinutes()) + p2(now.getSeconds()) + '.json';
+    var payload = {
+      url: location.href, at: now.toISOString(),
+      view: { w: innerWidth, h: innerHeight, dpr: devicePixelRatio },
+      theme: matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light',
+      notes: notes.slice()
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 1)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    notes.length = 0; save();
   }
 
   // ── 목록 ─────────────────────────────────────────────────────────
