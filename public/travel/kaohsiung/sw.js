@@ -5,7 +5,7 @@
    온라인이면 뒤에서 새 버전을 받아 캐시를 덮어쓴다. 그래야 내용을 고칠 때마다
    CACHE 이름을 올리는 걸 잊어도 다음 실행에서 최신본이 뜬다.
    나머지 자산(지도·아이콘)은 잘 안 바뀌므로 캐시 우선. */
-const CACHE = 'kaohsiung-2026-09-04b';
+const CACHE = 'kaohsiung-2026-09-04c';
 const ASSETS = [
   './',
   './index.html',

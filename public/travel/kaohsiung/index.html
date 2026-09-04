@@ -57,25 +57,40 @@
   /* ── 오프라인 지도 ─────────────────────────────────────────────── */
   .mapctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 8px}
   .mbtn{font:inherit;font-size:13px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;
-        border:1px solid var(--line);background:var(--card);color:var(--ink)}
+        border:1px solid var(--line);background:var(--card);color:var(--ink);touch-action:manipulation}
   .mbtn:active{transform:translateY(1px)}
   .mstat{color:var(--dim);font-size:12.5px;flex:1 1 100%}
-  .mapwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card2);
-           max-height:78vh;-webkit-overflow-scrolling:touch}
-  .mapinner{position:relative;width:calc(100% * var(--mz,1));line-height:0}
-  .mapinner img{width:100%;height:auto;display:block}
-  .mk{position:absolute;transform:translate(-50%,-50%);z-index:2}
+  /* 스크롤 컨테이너가 아니라 뷰포트다 — 이동은 transform 으로 하고 스크롤바는 없다 */
+  .mapwrap{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;
+           background:var(--card2);height:min(72vh,620px);min-height:300px;
+           touch-action:none;cursor:grab;overscroll-behavior:contain;
+           -ms-overflow-style:none;scrollbar-width:none}
+  .mapwrap::-webkit-scrollbar{display:none}
+  .mapwrap.drag{cursor:grabbing}
+  .mapinner{position:absolute;left:0;top:0;width:100%;transform-origin:0 0;line-height:0;
+            will-change:transform}
+  .mapinner img{width:100%;height:auto;display:block;pointer-events:none;
+                -webkit-user-drag:none;user-select:none}
+  /* 마커·현재위치는 지도를 확대해도 크기가 그대로여야 읽힌다 → 배율의 역수로 되돌린다 */
+  .mk{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
+      z-index:3;pointer-events:none}
   .mk b{display:block;width:11px;height:11px;border-radius:50%;background:var(--accent);
         border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
   .mk.food b{background:#f59e0b}.mk.see b{background:#10b981}
   .mk.mrt b{background:#6366f1}.mk.ferry b{background:#06b6d4}.mk.airport b{background:#ef4444}
+  .mk.shop b{background:#ec4899}
   .mk i{position:absolute;left:50%;top:13px;transform:translateX(-50%);font-style:normal;
         font-size:10.5px;line-height:1.25;white-space:nowrap;color:#111;background:rgba(255,255,255,.86);
         border-radius:4px;padding:0 3px;font-weight:700}
-  .me{position:absolute;transform:translate(-50%,-50%);z-index:5}
+  .me{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
+      z-index:5;pointer-events:none}
   .me i{display:block;width:16px;height:16px;border-radius:50%;background:#2563eb;
-        border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 0 var(--acc,0) rgba(37,99,235,.18)}
-  .mattr{color:var(--dim);font-size:11.5px;margin:6px 0 0}
+        border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
+  /* 정확도 원은 '거리'라서 지도와 같이 확대돼야 한다 — 역보정하지 않는다 */
+  .acc{position:absolute;border-radius:50%;transform:translate(-50%,-50%);z-index:4;
+       background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.4);pointer-events:none}
+  .mhint{color:var(--dim);font-size:12px;margin:7px 0 0}
+  .mattr{color:var(--dim);font-size:11.5px;margin:4px 0 0}
   .mnote{color:var(--dim);font-size:13px}
   .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px;margin:10px 0}
   .plist a{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);
@@ -83,25 +98,40 @@
   .plist a b{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:0 0 auto}
   .plist a.food b{background:#f59e0b}.plist a.see b{background:#10b981}
   .plist a.mrt b{background:#6366f1}.plist a.ferry b{background:#06b6d4}.plist a.airport b{background:#ef4444}
-  /* ── 하단 고정 내비 ────────────────────────────────────────────── */
-  nav.bn{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;gap:2px;
-         background:var(--card);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
-  nav.bn a{flex:1;text-align:center;text-decoration:none;color:var(--dim);font-size:12px;font-weight:700;
-           padding:7px 2px;border-radius:8px}
-  nav.bn a:active{background:var(--card2);color:var(--accent)}
-  nav.bn .net{flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:0 8px;font-size:11px;color:var(--dim)}
-  nav.bn .net s{width:8px;height:8px;border-radius:50%;background:var(--ok);display:block}
-  nav.bn .net.off s{background:var(--dim)}
+  .plist a.shop b{background:#ec4899}
+  .only-desk{display:none}
+  @media(hover:hover) and (pointer:fine){.only-desk{display:inline}}
+  /* ── 탭 ────────────────────────────────────────────────────────── */
+  .tab[hidden]{display:none}
+  .tab>h2:first-child{margin-top:10px}
+  .headbar{display:flex;align-items:flex-start;gap:12px;margin-bottom:6px}
+  .headbar h1{flex:1;min-width:0}
+  .net{flex:0 0 auto;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--dim);
+       border:1px solid var(--line);border-radius:999px;padding:3px 9px;margin-top:6px;white-space:nowrap}
+  .net s{width:7px;height:7px;border-radius:50%;background:var(--ok);display:block}
+  .net.off s{background:var(--dim)}
+  nav.bn{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;
+         background:var(--card);border-top:1px solid var(--line);
+         padding:5px 4px calc(5px + env(safe-area-inset-bottom));
+         box-shadow:0 -6px 18px rgba(0,0,0,.13)}
+  nav.bn a{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;color:var(--dim);
+           font-size:12px;font-weight:800;padding:8px 1px;border-radius:9px;
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+           -webkit-tap-highlight-color:transparent}
+  nav.bn a.on{color:#fff;background:var(--accent)}
+  @media(prefers-color-scheme:light){nav.bn a.on{color:#fff}}
+  nav.bn a:active{opacity:.75}
 </style>
 </head>
 <body><div class="wrap">
 
-<h1>가오슝 3박4일 — 부부 2쌍</h1>
+<div class="headbar"><h1>가오슝 3박4일 — 부부 2쌍</h1><span class="net" id="netdot"><s></s>온라인</span></div>
 <p class="lead">성인 4명 · <b>2026년 10월 29일(목) ~ 11월 1일(일) 확정</b> · 서울 출발.
 항공편은 <b>2026-09-04 재조사</b>(인천·김포 직항 전수, 두 개 플랫폼 교차확인)이고,
 공휴일·기후는 공식 자료로 확인했습니다. 가격은 검색 시점 기준이라 변동합니다.</p>
 
-<h2>① 이 날짜에만 걸리는 함정</h2>
+<section class="tab" id="tab-tips" hidden>
+<h2>이 날짜에만 걸리는 함정</h2>
 
 <div class="box bad">
 <b class="h">🚨 10/25는 대만 공휴일입니다 — 게다가 3일 연휴</b>
@@ -168,8 +198,123 @@ BR145 11:45 / CI165 12:00 / TW671 13:25 정도이고, 밤 출발은 <b>EVA BR171
 10월 말은 확률이 낮은 편이나, 항공권은 <b>일정 변경 가능 조건</b>을 확인하고
 여행자보험은 항공 지연·결항 보장이 포함된 것으로 드세요.
 </div>
+<h2>예약 순서 (지금부터)</h2>
+<div class="tw">
+<table>
+<tr><th>언제</th><th>할 일</th><th>메모</th></tr>
+<tr><td><b>이번 주</b></td><td>항공권 4인 확정</td><td>B안. 위탁 수하물 온라인으로 같이 추가</td></tr>
+<tr><td><b>이번 주</b></td><td>호텔 2실</td><td>메이리다오·중앙공원 일대. 무료 취소 조건으로 먼저 잡아두기</td></tr>
+<tr><td><b>10/1 (목)<br>오전 11시</b></td><td><b>재방문 지원금 등록 — 우리 부부 2명</b></td>
+    <td>한국시간 11시 = 대만 10시 개시. <b>예산 소진 시 조기 종료</b>라 첫날이 유리.
+    폼에서 동행자 인원·등록 시점 규칙을 직접 확인하고, 친구 부부를 동행자로 연결</td></tr>
+<tr><td>D-30</td><td>여권 유효기간 4명 확인</td><td>6개월 미만이면 재발급 기간이 필요합니다</td></tr>
+<tr><td>D-14</td><td>이심/유심, 여행자보험</td><td>보험은 항공 지연·결항 보장 포함 여부 확인</td></tr>
+<tr><td>D-7</td><td>DAY 3 코스 4인 합의</td><td>A/B/C 중 하나로 확정</td></tr>
+<tr><td>D-3</td><td>온라인 입국신고, 식당 예약</td><td>4명 각자 제출</td></tr>
+<tr><td>D-1</td><td>현금 환전, 짐 분배</td><td>위탁 2개를 4인이 나눠 담기</td></tr>
+</table>
+</div>
+<h2>예산 (4인 합계)</h2>
+<div class="tw">
+<table>
+<tr><th>항목</th><th>금액</th><th>산출</th></tr>
+<tr><td>항공</td><td>171~174만원</td><td>9/4 재조사. <b>위탁 15kg×4인 왕복 포함</b> — A안 1,708,325원 / B안 1,736,279원</td></tr>
+<tr><td>숙소 3박</td><td>60~90만원</td><td>4성급 2실 × 3박, 1실 10~15만원/박</td></tr>
+<tr><td>식비</td><td>50~60만원</td><td>4인 하루 15만원 × 3.5일. 야시장은 이보다 훨씬 저렴</td></tr>
+<tr><td>교통·입장</td><td>15~20만원</td><td>MRT·페리·택시·전동자전거·입장료</td></tr>
+<tr><td>기타</td><td>20~30만원</td><td>마사지·기념품·유심</td></tr>
+<tr><td><b>합계</b></td><td><b>316~384만원</b></td><td><b>1인 약 79~96만원</b></td></tr>
+</table>
+</div>
+<p>대만 물가는 한국보다 <b>식비가 확실히 쌉니다.</b> 야시장 위주로 먹으면 식비는 절반까지 내려갑니다.
+반대로 호텔은 성수기·연휴에 크게 뛰므로 B안(연휴 회피)의 이점이 여기서도 나옵니다.</p>
+<h2>실무 준비</h2>
+<h3>입국·통신</h3>
+<ul>
+<li><b>비자 면제</b> — 한국 여권 90일. 여권 유효기간이 <b>귀국일 기준 6개월 이상</b> 남아야 안전합니다</li>
+<li><b>입국신고서는 온라인</b>으로 미리 제출할 수 있습니다. 4명 각자 해야 하니 출발 전날 한 번에 처리하세요</li>
+<li><b>유심/이심</b> — 한국에서 이심을 미리 사두면 도착 즉시 켜집니다. 4인 중 최소 2명은 데이터가 있어야 길찾기가 편합니다</li>
+</ul>
+<h3>돈</h3>
+<ul>
+<li>대만은 <b>현금 비중이 아직 높습니다.</b> 야시장·페리·소규모 식당은 카드가 안 되는 곳이 많습니다</li>
+<li>4인 기준 <b>현금 2~3만 NTD</b>는 준비하고, 부족하면 현지 ATM에서 인출</li>
+<li><b>悠遊卡(이지카드)</b> 또는 <b>一卡通(아이패스)</b>를 4장 사서 MRT·경전철·버스·편의점에 쓰세요. 편의점에서 충전됩니다</li>
+</ul>
+<h3>날씨·복장</h3>
+<ul>
+<li>10월 말 가오슝 <b>평균 27℃, 낮 30℃ 근처</b>. 반팔로 다닙니다</li>
+<li>하순부터 습도가 떨어져 쾌적한 편이지만 <b>햇볕이 강합니다</b> — 선크림·모자·선글라스</li>
+<li>실내 냉방이 세고 저녁엔 선선하니 <b>얇은 겉옷 한 장</b>씩</li>
+<li>치진·보얼은 걷는 양이 많습니다. <b>편한 신발</b>이 이번 여행 최대 변수</li>
+</ul>
+<h3>앱</h3>
+<ul>
+<li><b>Google 지도 — 출국 전 오프라인 지도를 반드시 받아두세요.</b> 프로필 → 오프라인 지도 → 직접 지도 선택 → 가오슝 전체가 들어오게 범위 조절 → 다운로드. 받아두면 <b>데이터 없이도 파란 점·장소 검색·자동차 경로</b>가 됩니다(대중교통 경로만 온라인 필요). 와이파이에서 미리 하세요 — 200~400MB 정도 받습니다</li>
+<li><b>Google 번역 — 중국어(번체) 오프라인 팩</b>을 미리 내려받으세요. 카메라 메뉴판 번역이 야시장에서 데이터 없이도 됩니다</li>
+<li><b>이 문서를 홈 화면에 추가</b>해두세요(<b>지도</b> 탭에 방법). 비행기모드에서도 일정·항공편·지도가 그대로 열립니다</li>
+<li><b>Uber</b> — 대만에서 정상 작동. 4인이면 택시가 MRT보다 나은 구간이 많고, 언어 문제도 없습니다</li>
+<li>번역 앱 — 메뉴판 카메라 번역이 야시장에서 유용합니다</li>
+</ul>
+<h2>대만에서 모르면 벌금 나오는 것</h2>
+<div class="box bad">
+<b class="h">🚫 전자담배 반입 전면 금지</b>
+대만은 전자담배 반입이 <b>전면 금지</b>입니다. 적발 시 몰수 + 고액 과태료.
+넷 중 쓰는 사람이 있으면 <b>아예 두고 가세요.</b> 실수로 캐리어에 남아있는 경우가 많습니다.
+</div>
+<div class="box warn">
+<b class="h">🚇 MRT 안에서는 물도 못 마십니다</b>
+개찰구 안쪽부터 <b>음식·음료 전부 금지</b>이고 <b>물도 포함</b>입니다. 버블티 들고 타면 안 됩니다.
+과태료는 NT$1,500~7,500 (약 6만~30만원). 마시던 음료는 개찰구 전에 정리하세요.
+</div>
+<div class="box warn">
+<b class="h">🍖 육류·과일·채소 반입 금지</b>
+입국 시 육류·과일·채소·발효식품 반입이 금지됩니다. 기내식으로 받은 과일도 들고 내리지 마세요.
+</div>
+<h3>알아두면 편한 것</h3>
+<ul>
+<li><b>온라인 입국신고서가 필수입니다.</b> 종이 신고서가 폐지돼서 온라인으로만 제출합니다.
+    도착 7일 전부터 가능하니 <b>출발 전날 4명 것을 한 번에</b> 처리하세요</li>
+<li><b>영수증은 복권입니다.</b> 대만 영수증에는 복권 번호가 있어 당첨되면 실제로 돈을 받습니다.
+    앱으로 QR만 찍어두고 종이는 버려도 됩니다</li>
+<li><b>음료 당도는 "우탕"</b> — 기본 당도가 꽤 답니다. 무당은 <b>無糖(우탕)</b>, 반당은 <b>半糖(반탕)</b>.
+    이 두 단어만 알아도 실패를 줄입니다</li>
+<li><b>컨택리스 카드로 대중교통 탑승 가능</b> — 이지카드가 없어도 됩니다.
+    버스는 <b>탈 때와 내릴 때 모두 태그</b>해야 하고, 정류장에서 <b>손을 흔들지 않으면 그냥 지나갑니다</b></li>
+<li><b>유바이크(YouBike)는 현지 번호 인증이 필요할 수 있습니다.</b> 가오슝은 명소 간 거리가 애매해서
+    자전거가 유용한데, 이심에 현지 번호가 안 붙으면 등록이 막힐 수 있습니다 — 이심 살 때 확인하세요</li>
+<li><b>호텔 조식은 계산해보고 결정</b> — 1인 3~5만원 하는 곳도 있는데,
+    현지 아침(단빙·또우장)은 1만원 이하로 훨씬 대만답습니다. 4인 × 3일이면 차이가 큽니다</li>
+<li><b>구글맵 별점을 너무 믿지 마세요</b> — 로컬 맛집은 별점이 낮아도 맛있는 곳이 많습니다. 특히 아침식당</li>
+</ul>
+<h2>4인 여행에서만 생기는 함정</h2>
+<div class="box warn">
+<ul>
+<li><b>식당 4인석</b> — 인기 로컬 식당은 2인석 위주라 4명이 같이 앉기 어렵습니다. 저녁은 미리 예약하거나 시간을 당기세요</li>
+<li><b>택시</b> — 일반 택시는 4인+짐이 빠듯합니다. 공항 이동은 <b>MRT가 오히려 편합니다</b></li>
+<li><b>결제 분담</b> — 매번 나누면 피곤합니다. 공동 지갑을 만들어 한 명이 결제하고 마지막에 정산하는 방식을 추천합니다</li>
+<li><b>일정 합의</b> — DAY 3 갈림길처럼 <b>선택지가 갈리는 지점을 미리 정해두세요.</b> 현장에서 정하면 반드시 시간이 샙니다</li>
+<li><b>페이스 차이</b> — 부부마다 체력이 다릅니다. 오후에 <b>2시간쯤 각자 시간</b>을 넣어두면 오히려 전체 만족도가 올라갑니다</li>
+</ul>
+</div>
+<footer>
+<b>검증 상태</b> — 항공편·요금은 <b>2026-09-04 재조사</b>(성인 4명, 직항, 원화)입니다. Kiwi와 lastminute 두 플랫폼을 교차확인했고, <b>제주항공 7C6121의 10/29 운항은 제주항공 자체 운항 스케줄 시스템에서 직접 확인</b>했습니다(김포–가오슝 화·목·토 주 3회). 수하물 요금은 각 항공사 공식 요금표 기준입니다.
+대만 광복절 공휴일과 10/26 대체휴일은 대만 2026년 행사력으로 확인했습니다.
+기온·태풍 경향도 공개 자료로 확인했습니다.<br><br>
+재방문 소비지원금은 대만 관광청 공식 사이트(<code>5000.taiwan.net.tw</code>)로 확인했습니다.<br><br>
+<b>인스타 저장분 반영</b> — 명소 접근 정보(MRT 출구·버스 번호·입장료·야시장 시간)와
+대만 실무 규칙은 저장해둔 게시물에서 가져와 반영했습니다.
+루이펑 야시장 월·수 휴무는 <b>두 개의 독립된 출처에서 동일하게</b> 확인됐습니다.<br><br>
+<b>확인하지 않은 것</b> — <b>식당 이름은 널리 알려진 노포 위주로 골랐을 뿐 영업 여부를 확인하지 않았습니다.</b>
+대만 노포는 재료 소진 시 조기 마감하고 이전·폐업도 잦으니 반드시 구글맵으로 먼저 확인하세요.
+각 명소의 최신 운영시간·휴무일·입장료, 숙소 실제 요금도 예약 시점에 직접 확인이 필요합니다.
+페리 운항 시간은 계절마다 바뀝니다.<br><br>
+항공 요금은 검색 시점 기준이며 실시간으로 변합니다. 예약 전 최종 금액을 반드시 다시 확인하세요.
+</footer>
+</section>
 
-<h2>② 날짜 결정 — 두 안 비교</h2>
+<section class="tab" id="tab-air" hidden>
+<h2>날짜 결정 — 두 안 비교</h2>
 <div class="tw">
 <table>
 <tr><th></th><th>A안 · 10/21(수)~10/25(일)</th><th>B안 · 10/29(목)~11/1(일)</th></tr>
@@ -192,8 +337,7 @@ BR145 11:45 / CI165 12:00 / TW671 13:25 정도이고, 밤 출발은 <b>EVA BR171
 "수요일 밤이 힘들면 목요일 낮도 괜찮다"는 조건에 정확히 맞습니다.
 A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 </div>
-
-<h2 id="air">③ 항공편 — 10/29 출발 · 11/1 귀국 직항 전수</h2>
+<h2>항공편 — 10/29 출발 · 11/1 귀국 직항 전수</h2>
 <p>2026-09-04 재조사 · 성인 4명 · <b>직항만</b> · 원화 4인 총액 · Kiwi 기준(lastminute 교차확인)</p>
 
 <div class="box bad">
@@ -262,8 +406,7 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 </div>
 <p>※ 겨울 스케줄(10/25~)로 <b>TW672가 16:10 → 17:00 출발</b>로 바뀌었습니다. 9/3 자료와 다릅니다.
 11/1 김포 도착 편은 TW652 하나뿐입니다.</p>
-
-<h2>③-2 최종 후보 두 개</h2>
+<h2>최종 후보 두 개</h2>
 <div class="tw">
 <table>
 <tr><th></th><th>A안 · 인천 왕복</th><th>B안 · 김포 출발 + 인천 귀국</th></tr>
@@ -307,8 +450,10 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 <b>2순위</b> CI185 김포 12:00 → 14:10 (1,045,007원 · 위탁 이미 포함, 풀서비스) →
 <b>3순위</b> TW671 인천 13:25 → 15:55 (816,173원 · 매일 운항, 왕복 묶기 가능)
 </div>
+</section>
 
-<h2>④ 숙소 — 어느 역에 잡느냐가 전부</h2>
+<section class="tab" id="tab-stay" hidden>
+<h2>숙소 — 어느 역에 잡느냐가 전부</h2>
 <p>가오슝은 MRT 두 노선(레드·오렌지)이 <b>美麗島(메이리다오)역</b>에서 교차합니다. 여기를 중심으로 보세요.</p>
 <div class="tw">
 <table>
@@ -322,8 +467,10 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 </div>
 <p><b>부부 2쌍이면 방 2개</b>입니다. 트윈/더블을 미리 지정하고, 같은 층 인접 객실을 요청해두면
 아침에 모이기가 훨씬 편합니다. 조식 포함 여부는 4인 × 3일이면 금액 차이가 커지니 계산해보세요.</p>
+</section>
 
-<h2 id="plan">⑤ 일정표</h2>
+<section class="tab" id="tab-plan" hidden>
+<h2>일정표</h2>
 
 <div class="day">
 <h3><span class="chip">DAY 1</span>10/29 목 — 도착 &amp; 야시장</h3>
@@ -370,7 +517,7 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
   관람 동선은 <b>용호탑 → 춘추각 → 현천상제신상</b> 순서. 묶어서 2시간.<br>
   근처 <b>과무사구 아파트</b>(1.6km, 유바이크) — 9동 앞 놀이터가 포토존인데 <b>실거주 단지라 조용히</b>.</span></div></div>
 <div class="slot"><div class="time">12:00</div><div class="what"><b>점심 후 갈림길 — 셋 중 하나</b>
-  <span>4명 취향에 맞춰 고르세요. 아래 ⑥번에 각각 정리했습니다.</span></div></div>
+  <span>4명 취향에 맞춰 고르세요. 아래 <b>DAY 3 오후 — 세 가지 선택지</b>에 정리했습니다.</span></div></div>
 <div class="slot"><div class="time">18:30</div><div class="what"><b>瑞豐夜市 (루이펑 야시장)</b>
   <span><b>MRT 가오슝 아레나역 1번 출구 · 17:00~24:00.</b> 리우허보다 현지인 비중이 훨씬 높고 규모도 큽니다.<br>
   <b>월·수요일 휴무</b>라 토요일이 딱 맞습니다(두 개 출처에서 동일하게 확인).<br>
@@ -390,8 +537,7 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
   <span>MRT 레드라인 15분. 짐 찾아 이동하는 시간까지 여유 있게.</span></div></div>
 <div class="slot"><div class="time">17:00</div><div class="what"><b>TW672 출발 → 인천 20:45 도착</b></div></div>
 </div>
-
-<h2>⑥ DAY 3 오후 — 세 가지 선택지</h2>
+<h2>DAY 3 오후 — 세 가지 선택지</h2>
 <div class="tw">
 <table>
 <tr><th></th><th>내용</th><th>이동</th><th>이런 팀에게</th></tr>
@@ -414,52 +560,7 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 2인 여행 기준 일정표를 그대로 쓰면 반드시 밀립니다.
 욕심내지 말고 <b>C안을 기본으로 잡고, 컨디션이 좋으면 B안</b>으로 올리는 걸 권합니다.
 </div>
-
-<h2>⑦ 예산 (4인 합계)</h2>
-<div class="tw">
-<table>
-<tr><th>항목</th><th>금액</th><th>산출</th></tr>
-<tr><td>항공</td><td>171~174만원</td><td>9/4 재조사. <b>위탁 15kg×4인 왕복 포함</b> — A안 1,708,325원 / B안 1,736,279원</td></tr>
-<tr><td>숙소 3박</td><td>60~90만원</td><td>4성급 2실 × 3박, 1실 10~15만원/박</td></tr>
-<tr><td>식비</td><td>50~60만원</td><td>4인 하루 15만원 × 3.5일. 야시장은 이보다 훨씬 저렴</td></tr>
-<tr><td>교통·입장</td><td>15~20만원</td><td>MRT·페리·택시·전동자전거·입장료</td></tr>
-<tr><td>기타</td><td>20~30만원</td><td>마사지·기념품·유심</td></tr>
-<tr><td><b>합계</b></td><td><b>316~384만원</b></td><td><b>1인 약 79~96만원</b></td></tr>
-</table>
-</div>
-<p>대만 물가는 한국보다 <b>식비가 확실히 쌉니다.</b> 야시장 위주로 먹으면 식비는 절반까지 내려갑니다.
-반대로 호텔은 성수기·연휴에 크게 뛰므로 B안(연휴 회피)의 이점이 여기서도 나옵니다.</p>
-
-<h2 id="prep">⑧ 실무 준비</h2>
-<h3>입국·통신</h3>
-<ul>
-<li><b>비자 면제</b> — 한국 여권 90일. 여권 유효기간이 <b>귀국일 기준 6개월 이상</b> 남아야 안전합니다</li>
-<li><b>입국신고서는 온라인</b>으로 미리 제출할 수 있습니다. 4명 각자 해야 하니 출발 전날 한 번에 처리하세요</li>
-<li><b>유심/이심</b> — 한국에서 이심을 미리 사두면 도착 즉시 켜집니다. 4인 중 최소 2명은 데이터가 있어야 길찾기가 편합니다</li>
-</ul>
-<h3>돈</h3>
-<ul>
-<li>대만은 <b>현금 비중이 아직 높습니다.</b> 야시장·페리·소규모 식당은 카드가 안 되는 곳이 많습니다</li>
-<li>4인 기준 <b>현금 2~3만 NTD</b>는 준비하고, 부족하면 현지 ATM에서 인출</li>
-<li><b>悠遊卡(이지카드)</b> 또는 <b>一卡通(아이패스)</b>를 4장 사서 MRT·경전철·버스·편의점에 쓰세요. 편의점에서 충전됩니다</li>
-</ul>
-<h3>날씨·복장</h3>
-<ul>
-<li>10월 말 가오슝 <b>평균 27℃, 낮 30℃ 근처</b>. 반팔로 다닙니다</li>
-<li>하순부터 습도가 떨어져 쾌적한 편이지만 <b>햇볕이 강합니다</b> — 선크림·모자·선글라스</li>
-<li>실내 냉방이 세고 저녁엔 선선하니 <b>얇은 겉옷 한 장</b>씩</li>
-<li>치진·보얼은 걷는 양이 많습니다. <b>편한 신발</b>이 이번 여행 최대 변수</li>
-</ul>
-<h3>앱</h3>
-<ul>
-<li><b>Google 지도 — 출국 전 오프라인 지도를 반드시 받아두세요.</b> 프로필 → 오프라인 지도 → 직접 지도 선택 → 가오슝 전체가 들어오게 범위 조절 → 다운로드. 받아두면 <b>데이터 없이도 파란 점·장소 검색·자동차 경로</b>가 됩니다(대중교통 경로만 온라인 필요). 와이파이에서 미리 하세요 — 200~400MB 정도 받습니다</li>
-<li><b>Google 번역 — 중국어(번체) 오프라인 팩</b>을 미리 내려받으세요. 카메라 메뉴판 번역이 야시장에서 데이터 없이도 됩니다</li>
-<li><b>이 문서를 홈 화면에 추가</b>해두세요(⑭ 지도 섹션에 방법). 비행기모드에서도 일정·항공편·지도가 그대로 열립니다</li>
-<li><b>Uber</b> — 대만에서 정상 작동. 4인이면 택시가 MRT보다 나은 구간이 많고, 언어 문제도 없습니다</li>
-<li>번역 앱 — 메뉴판 카메라 번역이 야시장에서 유용합니다</li>
-</ul>
-
-<h2>⑨ 갈 만한 곳 전체 목록 — 골라 쓰세요</h2>
+<h2>갈 만한 곳 전체 목록 — 골라 쓰세요</h2>
 <p>위 일정은 하나의 안일 뿐입니다. 그날 컨디션대로 바꿔도 되도록 후보를 전부 펼쳐둡니다.
 접근 정보는 실제 다녀온 사람의 정리를 옮긴 것이라 구체적입니다.</p>
 
@@ -501,8 +602,75 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 <tr><td><b>컨딩</b></td><td>고속철 쭤잉역 <b>9189번 버스</b> 또는 일일투어</td>
     <td>대만 최남단. 닉슨 바위, 어롼비 등대, 롱판공원. <b>3박4일엔 무리</b></td></tr>
 </table></div>
+</section>
 
-<h2>⑩ 식당 — 로컬 위주</h2>
+<section class="tab" id="tab-shop" hidden>
+<h2>쇼핑 — 어디서 뭘 사나</h2>
+<p>가오슝 쇼핑은 <b>三多商圈(산둬 상권) 한 곳이면 대부분 끝납니다.</b>
+백화점 세 개가 한 역에 붙어 있어서 4인이 흩어졌다 모이기도 쉽습니다.</p>
+
+<h3>어디서</h3>
+<div class="tw">
+<table>
+<tr><th>곳</th><th>가는 법</th><th>성격</th></tr>
+<tr><td><b>三多商圈 (산둬 상권)</b></td><td><b>MRT 레드라인 R8 三多商圈역</b></td>
+    <td>신광미쓰코시·SOGO·다위안바이가 한 블록에. <b>기념품 한 번에 끝내기 1순위</b></td></tr>
+<tr><td><b>新堀江 (신쿠장)</b></td><td>中央公園역(R9)~三多商圈역(R8) 사이, 양쪽에서 도보 5~10분</td>
+    <td>젊은 층 거리. 저가 의류·잡화·소품. 홍대 느낌</td></tr>
+<tr><td><b>夢時代 드림몰</b></td>
+    <td><b>MRT R6 凱旋역 → 경전철 C3 前鎮之星 → C5 夢時代역</b><br>
+        경전철 06:30~22:00 · 배차 10~15분</td>
+    <td>대만 최대 쇼핑몰. 옥상 관람차 <b>'가오슝의 눈'</b>. 반나절 잡아야 함</td></tr>
+<tr><td><b>駁二 보얼예술특구</b></td><td>MRT 옌청푸역 1번 출구 도보 6분</td>
+    <td>디자인 소품·굿즈. <b>써니힐에서 펑리수 시식</b> 가능 — DAY 2에 이미 지나감</td></tr>
+<tr><td>야시장 (리우허·루이펑)</td><td>일정표 참고</td>
+    <td>잡화·먹거리 기념품이 가장 쌈. 대신 품질 편차 큼</td></tr>
+</table>
+</div>
+
+<h3>뭘</h3>
+<div class="tw">
+<table>
+<tr><th>품목</th><th>메모</th></tr>
+<tr><td><b>펑리수</b> (파인애플케이크)</td>
+    <td>써니힐·치아더·순청이 유명 브랜드. <b>선물용이면 브랜드, 나눠줄 용이면 마트·편의점 기성품</b>이 훨씬 쌉니다.
+        써니힐은 보얼예술특구 매장에서 차와 함께 시식하고 결정하면 실패가 없습니다</td></tr>
+<tr><td><b>누가크래커</b></td><td>파 크래커에 누가를 넣은 것. 회사·지인용으로 무난. 여름엔 녹으니 10월 말은 괜찮습니다</td></tr>
+<tr><td><b>드럭스토어</b></td>
+    <td><b>康是美(Cosmed) · 寶雅(POYA)</b> — 마스크팩·파스·치약·소분 화장품. 삼다상권 일대에 다 있습니다</td></tr>
+<tr><td>편의점 간식</td><td>세븐일레븐·패밀리마트 자체 상품이 의외로 선물용으로 좋습니다. 짐 무게 대비 만족도가 높음</td></tr>
+<tr><td>차 (우롱·아리산)</td><td>백화점 식품관이 안전합니다. 야시장 저가 차는 편차가 큽니다</td></tr>
+<tr><td>이지카드 / 아이패스</td><td>디자인 카드가 그 자체로 기념품입니다. 편의점에서 삽니다</td></tr>
+</table>
+</div>
+
+<div class="box hi">
+<b class="h">💸 세금 환급(TRS) — 백화점에서 몰아 사면 챙길 수 있습니다</b>
+외국인 관광객은 <b>같은 날 · 같은 매장에서 세금 포함 NT$2,000 이상</b> 사면 영업세를 돌려받습니다.
+<ul>
+<li><b>구매 당일 매장에서 여권을 제시</b>해야 합니다. 나중에 따로 신청할 수 없습니다</li>
+<li>환급 신청은 <b>출국할 때 공항에서</b> 합니다. 귀국 후에는 불가</li>
+<li>구매일로부터 <b>90일 안에</b> 물건을 가지고 출국해야 합니다</li>
+<li>4인이 따로 사면 각자 2,000을 못 넘기기 쉽습니다 — <b>한 명 명의로 몰아 결제</b>하는 게 유리합니다
+    (그 사람 여권으로 신청)</li>
+</ul>
+</div>
+
+<div class="box warn">
+<b class="h">4인이면 이걸 조심하세요</b>
+<ul>
+<li><b>기념품은 시내가 공항보다 쌉니다.</b> 마지막 날 공항에서 몰아 사면 확실히 손해입니다</li>
+<li><b>위탁 수하물 무게.</b> 티웨이·제주항공 모두 <b>15kg</b> 기준입니다. 4명이 각자 사면 금방 넘습니다 —
+    돌아오는 날 아침에 한 번 모아서 무게를 나눠 담으세요. 초과 요금은 공항에서 붙으면 비쌉니다</li>
+<li><b>결제.</b> 백화점·드림몰은 카드가 되지만 <b>야시장·노포는 현금</b>입니다. 쇼핑 날은 현금을 따로 챙기세요</li>
+<li><b>동선.</b> 삼다상권은 <b>루이펑 야시장(가오슝 아레나역)과 같은 레드라인</b>입니다.
+    DAY 3 저녁 야시장 전에 삼다에서 쇼핑을 끝내면 이동이 한 번으로 줄어듭니다</li>
+</ul>
+</div>
+</section>
+
+<section class="tab" id="tab-food" hidden>
+<h2>식당 — 로컬 위주</h2>
 <div class="box hi">
 <b class="h">동선의 핵심: 鹽埕(옌청푸)</b>
 가오슝 노포가 가장 빽빽한 곳이 <b>鹽埕 일대</b>인데, 마침 <b>보얼예술특구 바로 옆</b>입니다.
@@ -569,83 +737,28 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 <b>가기 전에 구글맵으로 영업 여부를 확인</b>하고, 한 곳이 닫혔을 때를 대비해 대안을 하나씩 잡아두세요.
 그리고 <b>구글맵 별점이 낮아도 맛있는 로컬집이 많습니다</b> — 별점보다 현지인 비율을 보세요.
 </div>
+</section>
 
-<h2>⑪ 대만에서 모르면 벌금 나오는 것</h2>
-<div class="box bad">
-<b class="h">🚫 전자담배 반입 전면 금지</b>
-대만은 전자담배 반입이 <b>전면 금지</b>입니다. 적발 시 몰수 + 고액 과태료.
-넷 중 쓰는 사람이 있으면 <b>아예 두고 가세요.</b> 실수로 캐리어에 남아있는 경우가 많습니다.
-</div>
-<div class="box warn">
-<b class="h">🚇 MRT 안에서는 물도 못 마십니다</b>
-개찰구 안쪽부터 <b>음식·음료 전부 금지</b>이고 <b>물도 포함</b>입니다. 버블티 들고 타면 안 됩니다.
-과태료는 NT$1,500~7,500 (약 6만~30만원). 마시던 음료는 개찰구 전에 정리하세요.
-</div>
-<div class="box warn">
-<b class="h">🍖 육류·과일·채소 반입 금지</b>
-입국 시 육류·과일·채소·발효식품 반입이 금지됩니다. 기내식으로 받은 과일도 들고 내리지 마세요.
-</div>
-<h3>알아두면 편한 것</h3>
-<ul>
-<li><b>온라인 입국신고서가 필수입니다.</b> 종이 신고서가 폐지돼서 온라인으로만 제출합니다.
-    도착 7일 전부터 가능하니 <b>출발 전날 4명 것을 한 번에</b> 처리하세요</li>
-<li><b>영수증은 복권입니다.</b> 대만 영수증에는 복권 번호가 있어 당첨되면 실제로 돈을 받습니다.
-    앱으로 QR만 찍어두고 종이는 버려도 됩니다</li>
-<li><b>음료 당도는 "우탕"</b> — 기본 당도가 꽤 답니다. 무당은 <b>無糖(우탕)</b>, 반당은 <b>半糖(반탕)</b>.
-    이 두 단어만 알아도 실패를 줄입니다</li>
-<li><b>컨택리스 카드로 대중교통 탑승 가능</b> — 이지카드가 없어도 됩니다.
-    버스는 <b>탈 때와 내릴 때 모두 태그</b>해야 하고, 정류장에서 <b>손을 흔들지 않으면 그냥 지나갑니다</b></li>
-<li><b>유바이크(YouBike)는 현지 번호 인증이 필요할 수 있습니다.</b> 가오슝은 명소 간 거리가 애매해서
-    자전거가 유용한데, 이심에 현지 번호가 안 붙으면 등록이 막힐 수 있습니다 — 이심 살 때 확인하세요</li>
-<li><b>호텔 조식은 계산해보고 결정</b> — 1인 3~5만원 하는 곳도 있는데,
-    현지 아침(단빙·또우장)은 1만원 이하로 훨씬 대만답습니다. 4인 × 3일이면 차이가 큽니다</li>
-<li><b>구글맵 별점을 너무 믿지 마세요</b> — 로컬 맛집은 별점이 낮아도 맛있는 곳이 많습니다. 특히 아침식당</li>
-</ul>
-
-<h2>⑫ 4인 여행에서만 생기는 함정</h2>
-<div class="box warn">
-<ul>
-<li><b>식당 4인석</b> — 인기 로컬 식당은 2인석 위주라 4명이 같이 앉기 어렵습니다. 저녁은 미리 예약하거나 시간을 당기세요</li>
-<li><b>택시</b> — 일반 택시는 4인+짐이 빠듯합니다. 공항 이동은 <b>MRT가 오히려 편합니다</b></li>
-<li><b>결제 분담</b> — 매번 나누면 피곤합니다. 공동 지갑을 만들어 한 명이 결제하고 마지막에 정산하는 방식을 추천합니다</li>
-<li><b>일정 합의</b> — DAY 3 갈림길처럼 <b>선택지가 갈리는 지점을 미리 정해두세요.</b> 현장에서 정하면 반드시 시간이 샙니다</li>
-<li><b>페이스 차이</b> — 부부마다 체력이 다릅니다. 오후에 <b>2시간쯤 각자 시간</b>을 넣어두면 오히려 전체 만족도가 올라갑니다</li>
-</ul>
-</div>
-
-<h2>⑬ 예약 순서 (지금부터)</h2>
-<div class="tw">
-<table>
-<tr><th>언제</th><th>할 일</th><th>메모</th></tr>
-<tr><td><b>이번 주</b></td><td>항공권 4인 확정</td><td>B안. 위탁 수하물 온라인으로 같이 추가</td></tr>
-<tr><td><b>이번 주</b></td><td>호텔 2실</td><td>메이리다오·중앙공원 일대. 무료 취소 조건으로 먼저 잡아두기</td></tr>
-<tr><td><b>10/1 (목)<br>오전 11시</b></td><td><b>재방문 지원금 등록 — 우리 부부 2명</b></td>
-    <td>한국시간 11시 = 대만 10시 개시. <b>예산 소진 시 조기 종료</b>라 첫날이 유리.
-    폼에서 동행자 인원·등록 시점 규칙을 직접 확인하고, 친구 부부를 동행자로 연결</td></tr>
-<tr><td>D-30</td><td>여권 유효기간 4명 확인</td><td>6개월 미만이면 재발급 기간이 필요합니다</td></tr>
-<tr><td>D-14</td><td>이심/유심, 여행자보험</td><td>보험은 항공 지연·결항 보장 포함 여부 확인</td></tr>
-<tr><td>D-7</td><td>DAY 3 코스 4인 합의</td><td>A/B/C 중 하나로 확정</td></tr>
-<tr><td>D-3</td><td>온라인 입국신고, 식당 예약</td><td>4명 각자 제출</td></tr>
-<tr><td>D-1</td><td>현금 환전, 짐 분배</td><td>위탁 2개를 4인이 나눠 담기</td></tr>
-</table>
-</div>
-
-<h2 id="map">⑭ 오프라인 지도 — GPS 켜면 현재 위치가 뜹니다</h2>
+<section class="tab" id="tab-map" hidden>
+<h2 id="map">오프라인 지도 — GPS 켜면 현재 위치가 뜹니다</h2>
 <p>이 지도는 <b>문서 안에 저장</b>돼 있어서 데이터·와이파이가 없어도 열립니다.
 비행기모드에서도 GPS는 동작하므로 <b>파란 점(현재 위치)</b>도 그대로 뜹니다.</p>
 
 <div class="mapctl">
   <button class="mbtn" id="btn-locate">📍 내 위치 찾기</button>
-  <button class="mbtn" id="btn-zoom" data-z="1">배율 1×</button>
+  <button class="mbtn" id="btn-zoom">배율 1×</button>
   <span class="mstat" id="map-stat">위치 권한을 허용하면 파란 점이 표시됩니다</span>
 </div>
 
 <div class="mapwrap" id="mapwrap">
   <div class="mapinner" id="mapinner">
     <img src="map.jpg" alt="가오슝 시내 지도" id="mapimg" width="1536" height="2048">
+    <div class="acc" id="acc" hidden></div>
     <div class="me" id="me" hidden><i></i></div>
   </div>
 </div>
+<p class="mhint">손가락으로 <b>끌어서 이동</b> · 두 손가락으로 <b>확대·축소</b> · <b>두 번 탭</b>하면 확대
+<span class="only-desk">(데스크톱은 드래그 이동, Ctrl+휠 확대)</span></p>
 <p class="mattr">지도 © <b>OpenStreetMap</b> 기여자 · ODbL. 개인 여행용으로 내려받아 넣은 이미지입니다.</p>
 
 <h3>장소 — 누르면 구글 지도가 열립니다</h3>
@@ -661,36 +774,23 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 한 번 추가하면 아이콘으로 실행되고, <b>비행기모드·데이터 없음 상태에서도</b> 문서 전체와 지도가 그대로 열립니다.
 추가 직후 한 번은 온라인 상태에서 열어 저장을 끝내주세요.
 </div>
-
-<footer>
-<b>검증 상태</b> — 항공편·요금은 <b>2026-09-04 재조사</b>(성인 4명, 직항, 원화)입니다. Kiwi와 lastminute 두 플랫폼을 교차확인했고, <b>제주항공 7C6121의 10/29 운항은 제주항공 자체 운항 스케줄 시스템에서 직접 확인</b>했습니다(김포–가오슝 화·목·토 주 3회). 수하물 요금은 각 항공사 공식 요금표 기준입니다.
-대만 광복절 공휴일과 10/26 대체휴일은 대만 2026년 행사력으로 확인했습니다.
-기온·태풍 경향도 공개 자료로 확인했습니다.<br><br>
-재방문 소비지원금은 대만 관광청 공식 사이트(<code>5000.taiwan.net.tw</code>)로 확인했습니다.<br><br>
-<b>인스타 저장분 반영</b> — 명소 접근 정보(MRT 출구·버스 번호·입장료·야시장 시간)와
-대만 실무 규칙은 저장해둔 게시물에서 가져와 반영했습니다.
-루이펑 야시장 월·수 휴무는 <b>두 개의 독립된 출처에서 동일하게</b> 확인됐습니다.<br><br>
-<b>확인하지 않은 것</b> — <b>식당 이름은 널리 알려진 노포 위주로 골랐을 뿐 영업 여부를 확인하지 않았습니다.</b>
-대만 노포는 재료 소진 시 조기 마감하고 이전·폐업도 잦으니 반드시 구글맵으로 먼저 확인하세요.
-각 명소의 최신 운영시간·휴무일·입장료, 숙소 실제 요금도 예약 시점에 직접 확인이 필요합니다.
-페리 운항 시간은 계절마다 바뀝니다.<br><br>
-항공 요금은 검색 시점 기준이며 실시간으로 변합니다. 예약 전 최종 금액을 반드시 다시 확인하세요.
-</footer>
-
+</section>
 </div>
-<nav class="bn"><a href="#air">항공</a><a href="#plan">일정</a><a href="#map">지도</a><a href="#prep">실무</a><span class="net" id="netdot"><s></s>온라인</span></nav>
+<nav class="bn"><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a></nav>
 <script>
-/* 오프라인 지도 + 현재 위치 + PWA 등록 */
+/* 오프라인 지도 + 현재 위치 + PWA 등록
+   지도는 스크롤 컨테이너가 아니라 transform 으로 움직인다 — 한 손가락 드래그로 이동,
+   두 손가락으로 확대/축소. 스크롤바가 없고 페이지 스크롤과도 싸우지 않는다. */
 (function () {
   var MAP = {"z": 14, "x0": 13664, "y0": 7130, "w": 1536, "h": 2048};
-  var PLACES = [{"n": "공항", "lat": 22.5750233, "lng": 120.3518671, "k": "airport"}, {"n": "메이리다오", "lat": 22.6313941, "lng": 120.3018602, "k": "mrt"}, {"n": "리우허야시장", "lat": 22.632315, "lng": 120.2998114, "k": "food"}, {"n": "보얼예술특구", "lat": 22.6208221, "lng": 120.2849755, "k": "see"}, {"n": "구산페리", "lat": 22.6198948, "lng": 120.2700121, "k": "ferry"}, {"n": "치진", "lat": 22.6071214, "lng": 120.2690771, "k": "see"}, {"n": "영국영사관", "lat": 22.6182838, "lng": 120.2672142, "k": "see"}, {"n": "음악센터", "lat": 22.6183599, "lng": 120.2921417, "k": "see"}, {"n": "용호탑", "lat": 22.6805069, "lng": 120.2923758, "k": "see"}, {"n": "루이펑야시장", "lat": 22.6662453, "lng": 120.2993655, "k": "food"}, {"n": "웨이우잉", "lat": 22.6229194, "lng": 120.3423978, "k": "see"}, {"n": "가오슝역", "lat": 22.6394421, "lng": 120.304021, "k": "mrt"}, {"n": "쭤잉역", "lat": 22.6872433, "lng": 120.3076744, "k": "mrt"}];
+  var PLACES = [{"n": "공항", "lat": 22.5750233, "lng": 120.3518671, "k": "airport"}, {"n": "메이리다오", "lat": 22.6313941, "lng": 120.3018602, "k": "mrt"}, {"n": "리우허야시장", "lat": 22.632315, "lng": 120.2998114, "k": "food"}, {"n": "보얼예술특구", "lat": 22.6208221, "lng": 120.2849755, "k": "see"}, {"n": "구산페리", "lat": 22.6198948, "lng": 120.2700121, "k": "ferry"}, {"n": "치진", "lat": 22.6071214, "lng": 120.2690771, "k": "see"}, {"n": "영국영사관", "lat": 22.6182838, "lng": 120.2672142, "k": "see"}, {"n": "음악센터", "lat": 22.6183599, "lng": 120.2921417, "k": "see"}, {"n": "용호탑", "lat": 22.6805069, "lng": 120.2923758, "k": "see"}, {"n": "루이펑야시장", "lat": 22.6662453, "lng": 120.2993655, "k": "food"}, {"n": "웨이우잉", "lat": 22.6229194, "lng": 120.3423978, "k": "see"}, {"n": "가오슝역", "lat": 22.6394421, "lng": 120.304021, "k": "mrt"}, {"n": "쭤잉역", "lat": 22.6872433, "lng": 120.3076744, "k": "mrt"}, {"n": "삼다상권", "lat": 22.6141528, "lng": 120.3044216, "k": "shop"}, {"n": "드림몰", "lat": 22.5950454, "lng": 120.3069875, "k": "shop"}];
 
   function lng2x(lng, z) { return (lng + 180) / 360 * Math.pow(2, z); }
   function lat2y(lat, z) {
     var r = lat * Math.PI / 180;
     return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z);
   }
-  // 지도 이미지 안에서의 위치를 % 로. 이미지가 어떤 배율로 그려져도 그대로 맞는다.
+  // 지도 이미지 안에서의 위치를 % 로. 어떤 배율로 그려져도 그대로 맞는다.
   function pct(lat, lng) {
     var px = (lng2x(lng, MAP.z) - MAP.x0) * 256;
     var py = (lat2y(lat, MAP.z) - MAP.y0) * 256;
@@ -701,7 +801,9 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   var inner = document.getElementById('mapinner');
   var wrap = document.getElementById('mapwrap');
   var me = document.getElementById('me');
+  var acc = document.getElementById('acc');
   var stat = document.getElementById('map-stat');
+  var zb = document.getElementById('btn-zoom');
   if (!inner) return;
 
   // ── 장소 마커 + 목록 ────────────────────────────────────────────
@@ -727,23 +829,149 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     if (list) list.appendChild(a);
   });
 
-  // ── 배율 ────────────────────────────────────────────────────────
-  var zb = document.getElementById('btn-zoom');
-  zb.addEventListener('click', function () {
-    var z = (parseInt(zb.dataset.z, 10) % 3) + 1;
-    zb.dataset.z = z;
-    zb.textContent = '배율 ' + z + '×';
-    inner.style.setProperty('--mz', z);
+  // ── 이동/확대 상태 ──────────────────────────────────────────────
+  var k = 1, tx = 0, ty = 0;
+  var MAXK = 5;
+
+  function box() {
+    var cw = wrap.clientWidth;
+    return { cw: cw, ch: wrap.clientHeight, W: cw, H: cw * MAP.h / MAP.w };
+  }
+  // 최소 배율 = 뷰포트를 꽉 채우는 배율. 위아래 빈 띠가 생기지 않고,
+  // 어느 배율에서도 끌어서 움직일 여지가 남는다.
+  function minK() {
+    var d = box();
+    if (!(d.cw > 0) || !(d.H > 0)) return 1;
+    return Math.max(1, d.ch / d.H);
+  }
+  // 지도가 뷰포트 밖으로 빠져나가지 않게. 작을 땐 가운데로.
+  function clamp() {
+    var mk = minK();
+    if (k < mk) k = mk;
+    var d = box(), w = d.W * k, h = d.H * k;
+    tx = w <= d.cw ? (d.cw - w) / 2 : Math.min(0, Math.max(d.cw - w, tx));
+    ty = h <= d.ch ? (d.ch - h) / 2 : Math.min(0, Math.max(d.ch - h, ty));
+  }
+  function apply() {
+    inner.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + k + ')';
+    inner.style.setProperty('--k', k);
+    if (zb) zb.textContent = '배율 ' + (Math.round(k * 10) / 10) + '×';
+  }
+  // (cx,cy) = 뷰포트 안 좌표. 그 점을 고정한 채 배율만 바꾼다.
+  function zoomAt(nk, cx, cy) {
+    nk = Math.max(minK(), Math.min(MAXK, nk));
+    var r = nk / k;
+    tx = cx - (cx - tx) * r;
+    ty = cy - (cy - ty) * r;
+    k = nk;
+    clamp(); apply(); drawAcc();
+  }
+  function centerOn(q) {
+    var d = box();
+    tx = d.cw / 2 - q.x / 100 * d.W * k;
+    ty = d.ch / 2 - q.y / 100 * d.H * k;
+    clamp(); apply();
+  }
+  clamp(); apply();
+  addEventListener('resize', function () { clamp(); apply(); drawAcc(); });
+  // 탭 전환으로 지도가 다시 보이게 됐을 때 호출된다 (숨어 있을 땐 폭이 0이라 계산이 안 된다)
+  window.__mapRelayout = function () { clamp(); apply(); drawAcc(); };
+
+  // ── 포인터 제스처 (마우스·터치 공용) ────────────────────────────
+  var pts = new Map();
+  var pinch = 0;
+
+  wrap.addEventListener('pointerdown', function (e) {
+    try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    wrap.classList.add('drag');
+    if (pts.size === 2) pinch = dist();
+  });
+
+  function dist() {
+    var v = [];
+    pts.forEach(function (p) { v.push(p); });
+    return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
+  }
+  function mid() {
+    var v = [], r = wrap.getBoundingClientRect();
+    pts.forEach(function (p) { v.push(p); });
+    return { x: (v[0].x + v[1].x) / 2 - r.left, y: (v[0].y + v[1].y) / 2 - r.top };
+  }
+
+  wrap.addEventListener('pointermove', function (e) {
+    var prev = pts.get(e.pointerId);
+    if (!prev) return;
+    e.preventDefault();
+    if (pts.size === 1) {
+      tx += e.clientX - prev.x;
+      ty += e.clientY - prev.y;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      clamp(); apply();
+    } else if (pts.size === 2) {
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      var nd = dist(), m = mid();
+      if (pinch > 0 && nd > 0) zoomAt(k * nd / pinch, m.x, m.y);
+      pinch = nd;
+    }
+  });
+
+  function release(e) {
+    pts.delete(e.pointerId);
+    if (pts.size < 2) pinch = 0;
+    if (pts.size === 0) wrap.classList.remove('drag');
+  }
+  wrap.addEventListener('pointerup', release);
+  wrap.addEventListener('pointercancel', release);
+
+  // 더블탭/더블클릭 = 한 단계 확대, 이미 확대돼 있으면 원래대로
+  var lastTap = 0, lastXY = null;
+  wrap.addEventListener('pointerup', function (e) {
+    var now = Date.now(), r = wrap.getBoundingClientRect();
+    var p = { x: e.clientX - r.left, y: e.clientY - r.top };
+    if (now - lastTap < 320 && lastXY &&
+        Math.hypot(p.x - lastXY.x, p.y - lastXY.y) < 30) {
+      zoomAt(k >= minK() * 2 ? minK() : minK() * 2.5, p.x, p.y);
+      lastTap = 0;
+    } else {
+      lastTap = now; lastXY = p;
+    }
+  });
+
+  // 데스크톱: ctrl(⌘)+휠로만 확대. 그냥 휠은 페이지 스크롤로 흘려보낸다.
+  wrap.addEventListener('wheel', function (e) {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    var r = wrap.getBoundingClientRect();
+    zoomAt(k * (e.deltaY < 0 ? 1.15 : 1 / 1.15), e.clientX - r.left, e.clientY - r.top);
+  }, { passive: false });
+
+  if (zb) zb.addEventListener('click', function () {
+    var base = minK();
+    var next = k >= base * 2.9 ? base : (k >= base * 1.9 ? base * 3 : base * 2);
+    var d = box();
+    zoomAt(next, d.cw / 2, d.ch / 2);
   });
 
   // ── 현재 위치 ───────────────────────────────────────────────────
   var last = null;
 
+  // 정확도 원은 실제 거리라서 지도와 함께 확대돼야 한다 → 지도 좌표계 크기로 그린다
+  function drawAcc() {
+    if (!last || !acc || acc.hidden) return;
+    var mpp = 156543.03 * Math.cos(last.coords.latitude * Math.PI / 180) / Math.pow(2, MAP.z);
+    var d = box();
+    var rpx = last.coords.accuracy / mpp * (d.W / MAP.w); // 확대 전 기준 픽셀
+    var size = Math.max(6, Math.min(2000, rpx * 2));
+    acc.style.width = size + 'px';
+    acc.style.height = size + 'px';
+  }
+
   function draw(pos) {
     last = pos;
     var q = pct(pos.coords.latitude, pos.coords.longitude);
     if (!q.inside) {
-      me.hidden = true;
+      me.hidden = true; if (acc) acc.hidden = true;
       stat.textContent = '현재 위치가 이 지도 범위 밖입니다 (' +
         pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4) + ')';
       return;
@@ -751,13 +979,15 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     me.hidden = false;
     me.style.left = q.x + '%';
     me.style.top = q.y + '%';
-    // 정확도 원 — 이 줌에서 1픽셀이 몇 m 인지로 환산
-    var mpp = 156543.03 * Math.cos(pos.coords.latitude * Math.PI / 180) / Math.pow(2, MAP.z);
-    var scale = inner.getBoundingClientRect().width / MAP.w;
-    var r = Math.max(0, Math.min(60, pos.coords.accuracy / mpp * scale));
-    me.querySelector('i').style.setProperty('--acc', r.toFixed(1) + 'px');
+    if (acc) {
+      acc.hidden = false;
+      acc.style.left = q.x + '%';
+      acc.style.top = q.y + '%';
+      drawAcc();
+    }
     stat.textContent = '현재 위치 표시 중 · 오차 약 ' + Math.round(pos.coords.accuracy) + 'm · ' +
       new Date(pos.timestamp).toLocaleTimeString('ko-KR');
+    return q;
   }
 
   function fail(err) {
@@ -766,20 +996,13 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
       : '위치를 가져오지 못했습니다 (' + err.message + '). 실외에서 다시 시도해보세요.';
   }
 
-  function center() {
-    if (!last) return;
-    var q = pct(last.coords.latitude, last.coords.longitude);
-    if (!q.inside) return;
-    var b = inner.getBoundingClientRect();
-    wrap.scrollTo({ left: q.x / 100 * b.width - wrap.clientWidth / 2,
-                    top: q.y / 100 * b.height - wrap.clientHeight / 2, behavior: 'smooth' });
-  }
-
   document.getElementById('btn-locate').addEventListener('click', function () {
     if (!navigator.geolocation) { stat.textContent = '이 브라우저는 위치 기능을 지원하지 않습니다.'; return; }
     stat.textContent = '위치를 찾는 중…';
-    navigator.geolocation.getCurrentPosition(function (p) { draw(p); center(); }, fail,
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+    navigator.geolocation.getCurrentPosition(function (p) {
+      var q = draw(p);
+      if (q) { if (k < minK() * 2) zoomAt(minK() * 2, box().cw / 2, box().ch / 2); centerOn(q); }
+    }, fail, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
     navigator.geolocation.watchPosition(draw, fail, { enableHighAccuracy: true, maximumAge: 5000 });
   });
 
@@ -801,6 +1024,44 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
       });
     });
   }
+})();
+
+/* 탭 전환 — 문서가 길어서 한 화면에 하나씩만 보여준다.
+   마지막으로 본 탭을 기억하고, #해시로 바로 들어올 수도 있다. */
+(function () {
+  var TABS = ['tips', 'air', 'stay', 'plan', 'shop', 'food', 'map'];
+  var links = [].slice.call(document.querySelectorAll('nav.bn a[data-tab]'));
+
+  function show(id, push) {
+    if (TABS.indexOf(id) < 0) id = 'tips';
+    TABS.forEach(function (t) {
+      var el = document.getElementById('tab-' + t);
+      if (el) el.hidden = (t !== id);
+    });
+    links.forEach(function (a) {
+      if (a.dataset.tab === id) a.classList.add('on'); else a.classList.remove('on');
+    });
+    try { localStorage.setItem('kh.tab', id); } catch (e) {}
+    if (push) {
+      scrollTo(0, 0);
+      if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    }
+    // 숨어 있는 동안은 폭이 0이라 지도 위치 계산이 안 된다 — 보이는 순간 다시 잡는다
+    if (id === 'map' && window.__mapRelayout) window.__mapRelayout();
+  }
+
+  links.forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); show(a.dataset.tab, true); });
+  });
+
+  var start = (location.hash || '').replace('#', '');
+  if (TABS.indexOf(start) < 0) {
+    try { start = localStorage.getItem('kh.tab') || 'tips'; } catch (e) { start = 'tips'; }
+  }
+  show(start, false);
+  addEventListener('hashchange', function () {
+    show((location.hash || '').replace('#', ''), false);
+  });
 })();
 </script>
 </body></html>
