@@ -148,6 +148,7 @@
   #btn-locate{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
   .mstat{color:var(--dim);font-size:12.5px;flex:1 1 100%}
   .mapwrap{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;
+           -webkit-user-select:none;user-select:none;
            background:var(--card2);height:min(70vh,600px);min-height:300px;box-shadow:var(--sh);
            touch-action:none;cursor:grab;overscroll-behavior:contain;
            -ms-overflow-style:none;scrollbar-width:none}
@@ -155,7 +156,7 @@
   .mapwrap.drag{cursor:grabbing}
   .mapinner{position:absolute;left:0;top:0;width:100%;transform-origin:0 0;line-height:0;
             will-change:transform}
-  .mapinner img{width:100%;height:auto;display:block;pointer-events:none;
+  .mapinner img{width:100%;height:auto;display:block;pointer-events:none;image-rendering:auto;
                 -webkit-user-drag:none;user-select:none}
   .mk{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
       z-index:3;pointer-events:none}
@@ -164,6 +165,7 @@
   .mk.food b{background:#f59e0b}.mk.see b{background:#10b981}
   .mk.mrt b{background:#6366f1}.mk.ferry b{background:#06b6d4}.mk.airport b{background:#ef4444}
   .mk.shop b{background:#ec4899}
+  .mk.air b{background:#0f172a}
   .mk i{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-style:normal;
         font-size:10.5px;line-height:1.3;white-space:nowrap;color:#0b1020;background:rgba(255,255,255,.9);
         border-radius:5px;padding:1px 5px;font-weight:800;box-shadow:0 1px 3px rgba(0,0,0,.25)}
@@ -186,6 +188,7 @@
   .plist a.food b{background:#f59e0b}.plist a.see b{background:#10b981}
   .plist a.mrt b{background:#6366f1}.plist a.ferry b{background:#06b6d4}.plist a.airport b{background:#ef4444}
   .plist a.shop b{background:#ec4899}
+  .plist a.air b{background:#0f172a}
   .only-desk{display:none}
   @media(hover:hover) and (pointer:fine){.only-desk{display:inline}}
 
@@ -215,6 +218,7 @@
   .pc .m.cat{border-color:transparent;color:#fff}
   .pc .m.cat.see{background:#10b981}.pc .m.cat.food{background:#f59e0b}
   .pc .m.cat.shop{background:#ec4899}.pc .m.cat.stay{background:#6366f1}
+  .pc .m.cat.air{background:#0f172a}
   .pc .acc{font-size:12px;color:var(--dim);font-weight:700}
   .pc .why{font-size:13px;color:var(--ink2);line-height:1.55;flex:1}
   .pc .act{display:flex;gap:6px;margin-top:2px}
@@ -338,7 +342,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-05f</span>
+  <span class="ver">v09-05g</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -529,6 +533,8 @@ BR145 11:45 / CI165 12:00 / TW671 13:25 정도이고, 밤 출발은 <b>EVA BR171
 
 <section class="tab" id="tab-air" hidden>
 <h2 id="air">항공편 — 최종 후보 두 개</h2>
+<p class="mnote">아래 두 편은 <b>일정에도 넣어 뒀습니다.</b> 빠졌으면 여기서 다시 담으세요.</p>
+<div class="cards" id="c-air" data-cat="air"></div>
 
 <div class="tw">
 <table>
@@ -603,10 +609,13 @@ BR145 11:45 / CI165 12:00 / TW671 13:25 정도이고, 밤 출발은 <b>EVA BR171
 같은 호텔도 날짜와 객실에 따라 크게 달라집니다.</p>
 <div class="cards" id="c-stay" data-cat="stay"></div>
 <div class="box">
-<b class="h">후기에서 자주 언급되는 곳 (지도에는 없음)</b>
-<b>호텔 두아(Hotel dùa)</b> — 메이리다오역 도보 1분, 4성. 객실이 넓고 조식이 좋다는 평이 많습니다.<br>
-<b>그리트인(Greet Inn)</b> — 첸진역 인근. 한국어가 되는 직원이 있고 욕조 있는 객실이 있습니다.<br>
-두 곳은 지도 좌표를 확정하지 못해 카드에서 빠졌습니다. 예약 사이트에서 위치를 직접 확인하세요.
+<b class="h">이름만 아는 곳 (좌표를 확정하지 못해 카드에는 없습니다)</b>
+<b>호텔 두아(Hotel dùa)</b> — 메이리다오역 도보 1분, 4성. 객실이 넓고 조식이 좋다는 평이 많습니다. 한국 여행자 후기 최다<br>
+<b>그리트인(Greet Inn)</b> — 첸진역 인근. 한국어가 되는 직원이 있고 욕조 객실이 있습니다<br>
+<b>킹덤 호텔(Kingdom Hotel)</b> — 옌청푸. 보얼예술특구·페리 도보권의 오래된 호텔<br>
+<b>저스트슬립(捷絲旅) 中正館</b> — 중앙공원 인근의 실속형 체인<br>
+<b>시티스위트(City Suites)</b> — 가오슝역 인근. 장기 투숙형 구조<br>
+예약 사이트에서 위치를 직접 확인하세요. <b>요금·평점은 날짜와 객실에 따라 크게 달라집니다.</b>
 </div>
 
 <p><b>부부 2쌍이면 방 2개</b>입니다. 트윈/더블을 미리 지정하고, 같은 층 인접 객실을 요청해두면
@@ -1009,7 +1018,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 
 <div class="mapwrap" id="mapwrap">
   <div class="mapinner" id="mapinner">
-    <img src="map.jpg" alt="가오슝 시내 지도" id="mapimg" width="1536" height="2048">
+    <img src="map.jpg" alt="가오슝 시내 지도" id="mapimg" width="2560" height="3328">
     <div class="mapacc" id="acc" hidden></div>
     <div class="me" id="me" hidden><i></i></div>
   </div>
@@ -1021,7 +1030,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 
 <h3>이 지도로 되는 것 / 안 되는 것</h3>
 <p class="mnote"><b>됩니다</b> — 지금 내 위치, 담은 일정의 순서와 위치, 후보 장소 위치.
-<b>안 됩니다</b> — 길찾기·검색·대중교통 경로.<br>
+<b>안 됩니다</b> — 길찾기·검색·대중교통 경로. <b>불광산·다둥 문화예술센터는 지도 범위 밖</b>이라 구글맵으로 보세요.<br>
 길찾기는 구글 지도 앱이 맡습니다. <b>출국 전 와이파이에서 가오슝 오프라인 지도를 받아두세요</b> —
 구글 지도 → 프로필 → 오프라인 지도 → 직접 지도 선택 → 가오슝 전체가 들어오게 범위 조절 → 다운로드.
 받아두면 각 카드의 <b>구글맵</b> 버튼이 데이터 없이도 열립니다.</p>
@@ -1040,7 +1049,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
    지도는 스크롤 컨테이너가 아니라 transform 으로 움직인다 — 한 손가락 드래그로 이동,
    두 손가락으로 확대/축소. 스크롤바가 없고 페이지 스크롤과도 싸우지 않는다. */
 (function () {
-  var MAP = {"z": 14, "x0": 13664, "y0": 7130, "w": 1536, "h": 2048};
+  var MAP = {"z": 15, "x0": 27329, "y0": 14262, "w": 2560, "h": 3328};
   var PLACES = [{"n": "공항", "lat": 22.5750233, "lng": 120.3518671, "k": "airport"}, {"n": "메이리다오", "lat": 22.6313941, "lng": 120.3018602, "k": "mrt"}, {"n": "리우허야시장", "lat": 22.632315, "lng": 120.2998114, "k": "food"}, {"n": "보얼예술특구", "lat": 22.6208221, "lng": 120.2849755, "k": "see"}, {"n": "구산페리", "lat": 22.6198948, "lng": 120.2700121, "k": "ferry"}, {"n": "치진", "lat": 22.6071214, "lng": 120.2690771, "k": "see"}, {"n": "영국영사관", "lat": 22.6182838, "lng": 120.2672142, "k": "see"}, {"n": "음악센터", "lat": 22.6183599, "lng": 120.2921417, "k": "see"}, {"n": "용호탑", "lat": 22.6805069, "lng": 120.2923758, "k": "see"}, {"n": "루이펑야시장", "lat": 22.6662453, "lng": 120.2993655, "k": "food"}, {"n": "웨이우잉", "lat": 22.6229194, "lng": 120.3423978, "k": "see"}, {"n": "가오슝역", "lat": 22.6394421, "lng": 120.304021, "k": "mrt"}, {"n": "쭤잉역", "lat": 22.6872433, "lng": 120.3076744, "k": "mrt"}, {"n": "삼다상권", "lat": 22.6141528, "lng": 120.3044216, "k": "shop"}, {"n": "드림몰", "lat": 22.5950454, "lng": 120.3069875, "k": "shop"}];
 
   function lng2x(lng, z) { return (lng + 180) / 360 * Math.pow(2, z); }
@@ -1068,7 +1077,13 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 
   // ── 이동/확대 상태 ──────────────────────────────────────────────
   var k = 1, tx = 0, ty = 0;
-  var MAXK = 5;
+  // 이미지 원본 픽셀에 닿는 배율 이상으로 키우면 흐려지기만 한다.
+  // 화면 폭 대비 원본 폭의 비율 + 약간의 여유까지만 허용한다.
+  function maxK() {
+    var d = box();
+    if (!(d.cw > 0)) return 4;
+    return Math.max(minK() * 1.5, Math.min(6, MAP.w / d.cw * 1.35));
+  }
 
   function box() {
     var cw = wrap.clientWidth;
@@ -1096,7 +1111,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   }
   // (cx,cy) = 뷰포트 안 좌표. 그 점을 고정한 채 배율만 바꾼다.
   function zoomAt(nk, cx, cy) {
-    nk = Math.max(minK(), Math.min(MAXK, nk));
+    nk = Math.max(minK(), Math.min(maxK(), nk));
     var r = nk / k;
     tx = cx - (cx - tx) * r;
     ty = cy - (cy - ty) * r;
@@ -1129,6 +1144,9 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   var pinch = 0;
 
   wrap.addEventListener('pointerdown', function (e) {
+    // 이걸 막지 않으면 브라우저가 텍스트 선택·이미지 끌기를 시작해
+    // pointermove 가 곧바로 취소된다 (PC 에서 드래그가 안 먹던 원인)
+    e.preventDefault();
     try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     wrap.classList.add('drag');
@@ -1194,8 +1212,16 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   }, { passive: false });
 
   if (zb) zb.addEventListener('click', function () {
-    var base = minK();
-    var next = k >= base * 2.9 ? base : (k >= base * 1.9 ? base * 3 : base * 2);
+    // base → 2배 → 3배 → 원본해상도 → 다시 base 로 순환한다.
+    // 이전 로직은 3배에서 갇혀 더 확대되지도, 돌아오지도 않았다.
+    var base = minK(), top = maxK();
+    var steps = [base, base * 2, base * 3, top].filter(function (v, i, a) {
+      return v <= top + 0.01 && (i === 0 || v > a[i - 1] + 0.05);
+    });
+    var next = base;
+    for (var i = 0; i < steps.length; i++) {
+      if (steps[i] > k + 0.05) { next = steps[i]; break; }
+    }
     var d = box();
     zoomAt(next, d.cw / 2, d.ch / 2);
   });
@@ -1277,7 +1303,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
    구조: DB(장소) → 카드 렌더 → 플래너(localStorage) → 지도 마커
    일정은 브라우저에 저장되므로 오프라인에서도 그대로 남는다. */
 (function () {
-  var DB = [{"id": "longhu", "n": "롄츠탄 용호탑", "lat": 22.680507, "lng": 120.292376, "c": "see", "dur": 120, "area": "쭤잉", "acc": "MRT 생태공원역 2번 출구 + 유바이크", "why": "가오슝 대표 사진 스팟. 용 입으로 들어가 호랑이 입으로 나오는 게 순서. 춘추각까지 묶어서", "r": "★★★"}, {"id": "pier2", "n": "보얼예술특구", "lat": 22.620822, "lng": 120.284976, "c": "see", "dur": 180, "area": "옌청푸", "acc": "MRT 옌청푸역 1번 출구 도보 6분", "why": "항만 창고를 개조한 문화예술구. 소품샵·포토존이 넓게 퍼져 있어 경전철로 구간 이동", "r": "★★★"}, {"id": "cijin", "n": "치진 해수욕장", "lat": 22.607121, "lng": 120.269077, "c": "see", "dur": 180, "area": "치진", "acc": "구산 페리 7분", "why": "자전거로 해안도로 한 바퀴가 정석. 무지개 교회·해산물 거리·등대", "r": "★★★"}, {"id": "sizihwan", "n": "시쯔완 일몰", "lat": 22.618465, "lng": 120.265997, "c": "see", "dur": 90, "area": "시쯔완", "acc": "MRT 시쯔완역 + 셔틀", "why": "가오슝 최고의 일몰. 10월 말 일몰은 17:20 전후라 시간을 앞당겨야 함", "r": "★★★"}, {"id": "formosa", "n": "美麗島 빛의 돔", "lat": 22.631394, "lng": 120.30186, "c": "see", "dur": 20, "area": "메이리다오", "acc": "MRT 미려도역 구내", "why": "세계 최대 유리 공공미술 光之穹頂. 역 안이라 5분이면 봄", "r": "★★★"}, {"id": "fokuang", "n": "불광산 불타기념관", "lat": 22.754801, "lng": 120.446495, "c": "see", "dur": 240, "area": "다수", "acc": "쭤잉역에서 E02 버스 40분", "why": "동양 최대급 불교 성지. 대불과 박물관 규모가 압도적. 반나절 이상 필요", "r": "★★★"}, {"id": "consul", "n": "打狗영국영사관", "lat": 22.618284, "lng": 120.267214, "c": "see", "dur": 90, "area": "시쯔완", "acc": "시쯔완 언덕", "why": "옛 영국 영사관에서 항구를 내려다봄. 일몰과 묶어서 보는 코스", "r": "★★"}, {"id": "music", "n": "가오슝 음악센터", "lat": 22.61836, "lng": 120.292142, "c": "see", "dur": 60, "area": "옌청푸", "acc": "경전철 음악센터역", "why": "항구변 조형 건축. 밤 조명이 좋아 저녁 동선에 넣기 좋음", "r": "★★"}, {"id": "weiwuying", "n": "웨이우잉 예술문화센터", "lat": 22.622919, "lng": 120.342398, "c": "see", "dur": 90, "area": "펑산", "acc": "MRT 웨이우잉역", "why": "거대한 곡면 건축. 실내라 날씨와 무관하고 사진이 잘 나옴", "r": "★★"}, {"id": "library", "n": "가오슝 시립도서관", "lat": 22.610066, "lng": 120.301858, "c": "see", "dur": 60, "area": "첸전", "acc": "MRT 산둬상권역 도보 10분", "why": "기둥 없이 매달린 구조의 도서관. 야간 조명이 특히 예쁨", "r": "★★"}, {"id": "central", "n": "중앙공원", "lat": 22.62486, "lng": 120.301067, "c": "see", "dur": 45, "area": "중앙공원", "acc": "MRT 중앙공원역 직결", "why": "도심 속 열대 공원. 저녁 산책 코스", "r": "★★"}, {"id": "ferry", "n": "구산 페리 선착장", "lat": 22.619895, "lng": 120.270012, "c": "see", "dur": 20, "area": "구산", "acc": "MRT 시쯔완역 도보 8분", "why": "치진 가는 페리. 자전거를 들고 탈 수 있음", "r": "★★"}, {"id": "bridge", "n": "대항교(다강차오)", "lat": 22.617875, "lng": 120.283879, "c": "see", "dur": 30, "area": "옌청푸", "acc": "경전철 다이한차오역", "why": "아시아 최초 수평 회전교. 개폐 시간을 맞춰 가야 볼거리가 됨", "r": "★★"}, {"id": "chengcing", "n": "청칭호", "lat": 22.660663, "lng": 120.351092, "c": "see", "dur": 150, "area": "냐오쑹", "acc": "MRT 웨이우잉역 + 버스", "why": "호수 공원. 한적하게 걷기 좋지만 접근이 번거로움", "r": "★"}, {"id": "dadong", "n": "다둥 문화예술센터", "lat": 22.624405, "lng": 120.363577, "c": "see", "dur": 60, "area": "펑산", "acc": "MRT 다둥역 도보 3분", "why": "우산 모양 막 구조물. 사진 명소지만 시내에서 다소 떨어짐", "r": "★"}, {"id": "ruifeng", "n": "루이펑 야시장", "lat": 22.666245, "lng": 120.299365, "c": "food", "dur": 120, "area": "아레나", "acc": "MRT 아레나역 1번 출구 · 17:00~24:00", "why": "현지인 비중이 훨씬 높고 규모도 큼. 월·수 휴무라 토요일이 딱", "r": "★★★"}, {"id": "yarou", "n": "鴨肉珍 오리고기", "lat": 22.624999, "lng": 120.281162, "c": "food", "dur": 60, "area": "옌청푸", "acc": "옌청푸 大溝頂 골목", "why": "오리고기 + 미가오(찹쌀밥). 가오슝 노포의 대표", "r": "★★★"}, {"id": "gangyuan", "n": "港園 우육면", "lat": 22.620738, "lng": 120.287499, "c": "food", "dur": 60, "area": "옌청푸", "acc": "보얼예술특구 도보권", "why": "가오슝 우육면 하면 나오는 이름. 점심에 줄이 김", "r": "★★★"}, {"id": "xinglong", "n": "興隆居 아침만두", "lat": 22.63042, "lng": 120.293621, "c": "food", "dur": 40, "area": "첸진", "acc": "MRT 미려도역 도보 10분", "why": "아침 만두·두유. 오전에만 열고 줄이 길어 일찍 가야 함", "r": "★★★"}, {"id": "huada", "n": "樺達 밀크티", "lat": 22.62378, "lng": 120.28581, "c": "food", "dur": 15, "area": "옌청푸", "acc": "MRT 옌청푸역 도보 5분", "why": "가오슝 밀크티의 대명사. 줄이 길지만 회전이 빠릅니다. 테이크아웃 전용", "r": "★★★"}, {"id": "liuhe", "n": "리우허 야시장", "lat": 22.632315, "lng": 120.299811, "c": "food", "dur": 90, "area": "메이리다오", "acc": "MRT 미려도역 11번 출구 · 매일 16:30~24:00", "why": "접근성 최고. 관광객 비중이 높지만 첫날 저녁으로는 최적", "r": "★★"}, {"id": "popo", "n": "婆婆冰 빙수", "lat": 22.626395, "lng": 120.28201, "c": "food", "dur": 40, "area": "옌청푸", "acc": "옌청푸 치셴3로", "why": "옌청푸 빙수 노포. 망고빙수가 간판", "r": "★★"}, {"id": "dingwang", "n": "鼎王 마라훠궈", "lat": 22.662707, "lng": 120.306742, "c": "food", "dur": 120, "area": "산둬", "acc": "MRT 쭤잉/아레나 인근", "why": "대만 대표 마라훠궈 체인. 4인이면 예약이 안전합니다", "r": "★★"}, {"id": "sanniu", "n": "三牛 우육면", "lat": 22.678315, "lng": 120.292809, "c": "food", "dur": 50, "area": "쭤잉", "acc": "롄츠탄 도보권", "why": "현지인이 채우는 우육면집. 용호탑 보고 걸어가기 좋습니다", "r": "★★"}, {"id": "sanduo", "n": "산둬 상권", "lat": 22.614153, "lng": 120.304422, "c": "shop", "dur": 150, "area": "산둬", "acc": "MRT 산둬상권역", "why": "신광미쓰코시·SOGO·다위안바이가 한 블록에. 기념품 한 번에 끝내기 1순위", "r": "★★★"}, {"id": "dream", "n": "드림몰", "lat": 22.595045, "lng": 120.306988, "c": "shop", "dur": 240, "area": "첸전", "acc": "MRT 凱旋역 → 경전철 夢時代역", "why": "대만 최대 쇼핑몰. 옥상 관람차. 반나절 필요", "r": "★★"}, {"id": "skm", "n": "신광미쓰코시", "lat": 22.614533, "lng": 120.30602, "c": "shop", "dur": 120, "area": "산둬", "acc": "MRT 산둬상권역 직결", "why": "백화점 식품관에서 차·펑리수를 사기 좋음", "r": "★★"}, {"id": "indigo", "n": "호텔 인디고 중앙공원", "lat": 22.624418, "lng": 120.301459, "c": "stay", "dur": 0, "area": "중앙공원", "acc": "MRT 중앙공원역 도보 2분", "why": "루프톱 바가 있는 부티크. 리우허 야시장·신굴장 도보권이라 4인 이동이 가장 편한 위치", "r": "★★★"}, {"id": "intercon", "n": "인터컨티넨탈 가오슝", "lat": 22.61101, "lng": 120.303312, "c": "stay", "dur": 0, "area": "아이허", "acc": "MRT 산둬상권역 도보 8분", "why": "2023년 개관한 최신 5성. 도서관·음악센터 쪽 신도심 뷰. 예산이 넉넉하면 1순위", "r": "★★★"}, {"id": "hilai", "n": "그랜드 하이라이", "lat": 22.619518, "lng": 120.296636, "c": "stay", "dur": 0, "area": "산둬", "acc": "MRT 산둬상권역 도보 5분", "why": "백화점과 붙은 대형 호텔. 조식 뷔페가 유명하고 방이 많아 4인 2실 잡기 쉬움", "r": "★★★"}, {"id": "ambass", "n": "앰배서더 가오슝", "lat": 22.624326, "lng": 120.290329, "c": "stay", "dur": 0, "area": "아이허", "acc": "MRT 옌청푸역 도보 8분", "why": "아이허(사랑강) 바로 앞 클래식 호텔. 강변 산책·보얼예술특구 도보권", "r": "★★"}, {"id": "silks", "n": "실크스 클럽", "lat": 22.610553, "lng": 120.305405, "c": "stay", "dur": 0, "area": "첸전", "acc": "MRT 산둬상권역 인근", "why": "미쉐린 레스토랑을 낀 5성 부티크. 객실 수가 적어 조용함", "r": "★★"}];
+  var DB = [{"id": "flyin", "n": "✈ 김포 11:00 → 가오슝 13:15", "lat": 22.575023, "lng": 120.351867, "c": "air", "dur": 0, "area": "공항", "r": "", "acc": "제주항공 7C6121 · 3시간 15분", "why": "도착 후 입국·유심 개통 → MRT 레드라인. 공항역이 터미널 지하에 바로 있어 시내까지 15분입니다"}, {"id": "flyout", "n": "✈ 가오슝 17:00 → 인천 20:45", "lat": 22.575023, "lng": 120.351867, "c": "air", "dur": 0, "area": "공항", "r": "", "acc": "티웨이 TW672 · 2시간 45분", "why": "공항에 15:00까지 도착하면 넉넉합니다. 시내에서 MRT 15분이라 14:30에는 출발하세요"}, {"id": "longhu", "n": "롄츠탄 용호탑", "lat": 22.680507, "lng": 120.292376, "c": "see", "dur": 120, "area": "쭤잉", "acc": "MRT 생태공원역 2번 출구 + 유바이크", "why": "가오슝 대표 사진 스팟. 용 입으로 들어가 호랑이 입으로 나오는 게 순서. 춘추각까지 묶어서", "r": "★★★"}, {"id": "pier2", "n": "보얼예술특구", "lat": 22.620822, "lng": 120.284976, "c": "see", "dur": 180, "area": "옌청푸", "acc": "MRT 옌청푸역 1번 출구 도보 6분", "why": "항만 창고를 개조한 문화예술구. 소품샵·포토존이 넓게 퍼져 있어 경전철로 구간 이동", "r": "★★★"}, {"id": "cijin", "n": "치진 해수욕장", "lat": 22.607121, "lng": 120.269077, "c": "see", "dur": 180, "area": "치진", "acc": "구산 페리 7분", "why": "자전거로 해안도로 한 바퀴가 정석. 무지개 교회·해산물 거리·등대", "r": "★★★"}, {"id": "sizihwan", "n": "시쯔완 일몰", "lat": 22.618465, "lng": 120.265997, "c": "see", "dur": 90, "area": "시쯔완", "acc": "MRT 시쯔완역 + 셔틀", "why": "가오슝 최고의 일몰. 10월 말 일몰은 17:20 전후라 시간을 앞당겨야 함", "r": "★★★"}, {"id": "formosa", "n": "美麗島 빛의 돔", "lat": 22.631394, "lng": 120.30186, "c": "see", "dur": 20, "area": "메이리다오", "acc": "MRT 미려도역 구내", "why": "세계 최대 유리 공공미술 光之穹頂. 역 안이라 5분이면 봄", "r": "★★★"}, {"id": "fokuang", "n": "불광산 불타기념관", "lat": 22.754801, "lng": 120.446495, "c": "see", "dur": 240, "area": "다수", "acc": "쭤잉역에서 E02 버스 40분", "why": "동양 최대급 불교 성지. 대불과 박물관 규모가 압도적. 반나절 이상 필요", "r": "★★★"}, {"id": "consul", "n": "打狗영국영사관", "lat": 22.618284, "lng": 120.267214, "c": "see", "dur": 90, "area": "시쯔완", "acc": "시쯔완 언덕", "why": "옛 영국 영사관에서 항구를 내려다봄. 일몰과 묶어서 보는 코스", "r": "★★"}, {"id": "music", "n": "가오슝 음악센터", "lat": 22.61836, "lng": 120.292142, "c": "see", "dur": 60, "area": "옌청푸", "acc": "경전철 음악센터역", "why": "항구변 조형 건축. 밤 조명이 좋아 저녁 동선에 넣기 좋음", "r": "★★"}, {"id": "weiwuying", "n": "웨이우잉 예술문화센터", "lat": 22.622919, "lng": 120.342398, "c": "see", "dur": 90, "area": "펑산", "acc": "MRT 웨이우잉역", "why": "거대한 곡면 건축. 실내라 날씨와 무관하고 사진이 잘 나옴", "r": "★★"}, {"id": "library", "n": "가오슝 시립도서관", "lat": 22.610066, "lng": 120.301858, "c": "see", "dur": 60, "area": "첸전", "acc": "MRT 산둬상권역 도보 10분", "why": "기둥 없이 매달린 구조의 도서관. 야간 조명이 특히 예쁨", "r": "★★"}, {"id": "central", "n": "중앙공원", "lat": 22.62486, "lng": 120.301067, "c": "see", "dur": 45, "area": "중앙공원", "acc": "MRT 중앙공원역 직결", "why": "도심 속 열대 공원. 저녁 산책 코스", "r": "★★"}, {"id": "ferry", "n": "구산 페리 선착장", "lat": 22.619895, "lng": 120.270012, "c": "see", "dur": 20, "area": "구산", "acc": "MRT 시쯔완역 도보 8분", "why": "치진 가는 페리. 자전거를 들고 탈 수 있음", "r": "★★"}, {"id": "bridge", "n": "대항교(다강차오)", "lat": 22.617875, "lng": 120.283879, "c": "see", "dur": 30, "area": "옌청푸", "acc": "경전철 다이한차오역", "why": "아시아 최초 수평 회전교. 개폐 시간을 맞춰 가야 볼거리가 됨", "r": "★★"}, {"id": "chengcing", "n": "청칭호", "lat": 22.660663, "lng": 120.351092, "c": "see", "dur": 150, "area": "냐오쑹", "acc": "MRT 웨이우잉역 + 버스", "why": "호수 공원. 한적하게 걷기 좋지만 접근이 번거로움", "r": "★"}, {"id": "dadong", "n": "다둥 문화예술센터", "lat": 22.624405, "lng": 120.363577, "c": "see", "dur": 60, "area": "펑산", "acc": "MRT 다둥역 도보 3분", "why": "우산 모양 막 구조물. 사진 명소지만 시내에서 다소 떨어짐", "r": "★"}, {"id": "ruifeng", "n": "루이펑 야시장", "lat": 22.666245, "lng": 120.299365, "c": "food", "dur": 120, "area": "아레나", "acc": "MRT 아레나역 1번 출구 · 17:00~24:00", "why": "현지인 비중이 훨씬 높고 규모도 큼. 월·수 휴무라 토요일이 딱", "r": "★★★"}, {"id": "yarou", "n": "鴨肉珍 오리고기", "lat": 22.624999, "lng": 120.281162, "c": "food", "dur": 60, "area": "옌청푸", "acc": "옌청푸 大溝頂 골목", "why": "오리고기 + 미가오(찹쌀밥). 가오슝 노포의 대표", "r": "★★★"}, {"id": "gangyuan", "n": "港園 우육면", "lat": 22.620738, "lng": 120.287499, "c": "food", "dur": 60, "area": "옌청푸", "acc": "보얼예술특구 도보권", "why": "가오슝 우육면 하면 나오는 이름. 점심에 줄이 김", "r": "★★★"}, {"id": "xinglong", "n": "興隆居 아침만두", "lat": 22.63042, "lng": 120.293621, "c": "food", "dur": 40, "area": "첸진", "acc": "MRT 미려도역 도보 10분", "why": "아침 만두·두유. 오전에만 열고 줄이 길어 일찍 가야 함", "r": "★★★"}, {"id": "huada", "n": "樺達 밀크티", "lat": 22.62378, "lng": 120.28581, "c": "food", "dur": 15, "area": "옌청푸", "acc": "MRT 옌청푸역 도보 5분", "why": "가오슝 밀크티의 대명사. 줄이 길지만 회전이 빠릅니다. 테이크아웃 전용", "r": "★★★"}, {"id": "liuhe", "n": "리우허 야시장", "lat": 22.632315, "lng": 120.299811, "c": "food", "dur": 90, "area": "메이리다오", "acc": "MRT 미려도역 11번 출구 · 매일 16:30~24:00", "why": "접근성 최고. 관광객 비중이 높지만 첫날 저녁으로는 최적", "r": "★★"}, {"id": "popo", "n": "婆婆冰 빙수", "lat": 22.626395, "lng": 120.28201, "c": "food", "dur": 40, "area": "옌청푸", "acc": "옌청푸 치셴3로", "why": "옌청푸 빙수 노포. 망고빙수가 간판", "r": "★★"}, {"id": "dingwang", "n": "鼎王 마라훠궈", "lat": 22.662707, "lng": 120.306742, "c": "food", "dur": 120, "area": "산둬", "acc": "MRT 쭤잉/아레나 인근", "why": "대만 대표 마라훠궈 체인. 4인이면 예약이 안전합니다", "r": "★★"}, {"id": "sanniu", "n": "三牛 우육면", "lat": 22.678315, "lng": 120.292809, "c": "food", "dur": 50, "area": "쭤잉", "acc": "롄츠탄 도보권", "why": "현지인이 채우는 우육면집. 용호탑 보고 걸어가기 좋습니다", "r": "★★"}, {"id": "sanduo", "n": "산둬 상권", "lat": 22.614153, "lng": 120.304422, "c": "shop", "dur": 150, "area": "산둬", "acc": "MRT 산둬상권역", "why": "신광미쓰코시·SOGO·다위안바이가 한 블록에. 기념품 한 번에 끝내기 1순위", "r": "★★★"}, {"id": "dream", "n": "드림몰", "lat": 22.595045, "lng": 120.306988, "c": "shop", "dur": 240, "area": "첸전", "acc": "MRT 凱旋역 → 경전철 夢時代역", "why": "대만 최대 쇼핑몰. 옥상 관람차. 반나절 필요", "r": "★★"}, {"id": "skm", "n": "신광미쓰코시", "lat": 22.614533, "lng": 120.30602, "c": "shop", "dur": 120, "area": "산둬", "acc": "MRT 산둬상권역 직결", "why": "백화점 식품관에서 차·펑리수를 사기 좋음", "r": "★★"}, {"id": "indigo", "n": "호텔 인디고 중앙공원", "lat": 22.624418, "lng": 120.301459, "c": "stay", "dur": 0, "area": "중앙공원", "acc": "MRT 중앙공원역 도보 2분", "why": "루프톱 바가 있는 부티크. 리우허 야시장·신굴장 도보권이라 4인 이동이 가장 편한 위치", "r": "★★★"}, {"id": "intercon", "n": "인터컨티넨탈 가오슝", "lat": 22.61101, "lng": 120.303312, "c": "stay", "dur": 0, "area": "아이허", "acc": "MRT 산둬상권역 도보 8분", "why": "2023년 개관한 최신 5성. 도서관·음악센터 쪽 신도심 뷰. 예산이 넉넉하면 1순위", "r": "★★★"}, {"id": "hilai", "n": "그랜드 하이라이", "lat": 22.619518, "lng": 120.296636, "c": "stay", "dur": 0, "area": "산둬", "acc": "MRT 산둬상권역 도보 5분", "why": "백화점과 붙은 대형 호텔. 조식 뷔페가 유명하고 방이 많아 4인 2실 잡기 쉬움", "r": "★★★"}, {"id": "ambass", "n": "앰배서더 가오슝", "lat": 22.624326, "lng": 120.290329, "c": "stay", "dur": 0, "area": "아이허", "acc": "MRT 옌청푸역 도보 8분", "why": "아이허(사랑강) 바로 앞 클래식 호텔. 강변 산책·보얼예술특구 도보권", "r": "★★"}, {"id": "silks", "n": "실크스 클럽", "lat": 22.610553, "lng": 120.305405, "c": "stay", "dur": 0, "area": "첸전", "acc": "MRT 산둬상권역 인근", "why": "미쉐린 레스토랑을 낀 5성 부티크. 객실 수가 적어 조용함", "r": "★★"}, {"id": "marriott", "n": "가오슝 메리어트", "lat": 22.655457, "lng": 120.306432, "c": "stay", "dur": 0, "area": "쭤잉", "acc": "MRT 쭤잉역 인근", "why": "2020년 개관한 대형 호텔. 방이 넓고 조식이 좋습니다. 고속철 쭤잉역이 가까워 타이난 당일치기에 유리", "r": "★★"}, {"id": "lees", "n": "리즈 호텔", "lat": 22.627073, "lng": 120.313786, "c": "stay", "dur": 0, "area": "산둬", "acc": "MRT 신이궈샤오역 도보권", "why": "린야 지역의 클래식 5성. 산둬 상권까지 한 정거장. 가격 대비 객실이 넓습니다", "r": "★★"}, {"id": "hgroyal", "n": "한신 아레나", "lat": 22.662724, "lng": 120.302052, "c": "stay", "dur": 0, "area": "가오슝역", "acc": "MRT 아레나역 도보 5분", "why": "루이펑 야시장 도보권. 수영장이 있고 신축이라 깔끔합니다. 시내 중심은 아님", "r": "★★"}];
   var BYID = {};
   DB.forEach(function (p) { BYID[p.id] = p; });
 
@@ -1287,17 +1313,17 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     { k: '3', t: 'DAY 3', d: '10/31 토', c: '#b06000' },
     { k: '4', t: 'DAY 4', d: '11/1 일',  c: '#d3307f' }
   ];
-  var CATNAME = { see: '명소', food: '맛집', shop: '쇼핑', stay: '숙소' };
+  var CATNAME = { see: '명소', food: '맛집', shop: '쇼핑', stay: '숙소', air: '항공' };
 
   // 문서의 기본 코스를 그대로 옮긴 추천 일정
   // 항공 B안(7C6121 김포 11:00 → 가오슝 13:15 도착) 기준.
   // 첫날 오후가 통째로 살아나므로 보얼·시쯔완을 DAY 1 로 당겼다.
   var PRESET = {
-    '1': [['pier2', '15:00'], ['sizihwan', '17:00'], ['formosa', '19:00'], ['liuhe', '19:30']],
+    '1': [['flyin', '11:00'], ['pier2', '15:00'], ['sizihwan', '17:00'], ['formosa', '19:00'], ['liuhe', '19:30']],
     '2': [['ferry', '09:30'], ['cijin', '10:00'], ['gangyuan', '13:30'], ['music', '16:00'],
           ['huada', '17:30']],
     '3': [['longhu', '09:00'], ['sanduo', '14:00'], ['ruifeng', '18:30']],
-    '4': [['weiwuying', '10:00'], ['skm', '12:00']]
+    '4': [['weiwuying', '10:00'], ['skm', '12:00'], ['flyout', '17:00']]
   };
 
   // ── 저장소 ──────────────────────────────────────────────────────
