@@ -152,12 +152,29 @@
       var nav = document.querySelector('nav a[data-tab="' + sec.id.replace(/^tab-/, '') + '"]');
       bits.push(nav ? nav.textContent.trim() + ' 탭' : sec.id);
     }
-    var h = el.closest && el.closest('section,div,article');
-    while (h) {
-      var head = h.querySelector && h.querySelector('h1,h2,h3,h4');
-      if (head && head.textContent.trim()) { bits.push(head.textContent.trim().slice(0, 40)); break; }
-      h = h.parentElement;
+    // 이 요소 '바로 앞'에 오는 제목을 찾는다.
+    // 컨테이너의 첫 제목을 집으면 긴 탭에서 항상 맨 위 제목이 나와 틀린다.
+    var HEAD = 'h1,h2,h3,h4,h5,h6,summary';
+    function lastHeadIn(node) {
+      if (!node || node.nodeType !== 1) return null;
+      if (/^(H[1-6]|SUMMARY)$/.test(node.tagName)) return node;
+      var inner = node.querySelectorAll ? node.querySelectorAll(HEAD) : [];
+      return inner.length ? inner[inner.length - 1] : null;
     }
+    var head = null, node = el;
+    while (node && node !== document.body && !head) {
+      var prev = node.previousElementSibling;
+      while (prev && !head) { head = lastHeadIn(prev); prev = prev.previousElementSibling; }
+      if (node === sec) break;
+      node = node.parentElement;
+    }
+    // 접힌 섹션(details) 안이면 그 summary 가 제목이다
+    var det = el.closest && el.closest('details');
+    if (det && det.querySelector('summary')) {
+      var sm = det.querySelector('summary').textContent.trim().slice(0, 40);
+      if (!head || head.textContent.trim().indexOf(sm) !== 0) bits.push(sm);
+    }
+    if (head) bits.push(head.textContent.trim().replace(/\s+/g, ' ').slice(0, 40));
     return bits.join(' › ');
   }
 
@@ -522,7 +539,7 @@
   };
   window.__apick = api;
 
-  setMode('el');
+  setMode('area');   // 기본은 영역 지정
   paint();
   }   // boot()
 })();
