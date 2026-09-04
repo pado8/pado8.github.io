@@ -23,9 +23,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          # package-lock.json 을 키로 의존성을 캐싱한다. 잠금 파일이 없으면 이 설정이 실패한다.
+          cache: 'npm'
 
+      # npm install 이 아니라 npm ci — 잠금 파일 그대로 설치하므로 매번 같은 트리가 나오고,
+      # 의존성 해석 단계가 통째로 빠진다(2026-09-04 기준 7분 54초 → 대폭 단축).
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build with Vite
         run: npm run build
