@@ -342,7 +342,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-05g</span>
+  <span class="ver">v09-05h</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1018,7 +1018,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 
 <div class="mapwrap" id="mapwrap">
   <div class="mapinner" id="mapinner">
-    <img src="map.jpg" alt="가오슝 시내 지도" id="mapimg" width="2560" height="3328">
+    <img src="map.jpg?v=2" alt="가오슝 시내 지도" id="mapimg" width="2560" height="3328">
     <div class="mapacc" id="acc" hidden></div>
     <div class="me" id="me" hidden><i></i></div>
   </div>
@@ -1610,7 +1610,21 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   // 한 번도 만진 적이 없으면 기본 코스를 채워둔다 — 빈 화면보다 낫다
   var touched = true;
   try { touched = localStorage.getItem(KEY) !== null; } catch (e) {}
-  if (!touched) loadPreset(); else renderAll();
+  if (!touched) {
+    loadPreset();
+  } else {
+    // 이미 짜둔 일정에는 항공편이 없다. 딱 한 번만 앞뒤에 끼워 넣는다.
+    var FLAG = 'khh.air.v1';
+    var done = true;
+    try { done = localStorage.getItem(FLAG) === '1'; } catch (e) {}
+    if (!done) {
+      if (BYID.flyin && !findDay('flyin')) plan['1'].unshift({ id: 'flyin', t: '11:00' });
+      if (BYID.flyout && !findDay('flyout')) plan['4'].push({ id: 'flyout', t: '17:00' });
+      try { localStorage.setItem(FLAG, '1'); } catch (e) {}
+      save();
+    }
+    renderAll();
+  }
 })();
 
 /* 탭 전환 — 문서가 길어서 한 화면에 하나씩만 보여준다.

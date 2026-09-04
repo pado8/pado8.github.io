@@ -5,14 +5,14 @@
    온라인이면 항상 최신본이 바로 뜨고(예전 stale-while-revalidate 는 한 번 더 열어야
    새 내용이 보여서 "고쳤는데 왜 그대로냐"가 됐다), 오프라인이거나 느리면 즉시 캐시본으로 떨어진다.
    나머지 자산(지도·아이콘)은 잘 안 바뀌므로 캐시 우선. */
-const CACHE = 'kaohsiung-2026-09-05g';
+const CACHE = 'kaohsiung-2026-09-05h';
 const DOC = './index.html';
 const NET_TIMEOUT = 2500;
 const SCOPE = new URL('./', self.registration.scope).pathname;
 const ASSETS = [
   './',
   DOC,
-  './map.jpg',
+  './map.jpg?v=2',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
