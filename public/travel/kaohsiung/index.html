@@ -13,56 +13,139 @@
 <meta name="apple-mobile-web-app-title" content="가오슝">
 <title>가오슝 3박4일 — 부부 2쌍 여행 도시에</title>
 <style>
-  :root{--bg:#0e0f13;--card:#171922;--card2:#1f2230;--line:#2b2f3d;--ink:#e9ebf2;--dim:#98a0b4;
-        --accent:#7c9cff;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--gold:#f0b429}
-  @media(prefers-color-scheme:light){:root{--bg:#f6f7fb;--card:#fff;--card2:#eef0f6;--line:#dde1ec;
-        --ink:#15171e;--dim:#5a6076;--accent:#3b5bdb;--ok:#15803d;--warn:#b45309;--bad:#dc2626;--gold:#b45309}}
+  /* ── 팔레트 ─────────────────────────────────────────────────────── */
+  :root{
+    --bg:#f4f6fd; --bg2:#e9edfb; --card:#fff; --card2:#f2f5fd; --line:#e0e6f5;
+    --ink:#131a2b; --ink2:#333d55; --dim:#68728d;
+    --accent:#3d5afe; --accent2:#7c4dff; --accent-soft:#eaeeff;
+    --ok:#0f9d58; --ok-soft:#e6f6ec; --warn:#b06000; --warn-soft:#fdf1e0;
+    --bad:#d3302f; --bad-soft:#fdecec; --gold:#a16207;
+    --sh:0 1px 2px rgba(19,26,43,.05),0 8px 24px -12px rgba(19,26,43,.16);
+    --sh-lg:0 2px 6px rgba(19,26,43,.06),0 18px 40px -18px rgba(19,26,43,.28);
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --bg:#0b1020; --bg2:#131b34; --card:#151d33; --card2:#1c2542; --line:#28325a;
+    --ink:#eef2ff; --ink2:#cfd8f5; --dim:#95a1c4;
+    --accent:#7aa2ff; --accent2:#b18cff; --accent-soft:#1d2748;
+    --ok:#4ade80; --ok-soft:#12291f; --warn:#fbbf24; --warn-soft:#2c2313;
+    --bad:#fb7185; --bad-soft:#2d1620; --gold:#f0b429;
+    --sh:0 1px 2px rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.7);
+    --sh-lg:0 2px 8px rgba(0,0,0,.35),0 22px 48px -20px rgba(0,0,0,.8);
+  }}
   *{box-sizing:border-box}
-  body{margin:0;padding:32px 18px 90px;background:var(--bg);color:var(--ink);
-       font:16px/1.72 -apple-system,BlinkMacSystemFont,"Pretendard","Malgun Gothic",sans-serif}
-  .wrap{max-width:900px;margin:0 auto}
-  h1{font-size:1.75rem;margin:0 0 6px;letter-spacing:-.02em}
-  .lead{color:var(--dim);margin:0 0 26px}
-  h2{font-size:1.2rem;margin:40px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line)}
-  h3{font-size:1.02rem;margin:24px 0 8px}
-  table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0}
-  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:var(--card2)}
-  .tw{overflow-x:auto}
-  pre{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:13px 15px;
-      overflow-x:auto;font-size:13.5px;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}
-  code{background:var(--card2);padding:1.5px 6px;border-radius:4px;font-size:.9em}
-  .box{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin:14px 0}
-  .box.bad{border-color:var(--bad)}
-  .box.warn{border-color:var(--warn)}
-  .box.ok{border-color:var(--ok)}
-  .box.hi{border-color:var(--accent)}
-  .box b.h{display:block;margin-bottom:6px;font-size:1rem}
-  .day{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px 22px;margin:16px 0}
-  .day h3{margin:0 0 3px;font-size:1.1rem;display:flex;align-items:center;gap:9px}
-  .chip{background:var(--accent);color:#fff;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800}
+  body{margin:0;padding:0 0 60px;color:var(--ink);
+       background:var(--bg);
+       background-image:radial-gradient(1100px 520px at 12% -8%,var(--bg2),transparent 62%),
+                        radial-gradient(900px 460px at 108% 4%,var(--accent-soft),transparent 60%);
+       background-attachment:fixed;
+       font:16px/1.72 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 18px}
+
+  /* ── 헤더 ───────────────────────────────────────────────────────── */
+  .headbar{padding:30px 0 16px}
+  h1{font-size:1.9rem;line-height:1.25;margin:0 0 10px;letter-spacing:-.035em;font-weight:800}
+  .hchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .hchip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+         border-radius:999px;padding:5px 11px;background:var(--card);border:1px solid var(--line);
+         color:var(--ink2);box-shadow:var(--sh)}
+  .hchip.dday{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+  .net s{width:7px;height:7px;border-radius:50%;background:var(--ok);display:block}
+  .net.off s{background:var(--dim)}
+  .ver{font-size:10.5px;color:var(--dim);opacity:.7;letter-spacing:.02em}
+  .lead{color:var(--dim);margin:14px 0 0;font-size:14.5px;line-height:1.65}
+
+  /* ── 상단 탭 ────────────────────────────────────────────────────── */
+  nav.bn{position:sticky;top:0;z-index:60;margin:14px -18px 0;padding:9px 18px;
+         display:flex;gap:6px;overflow-x:auto;scroll-behavior:smooth;
+         background:color-mix(in srgb,var(--bg) 86%,transparent);
+         backdrop-filter:saturate(1.6) blur(12px);-webkit-backdrop-filter:saturate(1.6) blur(12px);
+         border-bottom:1px solid var(--line);
+         -ms-overflow-style:none;scrollbar-width:none}
+  nav.bn::-webkit-scrollbar{display:none}
+  nav.bn .brand{display:none}
+  nav.bn a{flex:0 0 auto;text-decoration:none;color:var(--ink2);font-size:13.5px;font-weight:700;
+           padding:8px 15px;border-radius:999px;border:1px solid var(--line);background:var(--card);
+           white-space:nowrap;transition:transform .12s,box-shadow .12s,background .12s,color .12s;
+           -webkit-tap-highlight-color:transparent}
+  nav.bn a:hover{transform:translateY(-1px);box-shadow:var(--sh)}
+  nav.bn a.on{color:#fff;border-color:transparent;box-shadow:var(--sh-lg);
+              background:linear-gradient(135deg,var(--accent),var(--accent2))}
+  nav.bn a:active{transform:translateY(0) scale(.97)}
+
+  /* ── 본문 ───────────────────────────────────────────────────────── */
+  .tab[hidden]{display:none}
+  .tab{padding-top:6px}
+  h2{font-size:1.28rem;margin:34px 0 14px;padding-left:14px;position:relative;
+     letter-spacing:-.03em;font-weight:800;line-height:1.35}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;
+             background:linear-gradient(180deg,var(--accent),var(--accent2))}
+  .tab>h2:first-child{margin-top:18px}
+  h3{font-size:1.03rem;margin:26px 0 9px;font-weight:750;letter-spacing:-.02em}
+  p{margin:10px 0}
+  a{color:var(--accent)}
+
+  /* 표 */
+  .tw{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card);
+      box-shadow:var(--sh);margin:14px 0;-webkit-overflow-scrolling:touch}
+  .tw::-webkit-scrollbar{height:8px}
+  .tw::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  table{border-collapse:collapse;width:100%;font-size:13.8px;margin:0}
+  th,td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);
+        min-width:86px}  /* 좁은 화면에서 열이 한 글자씩 접히는 것 방지 — 대신 표가 가로로 스크롤된다 */
+  th{background:var(--card2);font-weight:750;color:var(--ink2);white-space:nowrap;
+     font-size:12.5px;letter-spacing:.01em}
+  tr:last-child td{border-bottom:0}
+  tbody tr:hover td,table tr:hover td{background:color-mix(in srgb,var(--card2) 55%,transparent)}
+
+  /* 강조 박스 */
+  .box{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+       border-radius:14px;padding:16px 18px;margin:16px 0;box-shadow:var(--sh)}
+  .box b.h{display:block;margin-bottom:7px;font-size:1rem;font-weight:800;letter-spacing:-.02em}
+  .box.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+  .box.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+  .box.ok{border-left-color:var(--ok);background:var(--ok-soft)}
+  .box.hi{border-left-color:var(--accent2)}
+  .box ul{margin:8px 0 0}
+
+  pre{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;
+      overflow-x:auto;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}
+  code{background:var(--card2);padding:2px 6px;border-radius:5px;font-size:.88em}
+  ul{padding-left:20px;margin:9px 0}
+  li{margin:6px 0}
+
+  /* 일정 카드 */
+  .day{background:var(--card);border:1px solid var(--line);border-radius:16px;
+       padding:20px 22px;margin:16px 0;box-shadow:var(--sh)}
+  .day h3{margin:0 0 4px;font-size:1.1rem;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .chip{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:8px;
+        padding:3px 10px;font-size:11.5px;font-weight:800;letter-spacing:.02em}
   .daysub{color:var(--dim);font-size:13px;margin:0 0 14px}
-  .slot{display:flex;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+  .slot{display:flex;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
   .slot:first-of-type{border-top:0}
-  .time{flex:0 0 82px;color:var(--accent);font-weight:700;font-size:13.5px;padding-top:2px}
+  .time{flex:0 0 76px;color:var(--accent);font-weight:800;font-size:13px;padding-top:2px;
+        font-variant-numeric:tabular-nums}
   .what{flex:1;min-width:0}
-  .what b{display:block}
+  .what b{display:block;font-weight:750}
   .what span{color:var(--dim);font-size:13.5px}
-  ul{padding-left:21px;margin:8px 0}
-  li{margin:5px 0}
+
   .pill{display:inline-block;border:1px solid currentColor;border-radius:999px;
-        padding:1px 9px;margin-right:5px;font-weight:700;font-size:11px}
-  .p-win{color:var(--ok)}.p-lose{color:var(--bad)}
-  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim);font-size:13.5px}
-  /* ── 오프라인 지도 ─────────────────────────────────────────────── */
-  .mapctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 8px}
-  .mbtn{font:inherit;font-size:13px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;
-        border:1px solid var(--line);background:var(--card);color:var(--ink);touch-action:manipulation}
-  .mbtn:active{transform:translateY(1px)}
+        padding:1px 9px;margin-right:5px;font-weight:800;font-size:11px}
+  .p-win{color:var(--ok);font-weight:700}.p-lose{color:var(--bad);font-weight:700}
+  footer{margin:44px 0 0;padding:20px 0 0;border-top:1px solid var(--line);
+         color:var(--dim);font-size:13px;line-height:1.7}
+
+  /* ── 오프라인 지도 ──────────────────────────────────────────────── */
+  .mapctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 10px}
+  .mbtn{font:inherit;font-size:13px;font-weight:750;padding:9px 16px;border-radius:999px;cursor:pointer;
+        border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--sh);
+        touch-action:manipulation;transition:transform .12s,box-shadow .12s}
+  .mbtn:hover{transform:translateY(-1px);box-shadow:var(--sh-lg)}
+  .mbtn:active{transform:translateY(0) scale(.97)}
+  #btn-locate{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
   .mstat{color:var(--dim);font-size:12.5px;flex:1 1 100%}
-  /* 스크롤 컨테이너가 아니라 뷰포트다 — 이동은 transform 으로 하고 스크롤바는 없다 */
-  .mapwrap{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;
-           background:var(--card2);height:min(72vh,620px);min-height:300px;
+  .mapwrap{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;
+           background:var(--card2);height:min(70vh,600px);min-height:300px;box-shadow:var(--sh);
            touch-action:none;cursor:grab;overscroll-behavior:contain;
            -ms-overflow-style:none;scrollbar-width:none}
   .mapwrap::-webkit-scrollbar{display:none}
@@ -71,78 +154,64 @@
             will-change:transform}
   .mapinner img{width:100%;height:auto;display:block;pointer-events:none;
                 -webkit-user-drag:none;user-select:none}
-  /* 마커·현재위치는 지도를 확대해도 크기가 그대로여야 읽힌다 → 배율의 역수로 되돌린다 */
   .mk{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
       z-index:3;pointer-events:none}
-  .mk b{display:block;width:11px;height:11px;border-radius:50%;background:var(--accent);
-        border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+  .mk b{display:block;width:12px;height:12px;border-radius:50%;background:var(--accent);
+        border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
   .mk.food b{background:#f59e0b}.mk.see b{background:#10b981}
   .mk.mrt b{background:#6366f1}.mk.ferry b{background:#06b6d4}.mk.airport b{background:#ef4444}
   .mk.shop b{background:#ec4899}
-  .mk i{position:absolute;left:50%;top:13px;transform:translateX(-50%);font-style:normal;
-        font-size:10.5px;line-height:1.25;white-space:nowrap;color:#111;background:rgba(255,255,255,.86);
-        border-radius:4px;padding:0 3px;font-weight:700}
+  .mk i{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-style:normal;
+        font-size:10.5px;line-height:1.3;white-space:nowrap;color:#0b1020;background:rgba(255,255,255,.9);
+        border-radius:5px;padding:1px 5px;font-weight:800;box-shadow:0 1px 3px rgba(0,0,0,.25)}
   .me{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
       z-index:5;pointer-events:none}
   .me i{display:block;width:16px;height:16px;border-radius:50%;background:#2563eb;
-        border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
-  /* 정확도 원은 '거리'라서 지도와 같이 확대돼야 한다 — 역보정하지 않는다 */
+        border:3px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.5)}
   .acc{position:absolute;border-radius:50%;transform:translate(-50%,-50%);z-index:4;
        background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.4);pointer-events:none}
-  .mhint{color:var(--dim);font-size:12px;margin:7px 0 0}
-  .mattr{color:var(--dim);font-size:11.5px;margin:4px 0 0}
+  .mhint{color:var(--dim);font-size:12px;margin:9px 0 0}
+  .mattr{color:var(--dim);font-size:11.5px;margin:5px 0 0;opacity:.85}
   .mnote{color:var(--dim);font-size:13px}
-  .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px;margin:10px 0}
-  .plist a{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);
-           border:1px solid var(--line);background:var(--card);border-radius:9px;padding:8px 10px;font-size:13px}
+  .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;margin:12px 0}
+  .plist a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);
+           border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;
+           font-size:13px;font-weight:650;box-shadow:var(--sh);
+           transition:transform .12s,box-shadow .12s}
+  .plist a:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
   .plist a b{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:0 0 auto}
   .plist a.food b{background:#f59e0b}.plist a.see b{background:#10b981}
   .plist a.mrt b{background:#6366f1}.plist a.ferry b{background:#06b6d4}.plist a.airport b{background:#ef4444}
   .plist a.shop b{background:#ec4899}
   .only-desk{display:none}
   @media(hover:hover) and (pointer:fine){.only-desk{display:inline}}
-  /* ── 탭 ────────────────────────────────────────────────────────── */
-  .tab[hidden]{display:none}
-  .tab>h2:first-child{margin-top:10px}
-  .headbar{display:flex;align-items:flex-start;gap:12px;margin-bottom:6px}
-  .headbar h1{flex:1;min-width:0}
-  .net{flex:0 0 auto;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--dim);
-       border:1px solid var(--line);border-radius:999px;padding:3px 9px;margin-top:6px;white-space:nowrap}
-  .net s{width:7px;height:7px;border-radius:50%;background:var(--ok);display:block}
-  .net.off s{background:var(--dim)}
-  nav.bn{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;
-         background:var(--card);border-top:1px solid var(--line);
-         padding:5px 4px calc(5px + env(safe-area-inset-bottom));
-         box-shadow:0 -6px 18px rgba(0,0,0,.13)}
-  nav.bn a{flex:1 1 0;min-width:0;text-align:center;text-decoration:none;color:var(--dim);
-           font-size:12px;font-weight:800;padding:8px 1px;border-radius:9px;
-           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-           -webkit-tap-highlight-color:transparent}
-  nav.bn a.on{color:#fff;background:var(--accent)}
-  @media(prefers-color-scheme:light){nav.bn a.on{color:#fff}}
-  nav.bn a:active{opacity:.75}
-  nav.bn .brand{display:none}
-  .ver{font-size:10.5px;color:var(--dim);opacity:.75;margin-left:6px}
-  /* 넓은 화면에서는 하단 바 대신 왼쪽 사이드바 — 폰용 바를 데스크톱에 그대로 늘리면 어색하다 */
-  @media(min-width:1000px){
-    body{padding:34px 26px 44px 244px}
-    .wrap{margin:0 auto}
-    nav.bn{top:0;bottom:0;right:auto;width:216px;flex-direction:column;align-items:stretch;
-           gap:3px;padding:24px 14px;overflow:auto;
-           border-top:0;border-right:1px solid var(--line);box-shadow:none}
-    nav.bn .brand{display:block;padding:0 10px 14px;margin-bottom:10px;
-                  border-bottom:1px solid var(--line);font-size:12px;color:var(--dim);line-height:1.5}
-    nav.bn .brand b{display:block;color:var(--ink);font-size:15px;letter-spacing:-.02em;margin-bottom:2px}
-    nav.bn a{flex:0 0 auto;text-align:left;padding:9px 12px;font-size:13.5px}
+
+  @media(max-width:520px){
+    .wrap{padding:0 14px}
+    nav.bn{margin:12px -14px 0;padding:8px 12px;gap:4px}
+    nav.bn a{padding:7px 11px;font-size:12.5px}
+    h1{font-size:1.55rem}
+    h2{font-size:1.16rem}
+    .day{padding:17px 16px}
+    .time{flex-basis:64px}
+    th,td{padding:9px 10px}
   }
 </style>
 </head>
 <body><div class="wrap">
 
-<div class="headbar"><h1>가오슝 3박4일 — 부부 2쌍</h1><span class="net" id="netdot"><s></s>온라인</span><span class="ver">v09-04d</span></div>
-<p class="lead">성인 4명 · <b>2026년 10월 29일(목) ~ 11월 1일(일) 확정</b> · 서울 출발.
-항공편은 <b>2026-09-04 재조사</b>(인천·김포 직항 전수, 두 개 플랫폼 교차확인)이고,
-공휴일·기후는 공식 자료로 확인했습니다. 가격은 검색 시점 기준이라 변동합니다.</p>
+<header class="headbar">
+<h1>가오슝 3박4일 — 부부 2쌍</h1>
+<div class="hchips">
+  <span class="hchip dday" id="dday">D-</span>
+  <span class="hchip">2026.10.29 목 – 11.01 일</span>
+  <span class="hchip">성인 4명 · 3박4일</span>
+  <span class="hchip net" id="netdot"><s></s>온라인</span>
+  <span class="ver">v09-04e</span>
+</div>
+<p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
+</header>
+<nav class="bn"><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a></nav>
 
 <section class="tab" id="tab-tips" hidden>
 <h2>이 날짜에만 걸리는 함정</h2>
@@ -790,7 +859,6 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 </div>
 </section>
 </div>
-<nav class="bn"><span class="brand"><b>가오슝 3박4일</b>2026.10.29 목 – 11.01 일 · 성인 4명</span><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a></nav>
 <script>
 /* 오프라인 지도 + 현재 위치 + PWA 등록
    지도는 스크롤 컨테이너가 아니라 transform 으로 움직인다 — 한 손가락 드래그로 이동,
@@ -1025,7 +1093,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   function sync() {
     if (!net) return;
     var on = navigator.onLine;
-    net.className = 'net' + (on ? '' : ' off');
+    net.classList.toggle('off', !on);   // className 통째 교체는 hchip 을 날린다
     net.lastChild.textContent = on ? '온라인' : '오프라인';
   }
   addEventListener('online', sync); addEventListener('offline', sync); sync();
@@ -1073,6 +1141,22 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     try { start = localStorage.getItem('kh.tab') || 'tips'; } catch (e) { start = 'tips'; }
   }
   show(start, false);
+
+  // 활성 알약이 가로 스크롤 밖에 있으면 끌어온다
+  function reveal(id) {
+    var a = document.querySelector('nav.bn a[data-tab="' + id + '"]');
+    if (a && a.scrollIntoView) a.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
+  links.forEach(function (a) { a.addEventListener('click', function () { reveal(a.dataset.tab); }); });
+  reveal(start);
+
+  // 출발까지 남은 날
+  var dd = document.getElementById('dday');
+  if (dd) {
+    var go = new Date(2026, 9, 29), now = new Date();
+    var left = Math.round((go - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+    dd.textContent = left > 0 ? 'D-' + left : (left === 0 ? 'D-DAY' : '여행 종료');
+  }
   addEventListener('hashchange', function () {
     show((location.hash || '').replace('#', ''), false);
   });
