@@ -279,6 +279,54 @@
   .mlegend{display:flex;flex-wrap:wrap;gap:9px;margin:8px 0 0;color:var(--dim);font-size:11.5px}
   .mlegend span{display:inline-flex;align-items:center;gap:4px}
   .mlegend s{width:9px;height:9px;border-radius:50%;display:block;text-decoration:none}
+  /* ── 모바일 가독성 ─────────────────────────────────────────────── */
+  .backtop{position:fixed;right:14px;bottom:18px;z-index:70;width:44px;height:44px;border-radius:14px;
+           border:1px solid var(--line);background:var(--card);color:var(--ink2);
+           font:inherit;font-size:17px;font-weight:800;cursor:pointer;box-shadow:var(--sh-lg);
+           display:none;place-items:center;padding:0}
+  .backtop.show{display:grid}
+  details.fold{border:1px solid var(--line);border-radius:14px;background:var(--card);
+               box-shadow:var(--sh);margin:16px 0;overflow:hidden}
+  details.fold>summary{cursor:pointer;padding:14px 16px;font-weight:800;font-size:1rem;
+                       letter-spacing:-.02em;list-style:none;display:flex;align-items:center;gap:9px}
+  details.fold>summary::-webkit-details-marker{display:none}
+  details.fold>summary::before{content:"▸";color:var(--accent);font-size:13px;transition:transform .15s}
+  details.fold[open]>summary::before{transform:rotate(90deg)}
+  details.fold>summary small{color:var(--dim);font-weight:650;font-size:12px}
+  details.fold .foldbody{padding:0 16px 14px}
+  details.fold .foldbody>h2:first-child,details.fold .foldbody>h3:first-child{margin-top:6px}
+
+  @media(max-width:640px){
+    /* 표를 가로 스크롤 대신 카드로 편다 — 7열짜리는 375px 에 절대 안 들어간다 */
+    .tw{overflow:visible;border:0;background:transparent;box-shadow:none;border-radius:0;margin:12px 0}
+    .tw table,.tw tbody,.tw tr,.tw td{display:block;width:auto}
+    .tw thead,.tw tr.hrow{display:none}
+    .tw tr{background:var(--card);border:1px solid var(--line);border-radius:14px;
+           box-shadow:var(--sh);margin:0 0 10px;padding:11px 14px}
+    .tw tr:hover td,.tw table tr:hover td{background:transparent}
+    .tw td{border:0;padding:5px 0;display:flex;gap:10px;align-items:flex-start;
+           font-size:13.5px;min-width:0}
+    .tw td::before{content:attr(data-l);flex:0 0 82px;color:var(--dim);font-weight:750;
+                   font-size:12px;padding-top:1px}
+    .tw td:not([data-l])::before{display:none}
+    .tw td.first{display:block;font-size:15.5px;font-weight:800;letter-spacing:-.02em;
+                 padding:0 0 8px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+    .tw td.first::before{display:none}
+    .tw td:last-child{padding-bottom:0}
+    /* 11px 는 폰에서 너무 작다 */
+    .pc .m,.pi .no,.mk i,.tag{font-size:12px}
+    .dayfoot,.mattr,.mlegend{font-size:12px}
+    .pc .why{font-size:13.5px}
+    .mstat,.mhint,.mnote{font-size:12.5px}
+    /* 헤더가 긴 표(A안/B안 비교 등)는 라벨을 윗줄로 내린다 */
+    .tw td.wl{display:block}
+    .tw td.wl::before{display:block;margin-bottom:3px;flex:none}
+    .pc .r,.chip{font-size:12px}
+  }
+  @media(max-width:400px){
+    .tw td::before{flex-basis:70px;font-size:11.5px}
+    .pc{padding:13px 13px}
+  }
 </style>
 </head>
 <body><div class="wrap">
@@ -290,7 +338,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-05a</span>
+  <span class="ver">v09-05b</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1585,5 +1633,79 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     show((location.hash || '').replace('#', ''), false);
   });
 })();
+
+/* 모바일 가독성 — 표를 카드로 펴기, 참고 섹션 접기, 맨 위로 */
+(function () {
+  // 1) 표: 헤더 텍스트를 각 칸에 라벨로 심는다. CSS 가 좁은 화면에서 카드로 편다.
+  [].forEach.call(document.querySelectorAll('.tw table'), function (t) {
+    var rows = t.rows;
+    if (!rows.length) return;
+    var head = [].map.call(rows[0].cells, function (c) { return c.textContent.trim(); });
+    // 헤더 행은 좁은 화면에서 숨긴다
+    if (rows[0].cells[0] && rows[0].cells[0].tagName === 'TH') rows[0].className += ' hrow';
+    for (var r = 1; r < rows.length; r++) {
+      var cells = rows[r].cells;
+      for (var c = 0; c < cells.length; c++) {
+        if (cells[c].colSpan > 1) continue;          // 병합 칸은 그대로 둔다
+        if (c === 0) { cells[c].className += ' first'; continue; }
+        var label = head[c] || '';
+        if (!label) continue;
+        cells[c].setAttribute('data-l', label);
+        // 라벨이 길면 82px 칸에서 3~4줄로 접힌다 → 윗줄로 내린다
+        if (label.length > 9) cells[c].className += ' wl';
+      }
+    }
+  });
+
+  // 2) 참고용 섹션 접기 — 제목부터 다음 같은 급 제목 직전까지를 details 로 감싼다
+  function fold(headingText, note, openByDefault) {
+    var hs = [].slice.call(document.querySelectorAll('section.tab h2, section.tab h3'));
+    var h = hs.filter(function (e) { return e.textContent.trim().indexOf(headingText) === 0; })[0];
+    if (!h) return false;
+    var level = h.tagName;
+    var body = document.createElement('div');
+    body.className = 'foldbody';
+    var n = h.nextSibling;
+    while (n) {
+      var next = n.nextSibling;
+      if (n.nodeType === 1 && (n.tagName === 'H2' || (level === 'H3' && n.tagName === 'H3'))) break;
+      body.appendChild(n);
+      n = next;
+    }
+    var d = document.createElement('details');
+    d.className = 'fold';
+    if (openByDefault) d.open = true;
+    var s = document.createElement('summary');
+    s.textContent = h.textContent.trim();
+    if (note) { var small = document.createElement('small'); small.textContent = note; s.appendChild(small); }
+    d.appendChild(s);
+    d.appendChild(body);
+    h.parentNode.replaceChild(d, h);
+    return true;
+  }
+  // 플래너·카드가 대체한 참고 자료와 검증 이력은 접어 둔다
+  fold('기본 코스', '펼쳐 보기');
+  fold('갈 만한 곳 전체 목록', '표로 된 원본 목록');
+  fold('DAY 3 오후', '세 가지 선택지');
+
+  // 3) 맨 위로 — 탭 하나가 10화면을 넘어가는 곳이 있다
+  var btn = document.createElement('button');
+  btn.className = 'backtop';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', '맨 위로');
+  btn.textContent = '↑';
+  btn.addEventListener('click', function () { scrollTo({ top: 0, behavior: 'smooth' }); });
+  document.body.appendChild(btn);
+  var ticking = false;
+  addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      btn.classList.toggle('show', scrollY > 700);
+      ticking = false;
+    });
+  }, { passive: true });
+})();
+
 </script>
 </body></html>
