@@ -3,7 +3,7 @@
    더 깊은 스코프가 우선이라 그쪽이 그대로 자기 페이지를 맡는다.
 
    문서는 네트워크 우선 + 2.5초 타임아웃 — 온라인이면 항상 최신본, 오프라인이면 즉시 캐시본. */
-const CACHE = 'travel-hub-2026-09-04b';
+const CACHE = 'travel-hub-2026-09-04c';
 const DOC = './index.html';
 const NET_TIMEOUT = 2500;
 const ASSETS = ['./', DOC, './manifest.webmanifest',

@@ -47,9 +47,11 @@
   h1{font-size:1.9rem;line-height:1.25;margin:0 0 10px;letter-spacing:-.035em;font-weight:800}
   .hchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
   .hchip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
-         border-radius:999px;padding:5px 11px;background:var(--card);border:1px solid var(--line);
+         border-radius:10px;padding:5px 11px;background:var(--card);border:1px solid var(--line);
          color:var(--ink2);box-shadow:var(--sh)}
-  .hchip.dday{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+  /* 활성 탭과 같은 파랑이면 헷갈린다 — D-day 는 앰버로 분리한다 */
+  .hchip.dday{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;border-color:transparent;
+              font-weight:800;letter-spacing:.01em}
   .net s{width:7px;height:7px;border-radius:50%;background:var(--ok);display:block}
   .net.off s{background:var(--dim)}
   .ver{font-size:10.5px;color:var(--dim);opacity:.7;letter-spacing:.02em}
@@ -64,8 +66,9 @@
          -ms-overflow-style:none;scrollbar-width:none}
   nav.bn::-webkit-scrollbar{display:none}
   nav.bn .brand{display:none}
-  nav.bn a{flex:0 0 auto;text-decoration:none;color:var(--ink2);font-size:13.5px;font-weight:700;
-           padding:8px 15px;border-radius:999px;border:1px solid var(--line);background:var(--card);
+  nav.bn a{flex:1 1 0;min-width:52px;max-width:124px;text-align:center;
+           text-decoration:none;color:var(--ink2);font-size:13.5px;font-weight:700;
+           padding:9px 8px;border-radius:11px;border:1px solid var(--line);background:var(--card);
            white-space:nowrap;transition:transform .12s,box-shadow .12s,background .12s,color .12s;
            -webkit-tap-highlight-color:transparent}
   nav.bn a:hover{transform:translateY(-1px);box-shadow:var(--sh)}
@@ -129,7 +132,7 @@
   .what b{display:block;font-weight:750}
   .what span{color:var(--dim);font-size:13.5px}
 
-  .pill{display:inline-block;border:1px solid currentColor;border-radius:999px;
+  .pill{display:inline-block;border:1px solid currentColor;border-radius:8px;
         padding:1px 9px;margin-right:5px;font-weight:800;font-size:11px}
   .p-win{color:var(--ok);font-weight:700}.p-lose{color:var(--bad);font-weight:700}
   footer{margin:44px 0 0;padding:20px 0 0;border-top:1px solid var(--line);
@@ -137,7 +140,7 @@
 
   /* ── 오프라인 지도 ──────────────────────────────────────────────── */
   .mapctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 10px}
-  .mbtn{font:inherit;font-size:13px;font-weight:750;padding:9px 16px;border-radius:999px;cursor:pointer;
+  .mbtn{font:inherit;font-size:13px;font-weight:750;padding:9px 16px;border-radius:11px;cursor:pointer;
         border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--sh);
         touch-action:manipulation;transition:transform .12s,box-shadow .12s}
   .mbtn:hover{transform:translateY(-1px);box-shadow:var(--sh-lg)}
@@ -188,8 +191,8 @@
 
   @media(max-width:520px){
     .wrap{padding:0 14px}
-    nav.bn{margin:12px -14px 0;padding:8px 12px;gap:4px}
-    nav.bn a{padding:7px 11px;font-size:12.5px}
+    nav.bn{margin:12px -14px 0;padding:8px 12px;gap:5px}
+    nav.bn a{padding:9px 4px;font-size:12.5px;min-width:44px}
     h1{font-size:1.55rem}
     h2{font-size:1.16rem}
     .day{padding:17px 16px}
@@ -207,7 +210,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-04e</span>
+  <span class="ver">v09-04f</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
