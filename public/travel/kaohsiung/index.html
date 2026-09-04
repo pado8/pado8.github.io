@@ -199,6 +199,86 @@
     .time{flex-basis:64px}
     th,td{padding:9px 10px}
   }
+  /* ── 장소 카드 + 담기 ─────────────────────────────────────────── */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px;margin:14px 0}
+  .pc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px;
+      box-shadow:var(--sh);display:flex;flex-direction:column;gap:7px;position:relative;
+      transition:transform .14s,box-shadow .14s,border-color .14s}
+  .pc:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+  .pc.on{border-color:var(--accent)}
+  .pc .t{display:flex;align-items:flex-start;gap:8px}
+  .pc .t b{flex:1;min-width:0;font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1.35}
+  .pc .r{flex:0 0 auto;font-size:11px;color:var(--gold);font-weight:800;letter-spacing:-.5px;padding-top:2px}
+  .pc .meta{display:flex;flex-wrap:wrap;gap:5px}
+  .pc .m{font-size:11px;font-weight:750;border-radius:7px;padding:2px 8px;
+         background:var(--card2);color:var(--dim);border:1px solid var(--line)}
+  .pc .m.cat{border-color:transparent;color:#fff}
+  .pc .m.cat.see{background:#10b981}.pc .m.cat.food{background:#f59e0b}
+  .pc .m.cat.shop{background:#ec4899}.pc .m.cat.stay{background:#6366f1}
+  .pc .acc{font-size:12px;color:var(--dim);font-weight:700}
+  .pc .why{font-size:13px;color:var(--ink2);line-height:1.55;flex:1}
+  .pc .act{display:flex;gap:6px;margin-top:2px}
+  .pc .act button,.pc .act a{font:inherit;font-size:12.5px;font-weight:750;padding:7px 11px;
+      border-radius:9px;border:1px solid var(--line);background:var(--card2);color:var(--ink);
+      cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .12s,color .12s}
+  .pc .act .add{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+  .pc .act .add.done{background:var(--ok-soft);color:var(--ok);border-color:currentColor}
+  .pc .act button:active{transform:scale(.97)}
+  /* 담을 날 고르기 */
+  .daypick{display:none;gap:5px;flex-wrap:wrap;margin-top:4px}
+  .daypick.show{display:flex}
+  .daypick button{font-size:12px;font-weight:800;padding:6px 10px;border-radius:8px;cursor:pointer;
+                  border:1px solid var(--line);background:var(--card2);color:var(--ink)}
+  .daypick button.d1{border-color:#3d5afe;color:#3d5afe}
+  .daypick button.d2{border-color:#0f9d58;color:#0f9d58}
+  .daypick button.d3{border-color:#b06000;color:#b06000}
+  .daypick button.d4{border-color:#d3307f;color:#d3307f}
+  .filters{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
+  .filters button{font:inherit;font-size:12.5px;font-weight:750;padding:7px 13px;border-radius:9px;
+                  cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink2)}
+  .filters button.on{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+
+  /* ── 플래너 ────────────────────────────────────────────────────── */
+  .plbar{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:12px 0}
+  .plbar .sum{flex:1 1 100%;color:var(--dim);font-size:12.5px}
+  .days{display:grid;gap:12px;margin:8px 0}
+  @media(min-width:900px){.days{grid-template-columns:1fr 1fr}}
+  .dayc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;
+        box-shadow:var(--sh);border-top:4px solid var(--dc,var(--accent))}
+  .dayc h4{margin:0 0 3px;font-size:1rem;font-weight:800;letter-spacing:-.02em;
+           display:flex;align-items:center;gap:8px}
+  .dayc h4 s{width:9px;height:9px;border-radius:50%;background:var(--dc);display:block;text-decoration:none}
+  .dayc .dsub{color:var(--dim);font-size:12px;margin:0 0 10px}
+  .plist2{list-style:none;margin:0;padding:0}
+  .pi{display:flex;align-items:center;gap:7px;padding:9px 0;border-top:1px solid var(--line);min-width:0}
+  .pi:first-child{border-top:0}
+  .pi .no{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:var(--dc);color:#fff;
+          font-size:11px;font-weight:800;display:grid;place-items:center}
+  /* input 은 flex-basis 만으로는 안 줄어든다 — 폭을 못박는다 */
+  .pi input.tm{flex:0 0 58px;width:58px;min-width:0;box-sizing:border-box;
+               font:inherit;font-size:12.5px;font-weight:700;text-align:center;
+               padding:5px 3px;border-radius:8px;border:1px solid var(--line);
+               background:var(--card2);color:var(--ink)}
+  .pi .nm{flex:1;min-width:0;font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pi .nm em{font-style:normal;color:var(--dim);font-weight:600;font-size:12px}
+  .pi .ops{display:flex;gap:3px;flex:0 0 auto}
+  .pi .ops button{font:inherit;font-size:12px;width:25px;height:25px;padding:0;border-radius:7px;flex:0 0 auto;
+                  cursor:pointer;border:1px solid var(--line);background:var(--card2);color:var(--ink2)}
+  .pi .ops button:hover{border-color:var(--accent);color:var(--accent)}
+  .pi .ops button.del:hover{border-color:var(--bad);color:var(--bad)}
+  .empty{color:var(--dim);font-size:12.5px;padding:12px 0;text-align:center}
+  .dayfoot{margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);
+           color:var(--dim);font-size:11.5px;display:flex;justify-content:space-between;gap:8px}
+
+  /* ── 지도: 담긴 항목은 번호 핀 ─────────────────────────────────── */
+  .mk.plan b{width:20px;height:20px;display:grid;place-items:center;color:#fff;
+             font-size:11px;font-weight:800;border-width:2.5px}
+  .mk.dim b{width:8px;height:8px;opacity:.62;border-width:1.5px}
+  .mk.dim i{display:none}
+  .mk.hl b{box-shadow:0 0 0 6px rgba(61,90,254,.28),0 1px 4px rgba(0,0,0,.45)}
+  .mlegend{display:flex;flex-wrap:wrap;gap:9px;margin:8px 0 0;color:var(--dim);font-size:11.5px}
+  .mlegend span{display:inline-flex;align-items:center;gap:4px}
+  .mlegend s{width:9px;height:9px;border-radius:50%;display:block;text-decoration:none}
 </style>
 </head>
 <body><div class="wrap">
@@ -210,7 +290,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-04f</span>
+  <span class="ver">v09-05a</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -551,12 +631,46 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 <tr><td><b>左營</b> (쭤잉)</td><td>★</td><td>고속철도역. 타이난 당일치기가 주목적일 때만</td></tr>
 </table>
 </div>
+
+<h3>구체적인 후보 — 눌러서 일정에 담기</h3>
+<p class="mnote">좌표가 확인된 곳만 실었습니다. <b>실제 요금·평점은 예약 사이트에서 확인</b>하세요 —
+같은 호텔도 날짜와 객실에 따라 크게 달라집니다.</p>
+<div class="cards" id="c-stay" data-cat="stay"></div>
+<div class="box">
+<b class="h">후기에서 자주 언급되는 곳 (지도에는 없음)</b>
+<b>호텔 두아(Hotel dùa)</b> — 메이리다오역 도보 1분, 4성. 객실이 넓고 조식이 좋다는 평이 많습니다.<br>
+<b>그리트인(Greet Inn)</b> — 첸진역 인근. 한국어가 되는 직원이 있고 욕조 있는 객실이 있습니다.<br>
+두 곳은 지도 좌표를 확정하지 못해 카드에서 빠졌습니다. 예약 사이트에서 위치를 직접 확인하세요.
+</div>
+
 <p><b>부부 2쌍이면 방 2개</b>입니다. 트윈/더블을 미리 지정하고, 같은 층 인접 객실을 요청해두면
 아침에 모이기가 훨씬 편합니다. 조식 포함 여부는 4인 × 3일이면 금액 차이가 커지니 계산해보세요.</p>
 </section>
 
 <section class="tab" id="tab-plan" hidden>
-<h2>일정표</h2>
+<h2>내 일정 — 담고, 옮기고, 시간 넣기</h2>
+<p>명소·맛집·숙소·쇼핑 탭에서 <b>“+ 일정에 담기”</b>를 누르면 여기에 쌓입니다.
+시간을 적으면 자동으로 시간순 정렬되고, <b>브라우저에 저장되므로 오프라인에서도 그대로 남습니다.</b>
+담은 곳은 <b>지도에 번호 핀</b>으로 표시됩니다.</p>
+<div class="plbar">
+  <button class="mbtn" id="btn-preset" type="button">기본 코스 불러오기</button>
+  <button class="mbtn" id="btn-clear" type="button">전체 비우기</button>
+  <span class="sum" id="plsum"></span>
+</div>
+<div class="days" id="days"></div>
+
+<h2>갈 만한 곳 — 평이 좋은 곳 위주</h2>
+<p class="mnote">★★★은 “가오슝 왔으면 보통 간다”, ★★는 “취향 맞으면”, ★는 “시간 남으면”입니다.</p>
+<div class="filters" data-for="c-see">
+  <button type="button" data-f="" class="on">전체</button>
+  <button type="button" data-f="see">명소</button>
+  <button type="button" data-f="food">맛집</button>
+  <button type="button" data-f="shop">쇼핑</button>
+</div>
+<div class="cards" id="c-see" data-cat="see,food,shop"></div>
+
+<h2>기본 코스 (참고용 설명)</h2>
+<h3>일정표</h3>
 
 <div class="day">
 <h3><span class="chip">DAY 1</span>10/29 목 — 도착 &amp; 야시장</h3>
@@ -692,6 +806,9 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 
 <section class="tab" id="tab-shop" hidden>
 <h2>쇼핑 — 어디서 뭘 사나</h2>
+<p class="mnote">누르면 일정에 담기고 지도에 번호가 붙습니다.</p>
+<div class="cards" id="c-shop" data-cat="shop"></div>
+
 <p>가오슝 쇼핑은 <b>三多商圈(산둬 상권) 한 곳이면 대부분 끝납니다.</b>
 백화점 세 개가 한 역에 붙어 있어서 4인이 흩어졌다 모이기도 쉽습니다.</p>
 
@@ -757,6 +874,9 @@ A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
 
 <section class="tab" id="tab-food" hidden>
 <h2>식당 — 로컬 위주</h2>
+<p class="mnote">누르면 일정에 담기고 지도에 번호가 붙습니다.</p>
+<div class="cards" id="c-food" data-cat="food"></div>
+
 <div class="box hi">
 <b class="h">동선의 핵심: 鹽埕(옌청푸)</b>
 가오슝 노포가 가장 빽빽한 곳이 <b>鹽埕 일대</b>인데, 마침 <b>보얼예술특구 바로 옆</b>입니다.
@@ -833,6 +953,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 <div class="mapctl">
   <button class="mbtn" id="btn-locate">📍 내 위치 찾기</button>
   <button class="mbtn" id="btn-zoom">배율 1×</button>
+  <button class="mbtn" id="btn-mapfilter" type="button">내 일정만 보기</button>
   <span class="mstat" id="map-stat">위치 권한을 허용하면 파란 점이 표시됩니다</span>
 </div>
 
@@ -845,13 +966,15 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 </div>
 <p class="mhint">손가락으로 <b>끌어서 이동</b> · 두 손가락으로 <b>확대·축소</b> · <b>두 번 탭</b>하면 확대
 <span class="only-desk">(데스크톱은 드래그 이동, Ctrl+휠 확대)</span></p>
+<div class="mlegend" id="mlegend"></div>
 <p class="mattr">지도 © <b>OpenStreetMap</b> 기여자 · ODbL. 개인 여행용으로 내려받아 넣은 이미지입니다.</p>
 
-<h3>장소 — 누르면 구글 지도가 열립니다</h3>
-<p class="mnote">구글 지도 앱에 <b>가오슝 오프라인 지도를 미리 받아두면</b> 이 링크들이 데이터 없이도 열립니다.
-받는 법: 구글 지도 → 프로필 → <b>오프라인 지도</b> → 직접 지도 선택 → 가오슝 전체가 들어오게 범위 조절 → 다운로드.
-<b>출국 전 와이파이에서 반드시 받아두세요.</b></p>
-<div class="plist" id="plist"></div>
+<h3>이 지도로 되는 것 / 안 되는 것</h3>
+<p class="mnote"><b>됩니다</b> — 지금 내 위치, 담은 일정의 순서와 위치, 후보 장소 위치.
+<b>안 됩니다</b> — 길찾기·검색·대중교통 경로.<br>
+길찾기는 구글 지도 앱이 맡습니다. <b>출국 전 와이파이에서 가오슝 오프라인 지도를 받아두세요</b> —
+구글 지도 → 프로필 → 오프라인 지도 → 직접 지도 선택 → 가오슝 전체가 들어오게 범위 조절 → 다운로드.
+받아두면 각 카드의 <b>구글맵</b> 버튼이 데이터 없이도 열립니다.</p>
 
 <div class="box hi">
 <b class="h">📲 홈 화면에 추가해두세요 (이게 오프라인의 핵심)</b>
@@ -891,28 +1014,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   var zb = document.getElementById('btn-zoom');
   if (!inner) return;
 
-  // ── 장소 마커 + 목록 ────────────────────────────────────────────
-  var list = document.getElementById('plist');
-  PLACES.forEach(function (p) {
-    var q = pct(p.lat, p.lng);
-    if (q.inside) {
-      var d = document.createElement('div');
-      d.className = 'mk ' + p.k;
-      d.style.left = q.x + '%';
-      d.style.top = q.y + '%';
-      d.innerHTML = '<b></b><i></i>';
-      d.querySelector('i').textContent = p.n;
-      inner.appendChild(d);
-    }
-    var a = document.createElement('a');
-    a.className = p.k;
-    a.href = 'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.innerHTML = '<b></b>';
-    a.appendChild(document.createTextNode(p.n));
-    if (list) list.appendChild(a);
-  });
+  // 마커는 planner 가 그린다(일정에 담긴 곳은 번호 핀, 나머지는 점).
 
   // ── 이동/확대 상태 ──────────────────────────────────────────────
   var k = 1, tx = 0, ty = 0;
@@ -961,6 +1063,16 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   addEventListener('resize', function () { clamp(); apply(); drawAcc(); });
   // 탭 전환으로 지도가 다시 보이게 됐을 때 호출된다 (숨어 있을 땐 폭이 0이라 계산이 안 된다)
   window.__mapRelayout = function () { clamp(); apply(); drawAcc(); };
+  // 좌표 → 지도 안 위치(%). planner 가 마커를 그릴 때 쓴다.
+  window.__mapPct = pct;
+  // 특정 좌표를 화면 가운데로. 카드·일정의 '지도' 버튼이 호출한다.
+  window.__mapCenter = function (lat, lng, z) {
+    var q = pct(lat, lng);
+    if (!q.inside) return;
+    var d = box();
+    if (z) zoomAt(minK() * z, d.cw / 2, d.ch / 2);
+    centerOn(q);
+  };
 
   // ── 포인터 제스처 (마우스·터치 공용) ────────────────────────────
   var pts = new Map();
@@ -1109,6 +1221,315 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
       });
     });
   }
+})();
+
+/* 가오슝 도시에 — 장소 DB · 일정 담기 · 지도 연동
+   구조: DB(장소) → 카드 렌더 → 플래너(localStorage) → 지도 마커
+   일정은 브라우저에 저장되므로 오프라인에서도 그대로 남는다. */
+(function () {
+  var DB = [{"id": "longhu", "n": "롄츠탄 용호탑", "lat": 22.680507, "lng": 120.292376, "c": "see", "dur": 120, "area": "쭤잉", "acc": "MRT 생태공원역 2번 출구 + 유바이크", "why": "가오슝 대표 사진 스팟. 용 입으로 들어가 호랑이 입으로 나오는 게 순서. 춘추각까지 묶어서", "r": "★★★"}, {"id": "pier2", "n": "보얼예술특구", "lat": 22.620822, "lng": 120.284976, "c": "see", "dur": 180, "area": "옌청푸", "acc": "MRT 옌청푸역 1번 출구 도보 6분", "why": "항만 창고를 개조한 문화예술구. 소품샵·포토존이 넓게 퍼져 있어 경전철로 구간 이동", "r": "★★★"}, {"id": "cijin", "n": "치진 해수욕장", "lat": 22.607121, "lng": 120.269077, "c": "see", "dur": 180, "area": "치진", "acc": "구산 페리 7분", "why": "자전거로 해안도로 한 바퀴가 정석. 무지개 교회·해산물 거리·등대", "r": "★★★"}, {"id": "sizihwan", "n": "시쯔완 일몰", "lat": 22.618465, "lng": 120.265997, "c": "see", "dur": 90, "area": "시쯔완", "acc": "MRT 시쯔완역 + 셔틀", "why": "가오슝 최고의 일몰. 10월 말 일몰은 17:20 전후라 시간을 앞당겨야 함", "r": "★★★"}, {"id": "formosa", "n": "美麗島 빛의 돔", "lat": 22.631394, "lng": 120.30186, "c": "see", "dur": 20, "area": "메이리다오", "acc": "MRT 미려도역 구내", "why": "세계 최대 유리 공공미술 光之穹頂. 역 안이라 5분이면 봄", "r": "★★★"}, {"id": "fokuang", "n": "불광산 불타기념관", "lat": 22.754801, "lng": 120.446495, "c": "see", "dur": 240, "area": "다수", "acc": "쭤잉역에서 E02 버스 40분", "why": "동양 최대급 불교 성지. 대불과 박물관 규모가 압도적. 반나절 이상 필요", "r": "★★★"}, {"id": "consul", "n": "打狗영국영사관", "lat": 22.618284, "lng": 120.267214, "c": "see", "dur": 90, "area": "시쯔완", "acc": "시쯔완 언덕", "why": "옛 영국 영사관에서 항구를 내려다봄. 일몰과 묶어서 보는 코스", "r": "★★"}, {"id": "music", "n": "가오슝 음악센터", "lat": 22.61836, "lng": 120.292142, "c": "see", "dur": 60, "area": "옌청푸", "acc": "경전철 음악센터역", "why": "항구변 조형 건축. 밤 조명이 좋아 저녁 동선에 넣기 좋음", "r": "★★"}, {"id": "weiwuying", "n": "웨이우잉 예술문화센터", "lat": 22.622919, "lng": 120.342398, "c": "see", "dur": 90, "area": "펑산", "acc": "MRT 웨이우잉역", "why": "거대한 곡면 건축. 실내라 날씨와 무관하고 사진이 잘 나옴", "r": "★★"}, {"id": "library", "n": "가오슝 시립도서관", "lat": 22.610066, "lng": 120.301858, "c": "see", "dur": 60, "area": "첸전", "acc": "MRT 산둬상권역 도보 10분", "why": "기둥 없이 매달린 구조의 도서관. 야간 조명이 특히 예쁨", "r": "★★"}, {"id": "central", "n": "중앙공원", "lat": 22.62486, "lng": 120.301067, "c": "see", "dur": 45, "area": "중앙공원", "acc": "MRT 중앙공원역 직결", "why": "도심 속 열대 공원. 저녁 산책 코스", "r": "★★"}, {"id": "ferry", "n": "구산 페리 선착장", "lat": 22.619895, "lng": 120.270012, "c": "see", "dur": 20, "area": "구산", "acc": "MRT 시쯔완역 도보 8분", "why": "치진 가는 페리. 자전거를 들고 탈 수 있음", "r": "★★"}, {"id": "bridge", "n": "대항교(다강차오)", "lat": 22.617875, "lng": 120.283879, "c": "see", "dur": 30, "area": "옌청푸", "acc": "경전철 다이한차오역", "why": "아시아 최초 수평 회전교. 개폐 시간을 맞춰 가야 볼거리가 됨", "r": "★★"}, {"id": "chengcing", "n": "청칭호", "lat": 22.660663, "lng": 120.351092, "c": "see", "dur": 150, "area": "냐오쑹", "acc": "MRT 웨이우잉역 + 버스", "why": "호수 공원. 한적하게 걷기 좋지만 접근이 번거로움", "r": "★"}, {"id": "dadong", "n": "다둥 문화예술센터", "lat": 22.624405, "lng": 120.363577, "c": "see", "dur": 60, "area": "펑산", "acc": "MRT 다둥역 도보 3분", "why": "우산 모양 막 구조물. 사진 명소지만 시내에서 다소 떨어짐", "r": "★"}, {"id": "ruifeng", "n": "루이펑 야시장", "lat": 22.666245, "lng": 120.299365, "c": "food", "dur": 120, "area": "아레나", "acc": "MRT 아레나역 1번 출구 · 17:00~24:00", "why": "현지인 비중이 훨씬 높고 규모도 큼. 월·수 휴무라 토요일이 딱", "r": "★★★"}, {"id": "yarou", "n": "鴨肉珍 오리고기", "lat": 22.624999, "lng": 120.281162, "c": "food", "dur": 60, "area": "옌청푸", "acc": "옌청푸 大溝頂 골목", "why": "오리고기 + 미가오(찹쌀밥). 가오슝 노포의 대표", "r": "★★★"}, {"id": "gangyuan", "n": "港園 우육면", "lat": 22.620738, "lng": 120.287499, "c": "food", "dur": 60, "area": "옌청푸", "acc": "보얼예술특구 도보권", "why": "가오슝 우육면 하면 나오는 이름. 점심에 줄이 김", "r": "★★★"}, {"id": "xinglong", "n": "興隆居 아침만두", "lat": 22.63042, "lng": 120.293621, "c": "food", "dur": 40, "area": "첸진", "acc": "MRT 미려도역 도보 10분", "why": "아침 만두·두유. 오전에만 열고 줄이 길어 일찍 가야 함", "r": "★★★"}, {"id": "liuhe", "n": "리우허 야시장", "lat": 22.632315, "lng": 120.299811, "c": "food", "dur": 90, "area": "메이리다오", "acc": "MRT 미려도역 11번 출구 · 매일 16:30~24:00", "why": "접근성 최고. 관광객 비중이 높지만 첫날 저녁으로는 최적", "r": "★★"}, {"id": "popo", "n": "婆婆冰 빙수", "lat": 22.626395, "lng": 120.28201, "c": "food", "dur": 40, "area": "옌청푸", "acc": "옌청푸 치셴3로", "why": "옌청푸 빙수 노포. 망고빙수가 간판", "r": "★★"}, {"id": "sanduo", "n": "산둬 상권", "lat": 22.614153, "lng": 120.304422, "c": "shop", "dur": 150, "area": "산둬", "acc": "MRT 산둬상권역", "why": "신광미쓰코시·SOGO·다위안바이가 한 블록에. 기념품 한 번에 끝내기 1순위", "r": "★★★"}, {"id": "dream", "n": "드림몰", "lat": 22.595045, "lng": 120.306988, "c": "shop", "dur": 240, "area": "첸전", "acc": "MRT 凱旋역 → 경전철 夢時代역", "why": "대만 최대 쇼핑몰. 옥상 관람차. 반나절 필요", "r": "★★"}, {"id": "skm", "n": "신광미쓰코시", "lat": 22.614533, "lng": 120.30602, "c": "shop", "dur": 120, "area": "산둬", "acc": "MRT 산둬상권역 직결", "why": "백화점 식품관에서 차·펑리수를 사기 좋음", "r": "★★"}, {"id": "indigo", "n": "호텔 인디고 중앙공원", "lat": 22.624418, "lng": 120.301459, "c": "stay", "dur": 0, "area": "중앙공원", "acc": "MRT 중앙공원역 도보 2분", "why": "루프톱 바가 있는 부티크. 리우허 야시장·신굴장 도보권이라 4인 이동이 가장 편한 위치", "r": "★★★"}, {"id": "intercon", "n": "인터컨티넨탈 가오슝", "lat": 22.61101, "lng": 120.303312, "c": "stay", "dur": 0, "area": "아이허", "acc": "MRT 산둬상권역 도보 8분", "why": "2023년 개관한 최신 5성. 도서관·음악센터 쪽 신도심 뷰. 예산이 넉넉하면 1순위", "r": "★★★"}, {"id": "hilai", "n": "그랜드 하이라이", "lat": 22.619518, "lng": 120.296636, "c": "stay", "dur": 0, "area": "산둬", "acc": "MRT 산둬상권역 도보 5분", "why": "백화점과 붙은 대형 호텔. 조식 뷔페가 유명하고 방이 많아 4인 2실 잡기 쉬움", "r": "★★★"}, {"id": "ambass", "n": "앰배서더 가오슝", "lat": 22.624326, "lng": 120.290329, "c": "stay", "dur": 0, "area": "아이허", "acc": "MRT 옌청푸역 도보 8분", "why": "아이허(사랑강) 바로 앞 클래식 호텔. 강변 산책·보얼예술특구 도보권", "r": "★★"}, {"id": "silks", "n": "실크스 클럽", "lat": 22.610553, "lng": 120.305405, "c": "stay", "dur": 0, "area": "첸전", "acc": "MRT 산둬상권역 인근", "why": "미쉐린 레스토랑을 낀 5성 부티크. 객실 수가 적어 조용함", "r": "★★"}];
+  var BYID = {};
+  DB.forEach(function (p) { BYID[p.id] = p; });
+
+  var DAYS = [
+    { k: '1', t: 'DAY 1', d: '10/29 목', c: '#3d5afe' },
+    { k: '2', t: 'DAY 2', d: '10/30 금', c: '#0f9d58' },
+    { k: '3', t: 'DAY 3', d: '10/31 토', c: '#b06000' },
+    { k: '4', t: 'DAY 4', d: '11/1 일',  c: '#d3307f' }
+  ];
+  var CATNAME = { see: '명소', food: '맛집', shop: '쇼핑', stay: '숙소' };
+
+  // 문서의 기본 코스를 그대로 옮긴 추천 일정
+  var PRESET = {
+    '1': [['formosa', '18:30'], ['liuhe', '19:00']],
+    '2': [['pier2', '09:30'], ['gangyuan', '12:00'], ['ferry', '13:20'], ['cijin', '13:30'],
+          ['sizihwan', '18:00'], ['music', '20:00']],
+    '3': [['longhu', '09:00'], ['sanduo', '14:00'], ['ruifeng', '18:30']],
+    '4': [['weiwuying', '10:00'], ['skm', '12:00']]
+  };
+
+  // ── 저장소 ──────────────────────────────────────────────────────
+  var KEY = 'khh.plan.v1';
+  var plan = load();
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var p = JSON.parse(raw);
+        if (p && p['1']) return p;
+      }
+    } catch (e) {}
+    return { '1': [], '2': [], '3': [], '4': [] };
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(plan)); } catch (e) {}
+  }
+  function findDay(id) {
+    for (var i = 0; i < DAYS.length; i++) {
+      var k = DAYS[i].k;
+      for (var j = 0; j < plan[k].length; j++) if (plan[k][j].id === id) return k;
+    }
+    return null;
+  }
+  // 담긴 순서대로 1,2,3… — 지도 핀 번호와 일정 번호를 맞춘다
+  function numbers() {
+    var m = {}, n = 0;
+    DAYS.forEach(function (d) {
+      plan[d.k].forEach(function (it) { n++; m[it.id] = { no: n, day: d.k, c: d.c }; });
+    });
+    return m;
+  }
+
+  function add(id, day) {
+    var cur = findDay(id);
+    if (cur) plan[cur] = plan[cur].filter(function (x) { return x.id !== id; });
+    plan[day].push({ id: id, t: '' });
+    sortDay(day); save(); renderAll();
+  }
+  function remove(id) {
+    var d = findDay(id);
+    if (!d) return;
+    plan[d] = plan[d].filter(function (x) { return x.id !== id; });
+    save(); renderAll();
+  }
+  function move(day, i, dir) {
+    var a = plan[day], j = i + dir;
+    if (j < 0 || j >= a.length) return;
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+    save(); renderAll();
+  }
+  // 시간이 적힌 항목은 시간순으로, 안 적힌 건 뒤로
+  function sortDay(day) {
+    plan[day].sort(function (a, b) {
+      if (!a.t && !b.t) return 0;
+      if (!a.t) return 1;
+      if (!b.t) return -1;
+      return a.t < b.t ? -1 : 1;
+    });
+  }
+
+  // ── 카드 ────────────────────────────────────────────────────────
+  function card(p) {
+    var el = document.createElement('div');
+    el.className = 'pc';
+    el.dataset.id = p.id;
+    var dur = p.dur ? Math.round(p.dur / 60 * 10) / 10 + '시간' : '';
+    el.innerHTML =
+      '<div class="t"><b></b><span class="r"></span></div>' +
+      '<div class="meta"><span class="m cat ' + p.c + '"></span><span class="m area"></span>' +
+      (dur ? '<span class="m dur"></span>' : '') + '</div>' +
+      '<div class="acc"></div><div class="why"></div>' +
+      '<div class="act">' +
+        '<button class="add" type="button">+ 일정에 담기</button>' +
+        '<button class="onmap" type="button">지도</button>' +
+        '<a class="gmap" target="_blank" rel="noopener">구글맵</a>' +
+      '</div>' +
+      '<div class="daypick">' + DAYS.map(function (d, i) {
+        return '<button type="button" class="d' + (i + 1) + '" data-day="' + d.k + '">' +
+               d.t + ' · ' + d.d + '</button>';
+      }).join('') + '</div>';
+    el.querySelector('b').textContent = p.n;
+    el.querySelector('.r').textContent = p.r;
+    el.querySelector('.cat').textContent = CATNAME[p.c];
+    el.querySelector('.area').textContent = p.area;
+    if (dur) el.querySelector('.dur').textContent = '약 ' + dur;
+    el.querySelector('.acc').textContent = p.acc;
+    el.querySelector('.why').textContent = p.why;
+    el.querySelector('.gmap').href = 'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
+
+    var pick = el.querySelector('.daypick');
+    el.querySelector('.add').addEventListener('click', function () {
+      if (findDay(p.id)) { remove(p.id); return; }
+      pick.classList.toggle('show');
+    });
+    pick.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-day]');
+      if (!b) return;
+      pick.classList.remove('show');
+      add(p.id, b.dataset.day);
+    });
+    el.querySelector('.onmap').addEventListener('click', function () { focusOn(p); });
+    return el;
+  }
+
+  var filterCat = {};   // 컨테이너별 하위 필터 상태
+  function renderCards() {
+    [].forEach.call(document.querySelectorAll('.cards'), function (box) {
+      var cats = (box.dataset.cat || '').split(',');
+      box.innerHTML = '';
+      DB.filter(function (p) { return cats.indexOf(p.c) > -1; })
+        .filter(function (p) { return !filterCat[box.id] || filterCat[box.id] === p.c; })
+        .forEach(function (p) {
+          var el = card(p);
+          var d = findDay(p.id);
+          if (d) {
+            el.classList.add('on');
+            var b = el.querySelector('.add');
+            b.classList.add('done');
+            b.textContent = '✓ DAY ' + d + ' 에 담김 (빼기)';
+          }
+          box.appendChild(el);
+        });
+      if (!box.children.length) {
+        box.innerHTML = '<p class="empty">해당하는 장소가 없습니다.</p>';
+      }
+    });
+  }
+
+  // ── 플래너 ──────────────────────────────────────────────────────
+  function renderPlan() {
+    var host = document.getElementById('days');
+    if (!host) return;
+    host.innerHTML = '';
+    var total = 0, mins = 0;
+    DAYS.forEach(function (d) {
+      var c = document.createElement('div');
+      c.className = 'dayc';
+      c.style.setProperty('--dc', d.c);
+      var items = plan[d.k], dmin = 0;
+      items.forEach(function (it) { dmin += (BYID[it.id] || {}).dur || 0; });
+      total += items.length; mins += dmin;
+      c.innerHTML = '<h4><s></s>' + d.t + '</h4><p class="dsub">' + d.d + '</p>' +
+                    '<ul class="plist2"></ul>' +
+                    '<div class="dayfoot"><span>' + items.length + '곳</span>' +
+                    '<span>' + (dmin ? '체류 약 ' + Math.round(dmin / 60 * 10) / 10 + '시간' : '—') + '</span></div>';
+      var ul = c.querySelector('ul');
+      if (!items.length) {
+        ul.innerHTML = '<li class="empty">아직 담은 곳이 없습니다.<br>명소·맛집·숙소 탭에서 “+ 일정에 담기”를 누르세요.</li>';
+      }
+      items.forEach(function (it, i) {
+        var p = BYID[it.id];
+        if (!p) return;
+        var li = document.createElement('li');
+        li.className = 'pi';
+        li.innerHTML = '<span class="no">' + (i + 1) + '</span>' +
+          '<input class="tm" type="text" inputmode="numeric" placeholder="--:--" maxlength="5">' +
+          '<span class="nm"><span class="t2"></span> <em></em></span>' +
+          '<span class="ops">' +
+            '<button class="up" type="button" title="위로">↑</button>' +
+            '<button class="dn" type="button" title="아래로">↓</button>' +
+            '<button class="mp" type="button" title="지도에서 보기">◎</button>' +
+            '<button class="del" type="button" title="빼기">×</button>' +
+          '</span>';
+        li.querySelector('.t2').textContent = p.n;
+        li.querySelector('em').textContent = CATNAME[p.c] + ' · ' + p.area;
+        var tm = li.querySelector('.tm');
+        tm.value = it.t || '';
+        tm.addEventListener('change', function () {
+          var v = tm.value.replace(/[^\d:]/g, '');
+          if (/^\d{3,4}$/.test(v)) v = v.slice(0, v.length - 2) + ':' + v.slice(-2);
+          it.t = /^\d{1,2}:\d{2}$/.test(v) ? v : '';
+          sortDay(d.k); save(); renderAll();
+        });
+        li.querySelector('.up').addEventListener('click', function () { move(d.k, i, -1); });
+        li.querySelector('.dn').addEventListener('click', function () { move(d.k, i, 1); });
+        li.querySelector('.mp').addEventListener('click', function () { focusOn(p); });
+        li.querySelector('.del').addEventListener('click', function () { remove(it.id); });
+        ul.appendChild(li);
+      });
+      host.appendChild(c);
+    });
+    var sum = document.getElementById('plsum');
+    if (sum) {
+      sum.textContent = total
+        ? '담은 곳 ' + total + '개 · 체류 시간 합계 약 ' + Math.round(mins / 60 * 10) / 10 + '시간 (이동 시간 별도)'
+        : '아직 비어 있습니다. 아래 “기본 코스 불러오기”를 누르거나 각 탭에서 담아보세요.';
+    }
+  }
+
+  function loadPreset() {
+    DAYS.forEach(function (d) { plan[d.k] = []; });
+    Object.keys(PRESET).forEach(function (k) {
+      PRESET[k].forEach(function (pair) {
+        if (BYID[pair[0]]) plan[k].push({ id: pair[0], t: pair[1] });
+      });
+    });
+    save(); renderAll();
+  }
+  function clearAll() {
+    if (!confirm('담은 일정을 전부 비웁니다. 계속할까요?')) return;
+    DAYS.forEach(function (d) { plan[d.k] = []; });
+    save(); renderAll();
+  }
+
+  // ── 지도 ────────────────────────────────────────────────────────
+  var onlyPlan = false;
+  function renderMarkers() {
+    var inner = document.getElementById('mapinner');
+    if (!inner || !window.__mapPct) return;
+    [].forEach.call(inner.querySelectorAll('.mk'), function (e) { e.remove(); });
+    var nums = numbers();
+    DB.forEach(function (p) {
+      var q = window.__mapPct(p.lat, p.lng);
+      if (!q.inside) return;
+      var info = nums[p.id];
+      if (onlyPlan && !info) return;
+      var el = document.createElement('div');
+      el.className = 'mk ' + p.c + (info ? ' plan' : ' dim');
+      el.dataset.id = p.id;
+      el.style.left = q.x + '%';
+      el.style.top = q.y + '%';
+      el.innerHTML = '<b></b><i></i>';
+      if (info) {
+        el.querySelector('b').textContent = info.no;
+        el.querySelector('b').style.background = info.c;
+        el.querySelector('i').textContent = p.n;
+      }
+      inner.appendChild(el);
+    });
+    var lg = document.getElementById('mlegend');
+    if (lg) {
+      lg.innerHTML = DAYS.map(function (d) {
+        return '<span><s style="background:' + d.c + '"></s>' + d.t + ' (' + plan[d.k].length + ')</span>';
+      }).join('') + '<span><s style="background:#9aa3bd"></s>담지 않은 후보</span>';
+    }
+  }
+
+  function focusOn(p) {
+    var link = document.querySelector('nav.bn a[data-tab="map"]');
+    if (link) link.click();
+    setTimeout(function () {
+      if (window.__mapCenter) window.__mapCenter(p.lat, p.lng, 2.2);
+      var el = document.querySelector('.mk[data-id="' + p.id + '"]');
+      if (el) {
+        el.classList.add('hl');
+        setTimeout(function () { el.classList.remove('hl'); }, 2600);
+      }
+    }, 120);
+  }
+
+  function renderAll() { renderCards(); renderPlan(); renderMarkers(); }
+
+  // ── 버튼 연결 ───────────────────────────────────────────────────
+  function bind() {
+    var a = document.getElementById('btn-preset');
+    if (a) a.addEventListener('click', loadPreset);
+    var b = document.getElementById('btn-clear');
+    if (b) b.addEventListener('click', clearAll);
+    var f = document.getElementById('btn-mapfilter');
+    if (f) f.addEventListener('click', function () {
+      onlyPlan = !onlyPlan;
+      f.classList.toggle('on', onlyPlan);
+      f.textContent = onlyPlan ? '내 일정만 보는 중' : '내 일정만 보기';
+      renderMarkers();
+    });
+    [].forEach.call(document.querySelectorAll('.filters'), function (bar) {
+      bar.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-f]');
+        if (!btn) return;
+        var target = bar.dataset.for;
+        filterCat[target] = btn.dataset.f || null;
+        [].forEach.call(bar.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
+        btn.classList.add('on');
+        renderCards();
+      });
+    });
+  }
+
+  window.__planRefresh = renderAll;
+  bind();
+  renderAll();
 })();
 
 /* 탭 전환 — 문서가 길어서 한 화면에 하나씩만 보여준다.
