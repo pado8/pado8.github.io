@@ -97,6 +97,11 @@
     'display:block;word-break:break-all;margin-top:2px}',
     '.' + NS + '-list .x{flex:0 0 auto;background:none;border:0;color:#94a3b8;cursor:pointer;font-size:15px}',
     'body.' + NS + '-picking *{cursor:crosshair !important}',
+    '.' + NS + '-dim{position:fixed;z-index:2147482050;pointer-events:none;background:#f59e0b;color:#111;',
+    'font:800 12px/1.5 monospace;padding:3px 8px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.35)}',
+    '.' + NS + '-cross{position:fixed;z-index:2147482050;pointer-events:none;background:#ef4444}',
+    '.' + NS + '-dot{position:absolute;z-index:2147482400;width:14px;height:14px;margin:-7px 0 0 -7px;',
+    'border-radius:50%;background:#ef4444;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.45);pointer-events:none}',
     'body.' + NS + '-area{touch-action:none;-webkit-user-select:none;user-select:none}',
     '@media(max-width:520px){.' + NS + '-bar{flex-wrap:wrap;gap:5px;padding:7px 8px}',
     '.' + NS + '-bar button{padding:7px 10px;font-size:12px}.' + NS + '-bar b{width:100%;margin:0 0 2px}',
@@ -169,6 +174,7 @@
       pin.textContent = i + 1;
       pin.style.left = (n.page.x) + 'px';
       pin.style.top = (n.page.y) + 'px';
+      if (n.kind === 'spot') { pin.style.background = '#ef4444'; pin.style.color = '#fff'; }
       pin.title = n.text;
       pin.addEventListener('click', function (e) { e.stopPropagation(); alert((i + 1) + '. ' + n.text + '\n\n' + n.sel); });
       document.body.appendChild(pin);
@@ -220,6 +226,7 @@
 
   // ── 요소 고르기 ──────────────────────────────────────────────────
   function onMove(e) {
+    if (mode === 'spot') { moveCross(e.clientX, e.clientY); return; }
     if (mode !== 'el') return;
     if (e.touches && e.touches[0]) { e = e.touches[0]; }
     var el = document.elementFromPoint(e.clientX, e.clientY);
@@ -255,11 +262,12 @@
     var x = Math.min(e.clientX, dragStart.x), y = Math.min(e.clientY, dragStart.y);
     var w = Math.abs(e.clientX - dragStart.x), h = Math.abs(e.clientY - dragStart.y);
     dragBox.style.cssText += ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px';
+    showDim(x + w + 8, y, Math.round(w) + ' × ' + Math.round(h));
   }
   function onUp(e) {
     if (!dragBox || !dragStart) return;
     var r = dragBox.getBoundingClientRect();
-    dragBox.remove(); dragBox = null;
+    dragBox.remove(); dragBox = null; hideDim();
     var s = dragStart; dragStart = null;
     if (r.width < 8 || r.height < 8) return;
     setMode(null);
@@ -273,6 +281,83 @@
       sample: mid ? (mid.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60) : '',
       url: location.href
     });
+  }
+
+  // ── 지점 찍기 — 요소와 무관하게 화면 어느 좌표든 ─────────────────
+  var crossV = null, crossH = null, dim = null;
+  function cross(on) {
+    if (!on) {
+      if (crossV) { crossV.remove(); crossH.remove(); crossV = crossH = null; }
+      return;
+    }
+    if (crossV) return;
+    crossV = document.createElement('div'); crossV.className = NS + '-cross';
+    crossV.style.cssText += ';width:1px;top:0;bottom:0;opacity:.5';
+    crossH = document.createElement('div'); crossH.className = NS + '-cross';
+    crossH.style.cssText += ';height:1px;left:0;right:0;opacity:.5';
+    document.body.appendChild(crossV); document.body.appendChild(crossH);
+  }
+  function moveCross(x, y) {
+    if (!crossV) return;
+    crossV.style.left = x + 'px';
+    crossH.style.top = y + 'px';
+    showDim(x + 10, y + 10, x + ', ' + y);
+  }
+  function showDim(x, y, text) {
+    if (!dim) { dim = document.createElement('div'); dim.className = NS + '-dim'; document.body.appendChild(dim); }
+    dim.textContent = text;
+    dim.style.left = Math.min(x, innerWidth - 110) + 'px';
+    dim.style.top = Math.max(52, Math.min(y, innerHeight - 30)) + 'px';
+    dim.style.display = 'block';
+  }
+  function hideDim() { if (dim) dim.style.display = 'none'; }
+
+  function onSpot(e) {
+    if (mode !== 'spot') return;
+    if (e.target.closest && e.target.closest('.' + NS + '-bar, .' + NS + '-pop, .' + NS + '-list')) return;
+    e.preventDefault(); e.stopPropagation();
+    var x = e.clientX, y = e.clientY;
+    var under = document.elementFromPoint(x, y);
+    setMode(null);
+    popup({ left: x, bottom: y, right: x }, {
+      sel: under ? selectorOf(under) + '  (그 지점의 요소)' : '(요소 없음)',
+      ctx: under ? contextOf(under) : '', kind: 'spot',
+      rect: { x: x, y: y, w: 0, h: 0 },
+      page: { x: Math.round(x + scrollX), y: Math.round(y + scrollY) },
+      view: { w: innerWidth, h: innerHeight, dpr: devicePixelRatio, scroll: Math.round(scrollY) },
+      sample: under ? (under.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 60) : '',
+      url: location.href
+    });
+  }
+
+  // ── 보내기 — 이 자리에서 작업 중인 세션으로 바로 보낸다 ──────────
+  var ENDPOINT = 'http://127.0.0.1:5299/note';
+  function send() {
+    if (!notes.length) { alert('남긴 코멘트가 없습니다.'); return; }
+    var btn = document.querySelector('.' + NS + '-send');
+    btn.textContent = '보내는 중…';
+    fetch(ENDPOINT, {
+      method: 'POST', mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        url: location.href, at: new Date().toISOString(),
+        view: { w: innerWidth, h: innerHeight, dpr: devicePixelRatio },
+        theme: matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light',
+        notes: notes
+      })
+    }).then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function () {
+        btn.textContent = '보냈습니다 ✓';
+        notes.length = 0; save();
+        setTimeout(function () { btn.textContent = '보내기'; }, 2000);
+      })
+      .catch(function () {
+        btn.textContent = '보내기';
+        if (confirm('수집기에 닿지 않았습니다.
+(작업 세션에서 수집기가 켜져 있어야 합니다)
+
+대신 클립보드로 복사할까요?')) copy();
+      });
   }
 
   // ── 목록 ─────────────────────────────────────────────────────────
@@ -336,11 +421,13 @@
   var bar = document.createElement('div');
   bar.className = NS + '-bar';
   bar.innerHTML = '<b>◎ 코멘트</b>' +
-    '<button class="' + NS + '-el" type="button">요소 클릭</button>' +
-    '<button class="' + NS + '-area" type="button">영역 드래그</button>' +
+    '<button class="' + NS + '-el" type="button">요소</button>' +
+    '<button class="' + NS + '-spot" type="button">지점</button>' +
+    '<button class="' + NS + '-area" type="button">영역</button>' +
     '<button class="' + NS + '-toggle ' + NS + '-count" type="button">목록 0</button>' +
     '<span class="sp"></span>' +
-    '<button class="go ' + NS + '-copy" type="button">복사</button>' +
+    '<button class="go ' + NS + '-send" type="button">보내기</button>' +
+    '<button class="' + NS + '-copy" type="button">복사</button>' +
     '<button class="' + NS + '-close" type="button">닫기</button>';
   document.body.appendChild(bar);
   if (!document.body.style.paddingTop) document.body.style.paddingTop = '44px';
@@ -356,10 +443,14 @@
     hi.style.display = m === 'el' ? 'block' : 'none';
     tag.style.display = m === 'el' ? 'block' : 'none';
     bar.querySelector('.' + NS + '-el').classList.toggle('on', m === 'el');
+    bar.querySelector('.' + NS + '-spot').classList.toggle('on', m === 'spot');
     bar.querySelector('.' + NS + '-area').classList.toggle('on', m === 'area');
+    cross(m === 'spot');
   }
   bar.querySelector('.' + NS + '-el').addEventListener('click', function () { setMode(mode === 'el' ? null : 'el'); });
+  bar.querySelector('.' + NS + '-spot').addEventListener('click', function () { setMode(mode === 'spot' ? null : 'spot'); });
   bar.querySelector('.' + NS + '-area').addEventListener('click', function () { setMode(mode === 'area' ? null : 'area'); });
+  bar.querySelector('.' + NS + '-send').addEventListener('click', send);
   bar.querySelector('.' + NS + '-copy').addEventListener('click', copy);
   bar.querySelector('.' + NS + '-toggle').addEventListener('click', function () {
     if (listBox) { listBox.remove(); listBox = null; return; }
@@ -374,6 +465,7 @@
   document.addEventListener('touchstart', onMove, { capture: true, passive: true });
   document.addEventListener('touchmove', onMove, { capture: true, passive: true });
   document.addEventListener('click', onClick, true);
+  document.addEventListener('click', onSpot, true);
   document.addEventListener('pointerdown', onDown, true);
   document.addEventListener('pointermove', onDrag, true);
   document.addEventListener('pointerup', onUp, true);
@@ -393,6 +485,8 @@
       document.removeEventListener('touchmove', onMove, true);
       document.body.classList.remove(NS + '-area');
       document.removeEventListener('click', onClick, true);
+      document.removeEventListener('click', onSpot, true);
+      cross(false); hideDim();
       document.removeEventListener('pointerdown', onDown, true);
       document.removeEventListener('pointermove', onDrag, true);
       document.removeEventListener('pointerup', onUp, true);
