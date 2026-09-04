@@ -345,24 +345,22 @@
         theme: matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light',
         notes: notes
       })
-    }).then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-      .then(function () {
-        btn.textContent = '보냈습니다 ✓';
-        notes.length = 0; save();
-        setTimeout(function () { btn.textContent = '보내기'; }, 2000);
-      })
-      .catch(function () {
-        // 브라우저가 공개 페이지 → localhost 요청을 막는 경우가 있다.
-        // 그때는 파일로 떨어뜨린다 — 작업 세션이 다운로드 폴더에서 주워간다.
-        saveFile();
-        btn.textContent = '파일로 보냄 ✓';
-        setTimeout(function () { btn.textContent = '보내기'; }, 2200);
-        return;
-      })
-      .catch(function () {
-        btn.textContent = '보내기';
-        if (confirm('수집기에 닿지 않았습니다. 작업 세션에서 수집기가 켜져 있어야 합니다.\n\n대신 클립보드로 복사할까요?')) copy();
-      });
+    }).then(function (r) {
+      if (!r.ok) throw new Error('status ' + r.status);
+      return r.json();
+    }).then(function () {
+      // 성공 — 여기서 예외가 나도 실패 경로로 새지 않도록 then(성공, 실패) 대신
+      // 두 인자 형태를 쓴다(아래).
+      notes.length = 0; save();
+      btn.textContent = '보냈습니다 ✓';
+      setTimeout(function () { btn.textContent = '보내기'; }, 2000);
+    }, function () {
+      // 브라우저가 공개 페이지 → localhost 요청을 막는 환경이 있다.
+      // 그때는 파일로 떨어뜨린다 — 작업 세션이 다운로드 폴더에서 주워간다.
+      saveFile();
+      btn.textContent = '파일로 보냄 ✓';
+      setTimeout(function () { btn.textContent = '보내기'; }, 2200);
+    });
   }
 
   // 다운로드 폴더로 떨어뜨리기 — 네트워크 정책과 무관하게 항상 통한다
