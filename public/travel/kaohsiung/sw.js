@@ -1,14 +1,16 @@
 /* 가오슝 도시에 오프라인 캐시.
    문서 하나 + 지도 이미지 + 아이콘이 전부라 통째로 미리 받아둔다.
 
-   문서(HTML)는 stale-while-revalidate 로 다룬다 — 캐시본을 즉시 보여주고
-   온라인이면 뒤에서 새 버전을 받아 캐시를 덮어쓴다. 그래야 내용을 고칠 때마다
-   CACHE 이름을 올리는 걸 잊어도 다음 실행에서 최신본이 뜬다.
+   문서(HTML)는 **네트워크 우선 + 2.5초 타임아웃**이다.
+   온라인이면 항상 최신본이 바로 뜨고(예전 stale-while-revalidate 는 한 번 더 열어야
+   새 내용이 보여서 "고쳤는데 왜 그대로냐"가 됐다), 오프라인이거나 느리면 즉시 캐시본으로 떨어진다.
    나머지 자산(지도·아이콘)은 잘 안 바뀌므로 캐시 우선. */
-const CACHE = 'kaohsiung-2026-09-04c';
+const CACHE = 'kaohsiung-2026-09-04d';
+const DOC = './index.html';
+const NET_TIMEOUT = 2500;
 const ASSETS = [
   './',
-  './index.html',
+  DOC,
   './map.jpg',
   './manifest.webmanifest',
   './icon-192.png',
@@ -28,13 +30,25 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-function refresh(req, key) {
-  return fetch(req)
-    .then((res) => {
-      if (res && res.ok) caches.open(CACHE).then((c) => c.put(key, res.clone()));
-      return res;
-    })
-    .catch(() => null); // 오프라인이면 조용히 포기 — 캐시본이 이미 나갔다
+function save(key, res) {
+  if (res && res.ok) {
+    const copy = res.clone();
+    caches.open(CACHE).then((c) => c.put(key, copy));
+  }
+  return res;
+}
+
+// 네트워크를 기다리되, 정해진 시간을 넘기면 캐시본으로 넘어간다.
+// 타임아웃으로 캐시본을 내보낸 경우에도 네트워크 응답은 계속 받아 캐시를 갱신한다.
+function docResponse() {
+  return caches.match(DOC).then((cached) => {
+    const net = fetch(new Request(DOC, { cache: 'reload' }))
+      .then((res) => save(DOC, res))
+      .catch(() => null);
+    if (!cached) return net.then((res) => res || caches.match('./'));
+    const timeout = new Promise((r) => setTimeout(() => r(null), NET_TIMEOUT));
+    return Promise.race([net, timeout]).then((res) => res || cached);
+  });
 }
 
 self.addEventListener('fetch', (e) => {
@@ -43,19 +57,14 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return; // 구글 지도 링크 등은 손대지 않는다
 
-  // 주소창 접근·홈 화면 실행: 저장된 문서를 바로 주고, 뒤에서 최신본을 받아둔다
   if (req.mode === 'navigate') {
-    e.respondWith(
-      caches.match('./index.html').then((hit) => {
-        const net = refresh(new Request('./index.html', { cache: 'reload' }), './index.html');
-        if (hit) { e.waitUntil(net); return hit; }
-        return net.then((res) => res || caches.match('./'));
-      })
-    );
+    e.respondWith(docResponse());
     return;
   }
 
   e.respondWith(
-    caches.match(req).then((hit) => hit || refresh(req, req).then((res) => res || Response.error()))
+    caches.match(req).then((hit) =>
+      hit || fetch(req).then((res) => save(req, res)).catch(() => Response.error())
+    )
   );
 });

@@ -121,11 +121,25 @@
   nav.bn a.on{color:#fff;background:var(--accent)}
   @media(prefers-color-scheme:light){nav.bn a.on{color:#fff}}
   nav.bn a:active{opacity:.75}
+  nav.bn .brand{display:none}
+  .ver{font-size:10.5px;color:var(--dim);opacity:.75;margin-left:6px}
+  /* 넓은 화면에서는 하단 바 대신 왼쪽 사이드바 — 폰용 바를 데스크톱에 그대로 늘리면 어색하다 */
+  @media(min-width:1000px){
+    body{padding:34px 26px 44px 244px}
+    .wrap{margin:0 auto}
+    nav.bn{top:0;bottom:0;right:auto;width:216px;flex-direction:column;align-items:stretch;
+           gap:3px;padding:24px 14px;overflow:auto;
+           border-top:0;border-right:1px solid var(--line);box-shadow:none}
+    nav.bn .brand{display:block;padding:0 10px 14px;margin-bottom:10px;
+                  border-bottom:1px solid var(--line);font-size:12px;color:var(--dim);line-height:1.5}
+    nav.bn .brand b{display:block;color:var(--ink);font-size:15px;letter-spacing:-.02em;margin-bottom:2px}
+    nav.bn a{flex:0 0 auto;text-align:left;padding:9px 12px;font-size:13.5px}
+  }
 </style>
 </head>
 <body><div class="wrap">
 
-<div class="headbar"><h1>가오슝 3박4일 — 부부 2쌍</h1><span class="net" id="netdot"><s></s>온라인</span></div>
+<div class="headbar"><h1>가오슝 3박4일 — 부부 2쌍</h1><span class="net" id="netdot"><s></s>온라인</span><span class="ver">v09-04d</span></div>
 <p class="lead">성인 4명 · <b>2026년 10월 29일(목) ~ 11월 1일(일) 확정</b> · 서울 출발.
 항공편은 <b>2026-09-04 재조사</b>(인천·김포 직항 전수, 두 개 플랫폼 교차확인)이고,
 공휴일·기후는 공식 자료로 확인했습니다. 가격은 검색 시점 기준이라 변동합니다.</p>
@@ -776,7 +790,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 </div>
 </section>
 </div>
-<nav class="bn"><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a></nav>
+<nav class="bn"><span class="brand"><b>가오슝 3박4일</b>2026.10.29 목 – 11.01 일 · 성인 4명</span><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a></nav>
 <script>
 /* 오프라인 지도 + 현재 위치 + PWA 등록
    지도는 스크롤 컨테이너가 아니라 transform 으로 움직인다 — 한 손가락 드래그로 이동,
