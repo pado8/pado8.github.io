@@ -62,6 +62,8 @@
        border:1px solid var(--line);background:var(--card2);color:var(--dim)}
   .tag.on{color:var(--ok);border-color:currentColor;background:transparent}
   .tag.off{color:var(--accent2);border-color:currentColor;background:transparent}
+  .tag.alt{color:#b45309;border-color:currentColor;background:transparent}
+  @media(prefers-color-scheme:dark){.tag.alt{color:#fbbf24}}
   .soon{background:transparent;border:1.5px dashed var(--line);border-radius:18px;
         padding:26px;color:var(--dim);font-size:13.5px;text-align:center}
   .tips{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent2);
@@ -77,7 +79,7 @@
 
 <header>
   <h1>여행 도시에</h1>
-  <p class="lead">일정·항공·예산·지도를 한 문서에 모아둔 곳. 각 도시에는 <b>데이터가 없어도</b> 열립니다.</p>
+  <p class="lead">일정·항공·예산·지도를 한 문서에. 각 도시에는 <b>데이터가 없어도</b> 열립니다.<br><b>가오슝과 나고야는 같은 날짜(10/29–11/1)를 놓고 비교하는 두 후보</b>입니다.</p>
 </header>
 
 <h2>예정된 여행</h2>
@@ -93,6 +95,23 @@
   </div>
   <div class="meta">
     <span class="tag on">일정 확정</span>
+    <span class="tag off">오프라인 지원</span>
+    <span class="tag off">GPS 지도</span>
+    <span class="tag">항공 · 숙소 · 예산 · 맛집 · 쇼핑</span>
+  </div>
+</a>
+
+<a class="trip" href="nagoya/">
+  <div class="top">
+    <div class="flag">JP</div>
+    <div class="ttl">
+      <b>나고야 3박4일</b>
+      <span>일본 · 2026.10.29(목) – 11.01(일) · 성인 4명(부부 2쌍)</span>
+    </div>
+    <div class="dday"><b class="dd2">D-</b><span class="ddsub2">출발까지</span></div>
+  </div>
+  <div class="meta">
+    <span class="tag alt">같은 날짜 · 후보</span>
     <span class="tag off">오프라인 지원</span>
     <span class="tag off">GPS 지도</span>
     <span class="tag">항공 · 숙소 · 예산 · 맛집 · 쇼핑</span>
@@ -117,13 +136,13 @@
 </div>
 <script>
   (function () {
-    var el = document.getElementById('dd'), sub = document.getElementById('ddsub');
-    if (el) {
-      var go = new Date(2026, 9, 29), now = new Date();
-      var d = Math.round((go - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
-      el.textContent = d > 0 ? 'D-' + d : (d === 0 ? 'D-DAY' : '다녀옴');
-      if (sub) sub.textContent = d > 0 ? '출발까지' : (d === 0 ? '오늘 출발' : '');
-    }
+    var go = new Date(2026, 9, 29), now = new Date();
+    var d = Math.round((go - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+    var label = d > 0 ? 'D-' + d : (d === 0 ? 'D-DAY' : '다녀옴');
+    var sub = d > 0 ? '출발까지' : (d === 0 ? '오늘 출발' : '');
+    // 두 여행이 같은 날짜라 카드 전부에 같은 값을 넣는다
+    [].forEach.call(document.querySelectorAll('#dd, .dd2'), function (e) { e.textContent = label; });
+    [].forEach.call(document.querySelectorAll('#ddsub, .ddsub2'), function (e) { e.textContent = sub; });
   })();
   if ('serviceWorker' in navigator) {
     addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });

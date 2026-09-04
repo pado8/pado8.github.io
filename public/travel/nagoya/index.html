@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0e0f13">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="나고야">
+<title>나고야 3박4일 — 부부 2쌍 여행 도시에</title>
+<style>
+  /* ── 팔레트 ─────────────────────────────────────────────────────── */
+  :root{
+    --bg:#f4f6fd; --bg2:#e9edfb; --card:#fff; --card2:#f2f5fd; --line:#e0e6f5;
+    --ink:#131a2b; --ink2:#333d55; --dim:#68728d;
+    --accent:#3d5afe; --accent2:#7c4dff; --accent-soft:#eaeeff;
+    --ok:#0f9d58; --ok-soft:#e6f6ec; --warn:#b06000; --warn-soft:#fdf1e0;
+    --bad:#d3302f; --bad-soft:#fdecec; --gold:#a16207;
+    --sh:0 1px 2px rgba(19,26,43,.05),0 8px 24px -12px rgba(19,26,43,.16);
+    --sh-lg:0 2px 6px rgba(19,26,43,.06),0 18px 40px -18px rgba(19,26,43,.28);
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --bg:#0b1020; --bg2:#131b34; --card:#151d33; --card2:#1c2542; --line:#28325a;
+    --ink:#eef2ff; --ink2:#cfd8f5; --dim:#95a1c4;
+    --accent:#7aa2ff; --accent2:#b18cff; --accent-soft:#1d2748;
+    --ok:#4ade80; --ok-soft:#12291f; --warn:#fbbf24; --warn-soft:#2c2313;
+    --bad:#fb7185; --bad-soft:#2d1620; --gold:#f0b429;
+    --sh:0 1px 2px rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.7);
+    --sh-lg:0 2px 8px rgba(0,0,0,.35),0 22px 48px -20px rgba(0,0,0,.8);
+  }}
+  *{box-sizing:border-box}
+  body{margin:0;padding:0 0 60px;color:var(--ink);
+       background:var(--bg);
+       background-image:radial-gradient(1100px 520px at 12% -8%,var(--bg2),transparent 62%),
+                        radial-gradient(900px 460px at 108% 4%,var(--accent-soft),transparent 60%);
+       background-attachment:fixed;
+       font:16px/1.72 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 18px}
+
+  /* ── 헤더 ───────────────────────────────────────────────────────── */
+  .headbar{padding:30px 0 16px}
+  h1{font-size:1.9rem;line-height:1.25;margin:0 0 10px;letter-spacing:-.035em;font-weight:800}
+  .hchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .hchip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;
+         border-radius:10px;padding:5px 11px;background:var(--card);border:1px solid var(--line);
+         color:var(--ink2);box-shadow:var(--sh)}
+  /* 활성 탭과 같은 파랑이면 헷갈린다 — D-day 는 앰버로 분리한다 */
+  .hchip.dday{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;border-color:transparent;
+              font-weight:800;letter-spacing:.01em}
+  .net s{width:7px;height:7px;border-radius:50%;background:var(--ok);display:block}
+  .net.off s{background:var(--dim)}
+  .ver{font-size:10.5px;color:var(--dim);opacity:.7;letter-spacing:.02em}
+  .lead{color:var(--dim);margin:14px 0 0;font-size:14.5px;line-height:1.65}
+
+  /* ── 상단 탭 ────────────────────────────────────────────────────── */
+  nav.bn{position:sticky;top:0;z-index:60;margin:14px -18px 0;padding:9px 18px;
+         display:flex;gap:6px;overflow-x:auto;scroll-behavior:smooth;
+         background:color-mix(in srgb,var(--bg) 86%,transparent);
+         backdrop-filter:saturate(1.6) blur(12px);-webkit-backdrop-filter:saturate(1.6) blur(12px);
+         border-bottom:1px solid var(--line);
+         -ms-overflow-style:none;scrollbar-width:none}
+  nav.bn::-webkit-scrollbar{display:none}
+  nav.bn .brand{display:none}
+  nav.bn a{flex:1 1 0;min-width:52px;max-width:124px;text-align:center;
+           text-decoration:none;color:var(--ink2);font-size:13.5px;font-weight:700;
+           padding:9px 8px;border-radius:11px;border:1px solid var(--line);background:var(--card);
+           white-space:nowrap;transition:transform .12s,box-shadow .12s,background .12s,color .12s;
+           -webkit-tap-highlight-color:transparent}
+  nav.bn a:hover{transform:translateY(-1px);box-shadow:var(--sh)}
+  nav.bn a.on{color:#fff;border-color:transparent;box-shadow:var(--sh-lg);
+              background:linear-gradient(135deg,var(--accent),var(--accent2))}
+  nav.bn a:active{transform:translateY(0) scale(.97)}
+
+  /* ── 본문 ───────────────────────────────────────────────────────── */
+  .tab[hidden]{display:none}
+  .tab{padding-top:6px}
+  h2{font-size:1.28rem;margin:34px 0 14px;padding-left:14px;position:relative;
+     letter-spacing:-.03em;font-weight:800;line-height:1.35}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;
+             background:linear-gradient(180deg,var(--accent),var(--accent2))}
+  .tab>h2:first-child{margin-top:18px}
+  h3{font-size:1.03rem;margin:26px 0 9px;font-weight:750;letter-spacing:-.02em}
+  p{margin:10px 0}
+  a{color:var(--accent)}
+
+  /* 표 */
+  .tw{position:relative;overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--card);
+      box-shadow:var(--sh);margin:14px 0;-webkit-overflow-scrolling:touch}
+  .tw::-webkit-scrollbar{height:8px}
+  .tw::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  table{border-collapse:collapse;width:100%;font-size:13.8px;margin:0}
+  th,td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);
+        min-width:86px}  /* 좁은 화면에서 열이 한 글자씩 접히는 것 방지 — 대신 표가 가로로 스크롤된다 */
+  th{background:var(--card2);font-weight:750;color:var(--ink2);white-space:nowrap;
+     font-size:12.5px;letter-spacing:.01em}
+  tr:last-child td{border-bottom:0}
+  tbody tr:hover td,table tr:hover td{background:color-mix(in srgb,var(--card2) 55%,transparent)}
+
+  /* 강조 박스 */
+  .box{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+       border-radius:14px;padding:16px 18px;margin:16px 0;box-shadow:var(--sh)}
+  .box b.h{display:block;margin-bottom:7px;font-size:1rem;font-weight:800;letter-spacing:-.02em}
+  .box.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+  .box.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+  .box.ok{border-left-color:var(--ok);background:var(--ok-soft)}
+  .box.hi{border-left-color:var(--accent2)}
+  .box ul{margin:8px 0 0}
+
+  pre{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;
+      overflow-x:auto;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}
+  code{background:var(--card2);padding:2px 6px;border-radius:5px;font-size:.88em}
+  ul{padding-left:20px;margin:9px 0}
+  li{margin:6px 0}
+
+  /* 일정 카드 */
+  .day{background:var(--card);border:1px solid var(--line);border-radius:16px;
+       padding:20px 22px;margin:16px 0;box-shadow:var(--sh)}
+  .day h3{margin:0 0 4px;font-size:1.1rem;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .chip{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:8px;
+        padding:3px 10px;font-size:11.5px;font-weight:800;letter-spacing:.02em}
+  .daysub{color:var(--dim);font-size:13px;margin:0 0 14px}
+  .slot{display:flex;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+  .slot:first-of-type{border-top:0}
+  .time{flex:0 0 76px;color:var(--accent);font-weight:800;font-size:13px;padding-top:2px;
+        font-variant-numeric:tabular-nums}
+  .what{flex:1;min-width:0}
+  .what b{display:block;font-weight:750}
+  .what span{color:var(--dim);font-size:13.5px}
+
+  .pill{display:inline-block;border:1px solid currentColor;border-radius:8px;
+        padding:1px 9px;margin-right:5px;font-weight:800;font-size:11px}
+  .p-win{color:var(--ok);font-weight:700}.p-lose{color:var(--bad);font-weight:700}
+  footer{margin:44px 0 0;padding:20px 0 0;border-top:1px solid var(--line);
+         color:var(--dim);font-size:13px;line-height:1.7}
+
+  /* ── 오프라인 지도 ──────────────────────────────────────────────── */
+  .mapctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 10px}
+  .mbtn{font:inherit;font-size:13px;font-weight:750;padding:9px 16px;border-radius:11px;cursor:pointer;
+        border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:var(--sh);
+        touch-action:manipulation;transition:transform .12s,box-shadow .12s}
+  .mbtn:hover{transform:translateY(-1px);box-shadow:var(--sh-lg)}
+  .mbtn:active{transform:translateY(0) scale(.97)}
+  #btn-locate{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+  .mstat{color:var(--dim);font-size:12.5px;flex:1 1 100%}
+  .mapwrap{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;
+           background:var(--card2);height:min(70vh,600px);min-height:300px;box-shadow:var(--sh);
+           touch-action:none;cursor:grab;overscroll-behavior:contain;
+           -ms-overflow-style:none;scrollbar-width:none}
+  .mapwrap::-webkit-scrollbar{display:none}
+  .mapwrap.drag{cursor:grabbing}
+  .mapinner{position:absolute;left:0;top:0;width:100%;transform-origin:0 0;line-height:0;
+            will-change:transform}
+  .mapinner img{width:100%;height:auto;display:block;pointer-events:none;
+                -webkit-user-drag:none;user-select:none}
+  .mk{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
+      z-index:3;pointer-events:none}
+  .mk b{display:block;width:12px;height:12px;border-radius:50%;background:var(--accent);
+        border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
+  .mk.food b{background:#f59e0b}.mk.see b{background:#10b981}
+  .mk.mrt b{background:#6366f1}.mk.ferry b{background:#06b6d4}.mk.airport b{background:#ef4444}
+  .mk.shop b{background:#ec4899}
+  .mk i{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-style:normal;
+        font-size:10.5px;line-height:1.3;white-space:nowrap;color:#0b1020;background:rgba(255,255,255,.9);
+        border-radius:5px;padding:1px 5px;font-weight:800;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .me{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
+      z-index:5;pointer-events:none}
+  .me i{display:block;width:16px;height:16px;border-radius:50%;background:#2563eb;
+        border:3px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.5)}
+  .acc{position:absolute;border-radius:50%;transform:translate(-50%,-50%);z-index:4;
+       background:rgba(37,99,235,.14);border:1px solid rgba(37,99,235,.4);pointer-events:none}
+  .mhint{color:var(--dim);font-size:12px;margin:9px 0 0}
+  .mattr{color:var(--dim);font-size:11.5px;margin:5px 0 0;opacity:.85}
+  .mnote{color:var(--dim);font-size:13px}
+  .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px;margin:12px 0}
+  .plist a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);
+           border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;
+           font-size:13px;font-weight:650;box-shadow:var(--sh);
+           transition:transform .12s,box-shadow .12s}
+  .plist a:hover{transform:translateY(-2px);box-shadow:var(--sh-lg)}
+  .plist a b{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:0 0 auto}
+  .plist a.food b{background:#f59e0b}.plist a.see b{background:#10b981}
+  .plist a.mrt b{background:#6366f1}.plist a.ferry b{background:#06b6d4}.plist a.airport b{background:#ef4444}
+  .plist a.shop b{background:#ec4899}
+  .only-desk{display:none}
+  @media(hover:hover) and (pointer:fine){.only-desk{display:inline}}
+
+  @media(max-width:520px){
+    .wrap{padding:0 14px}
+    nav.bn{margin:12px -14px 0;padding:8px 12px;gap:5px}
+    nav.bn a{padding:9px 4px;font-size:12.5px;min-width:44px}
+    h1{font-size:1.55rem}
+    h2{font-size:1.16rem}
+    .day{padding:17px 16px}
+    .time{flex-basis:64px}
+    th,td{padding:9px 10px}
+  }
+</style>
+</head>
+<body><div class="wrap">
+
+<header class="headbar">
+<h1>나고야 3박4일 — 부부 2쌍</h1>
+<div class="hchips">
+  <span class="hchip dday" id="dday">D-</span>
+  <span class="hchip">2026.10.29 목 – 11.01 일</span>
+  <span class="hchip">성인 4명 · 3박4일</span>
+  <span class="hchip net" id="netdot"><s></s>온라인</span>
+  <span class="ver">v09-04a</span>
+</div>
+<p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지.
+데이터가 없어도 열립니다.</p>
+</header>
+<nav class="bn"><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a></nav>
+
+<section class="tab" id="tab-tips" hidden>
+<h2>이 날짜에만 걸리는 함정</h2>
+
+<div class="box bad">
+<b class="h">🚨 11월 1일부터 일본 면세제도가 바뀝니다 — 여행 마지막 날이 시행 첫날</b>
+2026년 11월 1일부터 <b>여권 제시 → 그 자리에서 세금 빼고 결제</b>하던 방식이 없어지고,
+<b>세금 포함 전액을 먼저 내고 출국할 때 공항에서 돌려받는 방식</b>으로 바뀝니다.
+드럭스토어·백화점·돈키호테·가전 매장 전부 해당됩니다.<br><br>
+우리 일정은 <b>10/29~10/31이 옛 제도, 11/1이 새 제도</b>로 정확히 갈립니다.
+게다가 11/1은 새 제도 <b>시행 첫날</b>이라 매장도 공항도 혼선이 예상됩니다.<br>
+→ <b>쇼핑은 10/31(토)까지 끝내세요.</b> 마지막 날에 몰아 사면 세금을 먼저 다 내고,
+공항에서 새 단말기에 여권 찍고 세관 확인까지 받아야 합니다.
+</div>
+
+<div class="box warn">
+<b class="h">🎟 지브리파크는 현장 판매가 아예 없습니다 — 예매 날짜가 정해져 있습니다</b>
+지브리파크는 <b>당일권·현장 구매가 없습니다.</b> 티켓은 <b>방문 두 달 전, 매달 10일 오후 2시</b>에 열립니다.
+<ul>
+<li><b>10/29~10/31 방문분</b> — 8월 10일에 이미 판매 시작됨. <b>잔여분이 있는지 지금 확인</b>하세요</li>
+<li><b>11/1 방문분</b> — <b>9월 10일(목) 오후 2시</b> 판매 시작. 일본과 시차가 없으니 한국 시간도 오후 2시입니다</li>
+</ul>
+가격은 5개 구역 전체를 보는 <b>프리미엄이 평일 7,300엔 / 주말·공휴일 7,800엔</b>,
+일부 구역만 보는 스탠다드가 평일 3,300엔 / 주말 3,800엔입니다. 4인이면 프리미엄 기준 약 29,200~31,200엔.<br>
+가는 법 — 나고야역 → 지하철 히가시야마선 <b>후지가오카</b> → 리니모 <b>아이치큐하쿠기념공원역</b>. 약 46분·670엔.
+</div>
+
+<div class="box hi">
+<b class="h">🍂 단풍을 기대하면 실망합니다</b>
+나고야 시내 단풍 절정은 <b>11월 하순~12월 초</b>입니다. 10월 말~11월 초는 아직 초록에 가깝습니다.
+단풍이 목적이면 이 날짜는 맞지 않고, <b>대신 사람이 훨씬 적고 숙소도 쌉니다.</b>
+</div>
+
+<div class="box">
+<b class="h">🌡 일교차가 큽니다</b>
+10월 나고야는 <b>최고 22℃ / 최저 14℃</b>, 11월로 넘어가면 <b>최고 16℃ / 최저 8℃</b>로 뚝 떨어집니다.
+낮에는 반팔도 가능한데 아침저녁은 쌀쌀합니다. <b>얇은 패딩이나 자켓 한 장</b>은 필수입니다.
+</div>
+
+<h2>예약 순서 (지금부터)</h2>
+<div class="tw">
+<table>
+<tr><th>언제</th><th>할 일</th><th>메모</th></tr>
+<tr><td><b>9월 10일(목) 14시</b></td><td class="p-lose"><b>지브리파크 11/1 티켓</b></td>
+    <td>갈 거면 이 시각에 대기. 주말분은 빨리 나갑니다</td></tr>
+<tr><td>이번 주</td><td><b>항공권 4인 확정</b></td><td>제주항공은 위탁 수하물을 예약과 같이 추가</td></tr>
+<tr><td>이번 주</td><td><b>호텔 2실</b></td><td>나고야역 또는 사카에. 무료 취소 조건으로 먼저 잡기</td></tr>
+<tr><td>지금</td><td>지브리파크 10/29~31 잔여분 확인</td><td>이미 판매 중이라 남아 있으면 바로</td></tr>
+<tr><td>D-30</td><td>여권 유효기간 확인</td><td>일본은 체류기간 이상이면 되지만 6개월 여유가 안전</td></tr>
+<tr><td>D-7</td><td><b>Visit Japan Web 등록</b></td><td>4명 각자. QR 하나로 입국심사+세관 통과</td></tr>
+<tr><td>D-3</td><td>이심 구매 · 엔화 환전</td><td>현금은 4인 기준 6~8만엔</td></tr>
+</table>
+</div>
+
+<h2>예산 (4인 합계)</h2>
+<div class="tw">
+<table>
+<tr><th>항목</th><th>금액</th><th>산출</th></tr>
+<tr><td>항공</td><td>204~209만원</td><td>위탁 15kg×4인 왕복 포함. 최저 조합 2,036,318원</td></tr>
+<tr><td>숙소 3박</td><td>75~110만원</td><td>3~4성급 2실 × 3박, 1실 12.5~18만원/박</td></tr>
+<tr><td>식비</td><td>70~90만원</td><td>4인 하루 20~25만원 × 3.5일. 일본 물가는 대만보다 확실히 높습니다</td></tr>
+<tr><td>교통·입장</td><td>25~35만원</td><td>뮤스카이 왕복·지하철 1일권·입장료</td></tr>
+<tr><td>지브리파크(선택)</td><td>0 또는 30만원</td><td>4인 프리미엄 약 29,200~31,200엔</td></tr>
+<tr><td>기타</td><td>30~50만원</td><td>쇼핑·기념품·이심</td></tr>
+<tr><td><b>합계</b></td><td><b>404~524만원</b></td><td><b>1인 약 101~131만원</b></td></tr>
+</table>
+</div>
+<p>가오슝(316~384만원)보다 <b>1인당 30~45만원 더 듭니다.</b> 항공도 비싸고 식비·숙박이 특히 차이납니다.</p>
+
+<h2>실무 준비</h2>
+<h3>입국·통신</h3>
+<ul>
+<li><b>비자 면제</b> — 한국 여권 90일. 여권은 체류기간 이상 유효하면 되지만 <b>6개월 여유</b>가 안전합니다</li>
+<li><b>Visit Japan Web</b> — 입국심사와 세관신고를 <b>QR 하나</b>로 끝냅니다. 의무는 아니지만 줄이 확실히 짧습니다.
+    4명 각자 계정이 필요하니 출발 전에 한 번에 처리하세요</li>
+<li><b>이심</b> — 일본은 공용 와이파이가 생각보다 부실합니다. 4인 중 최소 2명은 데이터가 있어야 합니다</li>
+</ul>
+<h3>돈</h3>
+<ul>
+<li>일본도 카드가 많이 늘었지만 <b>노포·상점가·소규모 식당은 여전히 현금</b>입니다. 4인 기준 <b>6~8만엔</b> 준비</li>
+<li><b>동전이 빠르게 쌓입니다.</b> 1엔·5엔이 계속 생기니 편의점에서 소액 결제로 털어내세요</li>
+<li>트래블카드(트래블월렛·트래블로그)가 환전보다 유리한 경우가 많습니다</li>
+</ul>
+<h3>교통</h3>
+<ul>
+<li><b>공항 → 시내</b>: 메이테츠 <b>뮤스카이(μ-SKY) 28분</b>. 운임 1,430엔 <b>+ 특별차량권 450엔</b>.
+    미리 안 사고 차내에서 정산하면 <b>500엔</b>을 받습니다 — 개찰 전에 사세요</li>
+<li><b>지하철 1일권</b>은 하루 3~4번 이상 타면 이득입니다</li>
+<li><b>도니치에코킷푸(620엔)</b>는 <b>토·일·공휴일과 매월 8일에만</b> 쓸 수 있습니다 —
+    우리 일정에서는 <b>10/31(토), 11/1(일)</b> 이틀이 해당됩니다. 목·금은 일반 1일권을 사세요</li>
+<li><b>마나카(manaca)</b> IC카드 — 보증금 500엔 포함. 90분 안에 버스↔지하철 환승하면 80엔 할인</li>
+</ul>
+
+<h2>일본에서 조심할 것</h2>
+<div class="box warn">
+<b class="h">대만과 다른 점들</b>
+<ul>
+<li><b>길에 쓰레기통이 없습니다.</b> 편의점에서 산 건 그 편의점에서 버리거나 가방에 넣고 다녀야 합니다</li>
+<li><b>걸으면서 먹기·흡연이 금지</b>인 구역이 많습니다. 나고야역·사카에 일대는 노상 흡연 과태료 대상입니다</li>
+<li><b>팁이 없습니다.</b> 두고 나오면 오히려 쫓아옵니다</li>
+<li><b>식당에서 4인이 자리를 오래 잡는 걸 싫어합니다.</b> 특히 점심 피크에는 회전이 빠릅니다</li>
+<li><b>에스컬레이터</b> — 나고야는 오른쪽에 서고 왼쪽을 비웁니다(도쿄와 같음, 오사카와 반대)</li>
+<li><b>면세 한도</b> — 한국 입국 시 1인 미화 800달러. 4인이 몰아 사면 넘기기 쉽습니다</li>
+</ul>
+</div>
+
+<h2>4인 여행에서만 생기는 함정</h2>
+<ul>
+<li><b>식당 4인석</b> — 나고야 인기 노포는 카운터 위주라 4명이 같이 앉기 어렵습니다.
+    <b>야바톤·아츠타 호라이켄 같은 곳은 웨이팅 앱으로 미리 이름을 올려두세요</b></li>
+<li><b>지하철 1일권을 각자 사야 합니다</b> — 4장이면 금액이 커지니 그날 동선이 2번 이하면 그냥 개별 결제가 쌉니다</li>
+<li><b>택시</b> — 일본 택시는 기본요금이 비쌉니다. 4인이면 지하철이 거의 항상 유리합니다</li>
+<li><b>지브리파크는 티켓이 인당</b>이라 4인이면 30만원이 한 번에 나갑니다. 갈지 말지 먼저 정하세요</li>
+<li><b>결제 분담</b> — 공동 지갑을 만들어 한 명이 결제하고 마지막에 정산하는 게 편합니다.
+    <b>면세 환급도 한 명 명의로 몰면 유리</b>합니다</li>
+</ul>
+
+<footer>
+<b>검증 상태</b> — 항공편·요금은 <b>2026-09-04 조사</b>(성인 4명, 직항, 원화)이며
+Kiwi와 lastminute 두 플랫폼을 교차확인했습니다. 인천·김포 출발을 모두 훑었습니다.<br><br>
+<b>2026년 11월 1일 면세제도 변경</b>은 복수의 보도로 확인했습니다 — 여권 제시 즉시 면세에서
+선결제 후 공항 환급 방식으로 바뀝니다. <b>시행 첫날이 우리 출국일</b>이라는 점이 이번 일정의 핵심입니다.<br><br>
+<b>지브리파크</b> 티켓 판매 규칙(방문 두 달 전 매달 10일 14시, 현장 판매 없음)과 요금,
+<b>뮤스카이</b> 요금(1,430엔 + 특별차량권 450엔, 차내 정산 시 500엔),
+<b>도니치에코킷푸</b>(620엔, 토·일·공휴일과 매월 8일 한정)도 확인했습니다.<br><br>
+<b>확인하지 않은 것</b> — <b>식당은 널리 알려진 곳 위주로 골랐을 뿐 영업 여부를 확인하지 않았습니다.</b>
+휴무일·영업시간·웨이팅은 방문 전에 구글맵으로 확인하세요.
+각 시설의 최신 운영시간과 입장료, 숙소 실제 요금도 예약 시점에 직접 확인이 필요합니다.<br><br>
+항공 요금은 검색 시점 기준이며 실시간으로 변합니다. 예약 전 최종 금액을 반드시 다시 확인하세요.
+</footer>
+</section>
+
+<section class="tab" id="tab-air" hidden>
+<h2>항공편 — 10/29 출발 · 11/1 귀국 직항 전수</h2>
+<p>2026-09-04 조사 · 성인 4명 · <b>직항만</b> · 원화 4인 총액 · Kiwi 기준(lastminute 교차확인)</p>
+
+<div class="box ok">
+<b class="h">✅ 가오슝과 정반대로, 선택지가 아주 많습니다</b>
+10/29(목) 인천발 직항만 <b>9편</b>, 11/1(일) 귀국편도 <b>9편</b>입니다.
+아침 7시 반부터 저녁 7시까지 두 시간 간격으로 깔려 있어서 원하는 시간대를 고르면 됩니다.
+대한항공·아시아나 같은 풀서비스와 제주항공·진에어 LCC가 같은 노선에 다 들어옵니다.
+</div>
+
+<h3>가는 편 — 10/29(목) 인천(ICN) 출발</h3>
+<div class="tw">
+<table>
+<tr><th>편명</th><th>시각</th><th>소요</th><th>위탁</th><th>4인 총액</th><th>메모</th></tr>
+<tr><td><b>진에어 LJ289</b></td><td>07:30 → 09:30</td><td>2h00</td><td class="p-win">포함</td>
+    <td>920,908원</td><td>가장 이른 편. <b>오전을 통째로 벌 수 있음</b></td></tr>
+<tr><td>아시아나 OZ122</td><td>08:00 → 09:55</td><td>1h55</td><td class="p-win">포함</td>
+    <td>933,040원</td><td>풀서비스 최저. KE5725 코드셰어는 1,353,552원</td></tr>
+<tr><td><b>제주항공 7C1201</b></td><td>09:10 → 10:55</td><td>1h45</td><td class="p-lose">미포함</td>
+    <td class="p-win"><b>748,076원</b></td><td><b>최저가.</b> 위탁 포함하면 877,583원</td></tr>
+<tr><td>대한항공 KE745</td><td>10:35 → 12:30</td><td>1h55</td><td class="p-win">포함</td>
+    <td>1,304,608원</td><td>JAL·OZ9863 코드셰어 있음(더 비쌈)</td></tr>
+<tr><td>제주항공 7C1203</td><td>14:50 → 16:50</td><td>2h00</td><td class="p-lose">미포함</td>
+    <td>930,163원</td><td>오후 도착</td></tr>
+<tr><td>아시아나 OZ124</td><td>15:35 → 17:20</td><td>1h45</td><td class="p-win">포함</td>
+    <td>933,040원</td><td>KE5503 코드셰어 1,353,552원</td></tr>
+<tr><td>진에어 LJ293</td><td>15:45 → 17:30</td><td>1h45</td><td class="p-win">포함</td>
+    <td class="p-win">770,173원</td><td>오후 출발 중 최저</td></tr>
+<tr><td>진에어 LJ291</td><td>17:10 → 19:00</td><td>1h50</td><td class="p-win">포함</td>
+    <td>1,028,586원</td><td>저녁 도착</td></tr>
+<tr><td>대한항공 KE749</td><td>18:50 → 20:40</td><td>1h50</td><td class="p-win">포함</td>
+    <td>970,568원</td><td>가장 늦은 편. 첫날은 이동만</td></tr>
+</table>
+</div>
+
+<h3>가는 편 — 10/29(목) 김포(GMP) 출발</h3>
+<div class="tw">
+<table>
+<tr><th>편명</th><th>시각</th><th>소요</th><th>위탁</th><th>4인 총액</th><th>메모</th></tr>
+<tr><td><b>피치 MM764</b></td><td>11:10 → 13:00</td><td>1h50</td><td class="p-lose">미포함</td>
+    <td>791,656원</td><td>일본 LCC. 김포라 접근은 편하나 수하물·좌석이 전부 유료</td></tr>
+<tr><td>피치 MM768</td><td>17:15 → 19:05</td><td>1h50</td><td class="p-lose">미포함</td>
+    <td>1,379,942원</td><td>같은 노선인데 저녁편이 훨씬 비쌈</td></tr>
+</table>
+</div>
+<p class="mnote">피치는 <b>일본 LCC라 수하물 규정이 국내 LCC보다 빡빡합니다</b>(기내 합산 7kg). 4인 3박이면 위탁이 필요할 텐데,
+그 비용까지 더하면 인천발 진에어·제주항공보다 유리하지 않을 수 있습니다.</p>
+
+<h3>오는 편 — 11/1(일) 나고야(NGO) 출발</h3>
+<div class="tw">
+<table>
+<tr><th>편명</th><th>시각</th><th>도착</th><th>위탁</th><th>4인 총액</th><th>마지막 날</th></tr>
+<tr><td>대한항공 KE750</td><td>09:00 → 11:05</td><td>인천</td><td class="p-win">포함</td>
+    <td>1,704,862원</td><td class="p-lose">❌ 07:00 공항 = 4일차 없음</td></tr>
+<tr><td>진에어 LJ290</td><td>10:40 → 12:45</td><td>인천</td><td class="p-win">포함</td>
+    <td>1,336,160원</td><td class="p-lose">❌ 오전만</td></tr>
+<tr><td>아시아나 OZ121</td><td>10:55 → 13:00</td><td>인천</td><td class="p-win">포함</td>
+    <td>1,686,237원</td><td class="p-lose">❌ 오전만</td></tr>
+<tr><td>제주항공 7C1202</td><td>11:55 → 14:10</td><td>인천</td><td class="p-lose">미포함</td>
+    <td>1,233,597원</td><td>△ 09:00 출발이면 오전 조금</td></tr>
+<tr><td>대한항공 KE746</td><td>13:40 → 15:50</td><td>인천</td><td class="p-win">포함</td>
+    <td class="p-lose">2,583,677원</td><td>△ 오전 활용. 대신 가장 비쌈</td></tr>
+<tr><td>제주항공 7C1204</td><td>17:50 → 19:55</td><td>인천</td><td class="p-lose">미포함</td>
+    <td>1,324,471원</td><td class="p-win">✅ 오후 3시까지 사용</td></tr>
+<tr><td>아시아나 OZ123</td><td>18:20 → 20:30</td><td>인천</td><td class="p-win">포함</td>
+    <td>1,969,378원</td><td class="p-win">✅ 오후 3시 반까지</td></tr>
+<tr><td><b>진에어 LJ294</b></td><td>18:30 → 20:55</td><td>인천</td><td class="p-win">포함</td>
+    <td class="p-win"><b>1,188,801원</b></td><td class="p-win">✅ <b>최저가 + 마지막 날 최대 활용</b></td></tr>
+<tr><td>진에어 LJ292</td><td>20:00 → 22:15</td><td>인천</td><td class="p-win">포함</td>
+    <td>1,405,887원</td><td>✅ 저녁까지. 인천 도착이 늦음</td></tr>
+<tr><td>피치 MM763 / MM767</td><td>08:05 → 10:20 / 14:10 → 16:25</td><td><b>김포</b></td><td class="p-lose">미포함</td>
+    <td>각 1,407,171원</td><td>김포 도착. 두 편 값이 같음</td></tr>
+</table>
+</div>
+<p class="mnote">코드셰어 주의 — <b>OZ9866(1,690,403원)이 실제 운항편 KE750(1,704,862원)보다 쌉니다.</b>
+반대로 KE5726·KE5504·OZ9863 같은 코드셰어는 원래 편보다 비쌉니다. 같은 비행기라도 어느 편명으로 사느냐에 따라 값이 다릅니다.</p>
+
+<h2>추천 조합</h2>
+<div class="tw">
+<table>
+<tr><th></th><th>A안 · 시간 최대 + 최저가</th><th>B안 · 한 항공사 왕복</th><th>C안 · 여유롭게</th></tr>
+<tr><td><b>가는 편</b></td><td>7C1201 09:10 → 10:55</td><td>LJ289 07:30 → 09:30</td><td>OZ122 08:00 → 09:55</td></tr>
+<tr><td><b>오는 편</b></td><td>LJ294 18:30 → 20:55</td><td>LJ294 18:30 → 20:55</td><td>OZ123 18:20 → 20:30</td></tr>
+<tr><td><b>기내수하물만</b></td><td class="p-win"><b>1,936,877원</b></td><td>2,109,709원</td><td>2,902,418원</td></tr>
+<tr><td><b>위탁 15kg 포함</b></td><td class="p-win"><b>2,036,318원</b></td><td>2,086,488원</td><td>2,902,418원</td></tr>
+<tr><td><b>발권</b></td><td class="p-lose">제주 + 진에어 = 2건 분리</td><td class="p-win">진에어 왕복 1건 = 결항 시 보호</td><td class="p-win">아시아나 왕복 1건</td></tr>
+<tr><td><b>첫날</b></td><td>10:55 도착 → 시내 12시</td><td class="p-win">09:30 도착 → 시내 10시 반</td><td>09:55 도착 → 시내 11시</td></tr>
+<tr><td><b>마지막 날</b></td><td class="p-win">오후 3시까지</td><td class="p-win">오후 3시까지</td><td class="p-win">오후 3시까지</td></tr>
+</table>
+</div>
+
+<div class="box hi">
+<b class="h">판단</b>
+<b>위탁 수하물을 붙이면 A안과 B안 차이가 5만원까지 좁혀집니다.</b>
+진에어는 국제선 위탁 15kg가 기본 포함이라 가격이 거의 안 오르고, 제주항공은 따로 사야 하기 때문입니다.<br>
+5만원 차이면 <b>B안(진에어 왕복)</b>이 낫습니다 — 왕복 한 건이라 결항 시 보호를 받고,
+07:30 출발이라 <b>첫날 오전이 한 시간 반 더</b> 생깁니다. 대신 새벽 5시 반에는 공항에 있어야 합니다.<br>
+아침에 일어나는 게 부담이면 A안, 마지막 날 피곤이 부담이면 어느 쪽이든 <b>LJ294(18:30)</b>가 정답입니다.
+</div>
+
+<div class="box warn">
+<b class="h">예약 시 확인</b>
+<ul>
+<li><b>제주항공은 위탁 수하물을 예약 직후 온라인으로 추가</b>하세요. 공항 구매는 훨씬 비쌉니다</li>
+<li><b>진에어는 국제선 위탁 15kg 기본 포함</b>입니다. 별도 구매가 필요 없는지 예약 화면에서 확인하세요</li>
+<li><b>코드셰어를 피하세요.</b> 같은 비행기인데 편명만 다르고 값이 최대 40만원(4인)까지 차이납니다</li>
+<li><b>공항 도착 시각</b> — 인천 국제선은 출발 2시간 반 전 권장. LJ289(07:30)면 <b>05:00</b>입니다</li>
+<li>피치(MM)는 김포 출발이라 편하지만 <b>기내 수하물 합산 7kg</b> 제한이 빡빡합니다</li>
+</ul>
+</div>
+</section>
+
+<section class="tab" id="tab-stay" hidden>
+<h2>숙소 — 나고야역이냐 사카에냐</h2>
+<p>나고야는 <b>나고야역(名古屋駅)</b>과 <b>사카에(栄)</b> 두 축입니다. 지하철 히가시야마선으로 5분 거리라
+어디를 잡아도 크게 틀리지 않지만, 성격이 다릅니다.</p>
+<div class="tw">
+<table>
+<tr><th>지역</th><th>추천도</th><th>이유</th></tr>
+<tr><td><b>名古屋駅</b> (나고야역)</td><td>★★★</td>
+    <td>공항 뮤스카이가 바로 들어옴. 신칸센·지하철 3개 노선 교차. <b>짐 들고 움직이는 4인에게 1순위.</b>
+        백화점·지하상가가 역과 붙어 있어 비 와도 문제없음</td></tr>
+<tr><td><b>栄</b> (사카에)</td><td>★★★</td>
+    <td>밤이 살아 있는 쪽. 오아시스21·TV타워·백화점·술집이 도보권.
+        <b>저녁에 나가 놀 계획이면 여기</b>. 공항에서 한 번 갈아타야 함</td></tr>
+<tr><td><b>伏見</b> (후시미)</td><td>★★</td>
+    <td>나고야역과 사카에 딱 중간. 조용하고 가격이 살짝 쌈. 무난한 절충안</td></tr>
+<tr><td><b>金山</b> (카나야마)</td><td>★★</td>
+    <td>공항·아쓰타신궁 방향 교통 요지. 시내 중심은 아니지만 <b>가격 대비 방이 넓은 편</b></td></tr>
+<tr><td>大須 (오스)</td><td>★</td>
+    <td>상점가 한복판이라 재밌지만 숙소 선택지가 적음</td></tr>
+</table>
+</div>
+<div class="box hi">
+<b class="h">부부 2쌍이면</b>
+<b>방 2개</b>입니다. 일본 호텔은 <b>방이 좁고 트윈이 귀합니다</b> — 더블 침대 하나만 있는 방이 기본인 곳이 많으니
+<b>트윈(침대 2개)인지 반드시 확인</b>하세요. 같은 층 인접 객실을 요청해두면 아침에 모이기 편합니다.<br>
+일본은 <b>숙박세</b>가 붙는 지역이 있습니다. 나고야는 현재 숙박세가 없지만, 요금 표기에 세금·서비스료가 포함인지 확인하세요.
+</div>
+</section>
+
+<section class="tab" id="tab-plan" hidden>
+<h2>일정표</h2>
+<p class="mnote">아래는 <b>7C1201(10:55 도착) 기준</b>입니다. LJ289(09:30 도착)를 타면 전체가 1시간 반 앞당겨져
+첫날 오전에 한 곳을 더 넣을 수 있습니다.</p>
+
+<div class="day">
+<h3><span class="chip">DAY 1</span>10/29 목 — 도착 &amp; 나고야역·사카에</h3>
+<p class="daysub">공항에서 시내까지 28분. 첫날은 무리하지 않습니다.</p>
+<div class="slot"><div class="time">10:55</div><div class="what"><b>주부국제공항 도착</b>
+  <span>입국(Visit Japan Web QR) → 이심 개통 → <b>메이테츠 뮤스카이</b>. 개찰 전에 특별차량권 450엔을 같이 사세요.</span></div></div>
+<div class="slot"><div class="time">12:00</div><div class="what"><b>나고야역 도착 · 짐 맡기기</b>
+  <span>체크인 전이면 호텔에 짐만 맡기거나 역 코인락커. 4인 캐리어면 대형 락커가 필요합니다.</span></div></div>
+<div class="slot"><div class="time">12:30</div><div class="what"><b>점심 — 나고야역 첫 끼</b>
+  <span>역 안 <b>에스카(ESCA) 지하상가</b>에 나고야메시가 모여 있습니다. 미소카츠·키시멘·히츠마부시 전부 여기서 됩니다.</span></div></div>
+<div class="slot"><div class="time">14:00</div><div class="what"><b>노리타케의 정원 · 토요타산업기술기념관</b>
+  <span>나고야역에서 도보 15분. 붉은 벽돌 공장을 개조한 정원과, <b>실제로 기계가 돌아가는</b> 산업기술관.
+  기계·자동차에 관심 없어도 규모가 압도적이라 볼 만합니다.</span></div></div>
+<div class="slot"><div class="time">17:00</div><div class="what"><b>사카에 이동 — 오아시스21 · TV타워</b>
+  <span>지하철 히가시야마선 5분. <b>물의 우주선</b>이라 불리는 유리 지붕 위를 걸을 수 있고, 해질 무렵 조명이 예쁩니다.</span></div></div>
+<div class="slot"><div class="time">18:30</div><div class="what"><b>저녁 — 테바사키(닭날개 튀김)</b>
+  <span>사카에 일대에 <b>세카이노야마짱·후라이보</b>가 몰려 있습니다. 맥주와 함께 먹는 게 정석.
+  4인이면 자리가 빨리 차니 <b>18시 전에 가거나 예약</b>하세요.</span></div></div>
+</div>
+
+<div class="day">
+<h3><span class="chip">DAY 2</span>10/30 금 — 나고야성 &amp; 오스</h3>
+<p class="daysub">평일이라 어디든 한산합니다. 나고야의 핵심을 이날 몰아넣습니다.</p>
+<div class="slot"><div class="time">09:30</div><div class="what"><b>名古屋城 (나고야성)</b>
+  <span>지하철 메이조선 <b>시야쿠쇼(市役所)역</b> 7번 출구 도보 5분. 천수각은 내부 관람이 막혀 있지만
+  <b>혼마루고텐(本丸御殿)</b>이 복원돼 있어 그쪽이 볼거리입니다. 2시간 잡으세요.</span></div></div>
+<div class="slot"><div class="time">12:00</div><div class="what"><b>점심 — 미소니코미우동</b>
+  <span>된장 국물에 끓인 우동. <b>야마모토야 혼텐</b>이 대표격입니다. 면이 아주 단단해서 호불호가 갈립니다.</span></div></div>
+<div class="slot"><div class="time">14:00</div><div class="what"><b>大須商店街 (오스 상점가)</b>
+  <span>지하철 <b>오스칸논역</b> 2번 출구. 절과 빈티지숍·전자상가·먹거리가 뒤섞인 곳으로,
+  <b>나고야에서 가장 걷기 재밌는 구역</b>입니다. 2~3시간은 금방 갑니다.</span></div></div>
+<div class="slot"><div class="time">17:00</div><div class="what"><b>大須観音 (오스칸논)</b>
+  <span>상점가 끝의 붉은 사원. 비둘기가 많습니다.</span></div></div>
+<div class="slot"><div class="time">18:30</div><div class="what"><b>저녁 — 히츠마부시</b>
+  <span>장어덮밥을 <b>①그냥 → ②양념 얹어 → ③차에 말아</b> 세 번에 나눠 먹는 나고야 명물.
+  <b>아츠타 호라이켄</b>이 원조로 유명하지만 웨이팅이 깁니다. 4인이면 <b>이름을 미리 올려두세요.</b></span></div></div>
+</div>
+
+<div class="day">
+<h3><span class="chip">DAY 3</span>10/31 토 — 갈림길 (지브리 or 근교 or 시내)</h3>
+<p class="daysub">토요일입니다. 어디를 가든 사람이 많으니 오전을 일찍 시작하세요. <b>쇼핑은 오늘까지 끝내야 합니다</b>(면세 제도 변경).</p>
+<div class="slot"><div class="time">종일 A</div><div class="what"><b>지브리파크</b>
+  <span>티켓이 있어야만 갑니다. 나고야역 → 후지가오카 → 리니모, 약 46분·670엔.
+  <b>프리미엄이면 하루가 꼬박</b> 갑니다.</span></div></div>
+<div class="slot"><div class="time">종일 B</div><div class="what"><b>이누야마(犬山) 당일치기</b>
+  <span>메이테츠로 <b>25~30분</b>. <b>국보 이누야마성</b>과 성 아래 옛 거리가 아기자기합니다.
+  반나절이면 충분해서 오후에 시내로 돌아올 수 있습니다.</span></div></div>
+<div class="slot"><div class="time">종일 C</div><div class="what"><b>나가시마 아울렛 + 스파랜드</b>
+  <span>나고야역에서 버스 약 50분. <b>쇼핑을 몰아서 할 팀에 최적</b>이고 면세도 여기서 끝낼 수 있습니다.</span></div></div>
+<div class="slot"><div class="time">17:00</div><div class="what"><b>시내 복귀 · 쇼핑 마감</b>
+  <span><b>11/1부터 면세 방식이 바뀌므로 오늘까지 사는 게 확실히 편합니다.</b> 사카에·나고야역 백화점에서 마무리.</span></div></div>
+<div class="slot"><div class="time">19:00</div><div class="what"><b>저녁 — 미소카츠</b>
+  <span><b>야바톤(矢場とん)</b>이 대표. 돈카츠에 된장 소스를 얹습니다. 토요일 저녁은 웨이팅이 깁니다.</span></div></div>
+</div>
+
+<div class="day">
+<h3><span class="chip">DAY 4</span>11/1 일 — 마무리</h3>
+<p class="daysub">18:30 비행기(LJ294). 공항에 16:30까지 도착하면 넉넉합니다.</p>
+<div class="slot"><div class="time">09:00</div><div class="what"><b>체크아웃 · 짐 보관</b>
+  <span>호텔 프런트나 나고야역 코인락커.</span></div></div>
+<div class="slot"><div class="time">10:00</div><div class="what"><b>熱田神宮 (아쓰타신궁)</b>
+  <span>지하철 메이조선 <b>진구니시역</b>. 삼종신기 중 하나를 모신다는 곳으로, 도심 안에 숲이 통째로 있습니다.
+  <b>일요일 아침이라 결혼식·참배객</b>을 볼 수도 있습니다. 경내 <b>키시멘</b> 가게가 유명합니다.</span></div></div>
+<div class="slot"><div class="time">12:00</div><div class="what"><b>점심 — 코메다 커피 또는 앙카케 스파게티</b>
+  <span><b>코메다 커피</b>는 나고야 발상 체인으로, 음료를 시키면 토스트와 삶은달걀이 딸려 나오는
+  <b>모닝 서비스</b>가 나고야 문화입니다(오전 한정).</span></div></div>
+<div class="slot"><div class="time">14:00</div><div class="what"><b>나고야역 기념품 마무리</b>
+  <span><b>단, 오늘 사는 건 면세 즉시 할인이 안 됩니다</b>(11/1부터 환급 방식). 소액이면 그냥 세금 내고 사는 게 빠릅니다.</span></div></div>
+<div class="slot"><div class="time">15:30</div><div class="what"><b>공항 이동</b>
+  <span>뮤스카이 28분. 특별차량권을 미리 사두면 자리 확보가 됩니다.</span></div></div>
+<div class="slot"><div class="time">18:30</div><div class="what"><b>LJ294 출발 → 인천 20:55 도착</b></div></div>
+</div>
+
+<h2>갈 만한 곳 — 골라 쓰세요</h2>
+<div class="tw">
+<table>
+<tr><th>장소</th><th>가는 법</th><th>메모</th></tr>
+<tr><td><b>나고야성</b></td><td>지하철 시야쿠쇼역 7번 출구 도보 5분</td><td>혼마루고텐이 진짜 볼거리. 2시간</td></tr>
+<tr><td><b>오스 상점가</b></td><td>지하철 오스칸논역 2번 출구</td><td>가장 걷기 재밌는 곳. 빈티지·전자·먹거리</td></tr>
+<tr><td><b>아쓰타신궁</b></td><td>지하철 진구니시역</td><td>도심 속 숲. 경내 키시멘</td></tr>
+<tr><td><b>오아시스21 · TV타워</b></td><td>지하철 사카에역 직결</td><td>야경 포인트. 무료</td></tr>
+<tr><td><b>토요타산업기술기념관</b></td><td>메이테츠 사코마치역 도보 3분</td><td>기계가 실제로 돌아감. 아이 없어도 재밌음</td></tr>
+<tr><td><b>노리타케의 정원</b></td><td>나고야역 도보 15분</td><td>붉은 벽돌·도자기. 산업관과 묶어서</td></tr>
+<tr><td><b>히가시야마 동식물원</b></td><td>지하철 히가시야마코엔역</td><td>코알라로 유명. 반나절</td></tr>
+<tr><td><b>나고야항 수족관</b></td><td>지하철 나고야코역</td><td>범고래·돌고래쇼. 반나절</td></tr>
+<tr><td><b>이누야마성</b></td><td>메이테츠 25~30분</td><td>국보 천수각 + 옛 거리. 반나절</td></tr>
+<tr><td><b>지브리파크</b></td><td>후지가오카 → 리니모, 46분</td><td><b>사전 예매 필수.</b> 하루 종일</td></tr>
+</table>
+</div>
+</section>
+
+<section class="tab" id="tab-shop" hidden>
+<h2>쇼핑 — 어디서 뭘 사나</h2>
+
+<div class="box bad">
+<b class="h">🚨 11/1부터 면세 방식이 바뀝니다 — 쇼핑은 10/31까지</b>
+<b>10/29~10/31</b>: 지금까지처럼 여권 제시 → <b>세금 뺀 값으로 즉시 결제</b>.<br>
+<b>11/1부터</b>: 세금 포함 전액을 내고, <b>출국할 때 공항에서 환급 신청</b>.
+공항 단말기에 여권을 대고 세관이 물건 소지를 확인합니다.<br><br>
+바뀌는 날이 하필 우리 출국일이고 <b>시행 첫날</b>이라 혼선이 예상됩니다.
+<b>살 것은 10/31(토)까지 끝내는 게 압도적으로 편합니다.</b>
+</div>
+
+<h3>어디서</h3>
+<div class="tw">
+<table>
+<tr><th>곳</th><th>가는 법</th><th>성격</th></tr>
+<tr><td><b>栄 (사카에)</b></td><td>지하철 사카에역 직결</td>
+    <td>미쓰코시·마츠자카야·파르코·라시크가 한 블록에. <b>백화점 쇼핑 1순위</b></td></tr>
+<tr><td><b>名古屋駅 (나고야역)</b></td><td>역 직결</td>
+    <td>JR 타카시마야·다카시마야게이트타워·긴테츠. <b>귀국 전 마지막 쇼핑에 최적</b></td></tr>
+<tr><td><b>大須 (오스)</b></td><td>지하철 오스칸논역 2번 출구</td>
+    <td>빈티지·중고·전자·잡화. <b>싸고 재밌는 걸 찾는다면 여기</b></td></tr>
+<tr><td><b>돈키호테</b></td><td>사카에·나고야역 등</td>
+    <td>과자·의약품·잡화 한 번에. 심야까지 영업</td></tr>
+<tr><td>나가시마 아울렛</td><td>나고야역에서 버스 50분</td><td>브랜드 아울렛. 하루를 써야 함</td></tr>
+</table>
+</div>
+
+<h3>뭘</h3>
+<div class="tw">
+<table>
+<tr><th>품목</th><th>메모</th></tr>
+<tr><td><b>드럭스토어</b></td>
+    <td>마츠모토키요시·코쿠민 등. 동전 파스·카베진·비오레·시세이도 — <b>한국보다 확실히 쌉니다</b></td></tr>
+<tr><td><b>나고야 한정 과자</b></td>
+    <td><b>우이로(외로)</b> — 나고야 대표 떡과자. <b>시아치보코 만주</b>, 코메다 커피 원두도 나고야역에서 삽니다</td></tr>
+<tr><td><b>테바사키 양념·미소카츠 소스</b></td><td>야바톤 소스는 병으로 팝니다. 집에서 재현 가능</td></tr>
+<tr><td><b>주방용품</b></td><td>일본 칼·주물 냄비. 오스나 백화점 식기 코너</td></tr>
+<tr><td><b>전자·게임</b></td><td>오스 전자상가. 중고 게임기·카메라가 강합니다</td></tr>
+</table>
+</div>
+
+<div class="box warn">
+<b class="h">4인이면 이걸 조심하세요</b>
+<ul>
+<li><b>한국 입국 면세 한도는 1인 미화 800달러</b>입니다. 4인이 몰아 사면 넘기기 쉽고,
+    <b>초과분은 자진신고</b>하는 게 유리합니다(가산세 회피)</li>
+<li><b>위탁 수하물 무게.</b> 제주항공·진에어 모두 15kg 기준입니다. 돌아오는 날 아침에 한 번 모아서 나눠 담으세요</li>
+<li><b>주류는 1인 1병(1L, 400달러 이하)</b>까지가 면세입니다. 4인이면 4병</li>
+<li><b>결제</b> — 백화점·돈키호테는 카드가 되지만 <b>오스 상점가 소규모 가게는 현금</b>이 많습니다</li>
+</ul>
+</div>
+</section>
+
+<section class="tab" id="tab-food" hidden>
+<h2>맛집 — 나고야메시</h2>
+<p>나고야는 <b>자기 지역 음식에 이름을 따로 붙일 만큼</b> 향토색이 강합니다.
+아래 다섯 개만 먹어도 나고야를 먹은 셈입니다.</p>
+
+<div class="tw">
+<table>
+<tr><th>음식</th><th>어디서</th><th>메모</th></tr>
+<tr><td><b>히츠마부시</b> (ひつまぶし)<br>장어덮밥</td>
+    <td><b>아츠타 호라이켄</b>(본점·신칸센점)<br>마루야 혼텐(나고야역)</td>
+    <td>①그냥 ②양념 ③차에 말아 — <b>세 번 나눠 먹는 게 규칙</b>.
+        1인 5,000엔 안팎으로 비싸지만 나고야에서 하나만 고르라면 이것</td></tr>
+<tr><td><b>미소카츠</b> (味噌カツ)<br>된장 돈카츠</td>
+    <td><b>야바톤(矢場とん)</b> — 야바초 본점·나고야역점</td>
+    <td>진한 콩된장 소스. 소스를 따로 달라고 하면 찍어 먹을 수 있습니다</td></tr>
+<tr><td><b>테바사키</b> (手羽先)<br>닭날개 튀김</td>
+    <td><b>세카이노야마짱</b>(매운맛)<br><b>후라이보</b>(원조·후추)</td>
+    <td>맥주 안주. <b>사카에에 지점이 몰려</b> 있습니다. 손으로 먹으니 물티슈 필수</td></tr>
+<tr><td><b>미소니코미우동</b><br>된장 우동</td>
+    <td><b>야마모토야 혼텐</b></td>
+    <td>면이 아주 단단합니다. <b>호불호가 확실히 갈리니</b> 4인이면 한 그릇 먼저 나눠 드셔보세요</td></tr>
+<tr><td><b>코메다 커피</b><br>모닝 서비스</td>
+    <td>시내 어디에나</td>
+    <td><b>오전에 음료만 시키면 토스트+삶은달걀이 공짜</b>로 딸려 나옵니다. 나고야 발상 체인</td></tr>
+<tr><td>앙카케 스파게티</td><td>요코이·챠오</td><td>걸쭉한 매운 소스 스파게티. 나고야에만 있는 장르</td></tr>
+<tr><td>타이완라멘</td><td><b>미센(味仙)</b></td><td>이름과 달리 나고야에서 만든 매운 라멘. 한국인 입에 잘 맞습니다</td></tr>
+<tr><td>키시멘</td><td>아쓰타신궁 경내·나고야역 승강장</td><td>납작한 우동. 가볍게 한 끼</td></tr>
+</table>
+</div>
+
+<div class="box hi">
+<b class="h">4인 식사 요령</b>
+<ul>
+<li><b>인기 노포는 카운터석 위주</b>라 4명이 같이 앉기 어렵습니다. 웨이팅 앱이나 전화로 미리 이름을 올려두세요</li>
+<li><b>점심 피크(12~13시)는 피하세요.</b> 11시 반이나 13시 반이면 훨씬 수월합니다</li>
+<li><b>나고야메시는 대체로 짜고 진합니다.</b> 하루 두 끼를 나고야메시로 채우면 물립니다 — 한 끼는 평범하게</li>
+<li>야바톤·호라이켄 같은 곳은 <b>백화점 식당가 지점</b>이 본점보다 웨이팅이 짧습니다</li>
+</ul>
+</div>
+</section>
+
+<section class="tab" id="tab-map" hidden>
+<h2 id="map">오프라인 지도 — GPS 켜면 현재 위치가 뜹니다</h2>
+<p>이 지도는 <b>문서 안에 저장</b>돼 있어서 데이터·와이파이가 없어도 열립니다.
+비행기모드에서도 GPS는 동작하므로 <b>파란 점(현재 위치)</b>도 그대로 뜹니다.</p>
+
+<div class="mapctl">
+  <button class="mbtn" id="btn-locate">📍 내 위치 찾기</button>
+  <button class="mbtn" id="btn-zoom">배율 1×</button>
+  <span class="mstat" id="map-stat">위치 권한을 허용하면 파란 점이 표시됩니다</span>
+</div>
+
+<div class="mapwrap" id="mapwrap">
+  <div class="mapinner" id="mapinner">
+    <img src="map.jpg" alt="나고야 시내 지도" id="mapimg" width="1536" height="2048">
+    <div class="acc" id="acc" hidden></div>
+    <div class="me" id="me" hidden><i></i></div>
+  </div>
+</div>
+<p class="mhint">손가락으로 <b>끌어서 이동</b> · 두 손가락으로 <b>확대·축소</b> · <b>두 번 탭</b>하면 확대
+<span class="only-desk">(데스크톱은 드래그 이동, Ctrl+휠 확대)</span></p>
+<p class="mattr">지도 © <b>OpenStreetMap</b> 기여자 · ODbL. 개인 여행용으로 내려받아 넣은 이미지입니다.</p>
+
+<h3>장소 — 누르면 구글 지도가 열립니다</h3>
+<p class="mnote">구글 지도 앱에 <b>나고야 오프라인 지도를 미리 받아두면</b> 이 링크들이 데이터 없이도 열립니다.
+받는 법: 구글 지도 → 프로필 → <b>오프라인 지도</b> → 직접 지도 선택 → 나고야 시내가 들어오게 범위 조절 → 다운로드.
+<b>출국 전 와이파이에서 반드시 받아두세요.</b></p>
+<div class="plist" id="plist"></div>
+
+<div class="box hi">
+<b class="h">📲 홈 화면에 추가해두세요 (이게 오프라인의 핵심)</b>
+<b>아이폰</b> — 사파리로 이 페이지를 열고 공유 버튼 → <b>홈 화면에 추가</b>.<br>
+<b>안드로이드</b> — 크롬에서 ⋮ → <b>홈 화면에 추가</b>(또는 앱 설치).<br>
+한 번 추가하면 아이콘으로 실행되고, <b>비행기모드·데이터 없음 상태에서도</b> 문서 전체와 지도가 그대로 열립니다.
+추가 직후 한 번은 온라인 상태에서 열어 저장을 끝내주세요.
+</div>
+</section>
+
+</div>
+<script>
+/* 오프라인 지도 + 현재 위치 + PWA 등록
+   지도는 스크롤 컨테이너가 아니라 transform 으로 움직인다 — 한 손가락 드래그로 이동,
+   두 손가락으로 확대/축소. 스크롤바가 없고 페이지 스크롤과도 싸우지 않는다. */
+(function () {
+  var MAP = {"z": 14, "x0": 14419, "y0": 6477, "w": 2048, "h": 2304};
+  var PLACES = [{"n": "나고야역", "lat": 35.1711834, "lng": 136.8839084, "k": "mrt"}, {"n": "사카에", "lat": 35.1699643, "lng": 136.9088206, "k": "mrt"}, {"n": "나고야성", "lat": 35.184396, "lng": 136.9000992, "k": "see"}, {"n": "오스상점가", "lat": 35.159761, "lng": 136.898534, "k": "shop"}, {"n": "아쓰타신궁", "lat": 35.1254307, "lng": 136.9092535, "k": "see"}, {"n": "오아시스21", "lat": 35.171088, "lng": 136.9096446, "k": "see"}, {"n": "TV타워", "lat": 35.1722972, "lng": 136.9083338, "k": "see"}, {"n": "토요타산업관", "lat": 35.1825118, "lng": 136.8765247, "k": "see"}, {"n": "히가시야마", "lat": 35.1565274, "lng": 136.9818196, "k": "see"}, {"n": "나고야항수족관", "lat": 35.09097, "lng": 136.8780335, "k": "see"}, {"n": "노리타케정원", "lat": 35.1786245, "lng": 136.8806955, "k": "see"}];
+
+  function lng2x(lng, z) { return (lng + 180) / 360 * Math.pow(2, z); }
+  function lat2y(lat, z) {
+    var r = lat * Math.PI / 180;
+    return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z);
+  }
+  // 지도 이미지 안에서의 위치를 % 로. 어떤 배율로 그려져도 그대로 맞는다.
+  function pct(lat, lng) {
+    var px = (lng2x(lng, MAP.z) - MAP.x0) * 256;
+    var py = (lat2y(lat, MAP.z) - MAP.y0) * 256;
+    return { x: px / MAP.w * 100, y: py / MAP.h * 100,
+             inside: px >= 0 && py >= 0 && px <= MAP.w && py <= MAP.h };
+  }
+
+  var inner = document.getElementById('mapinner');
+  var wrap = document.getElementById('mapwrap');
+  var me = document.getElementById('me');
+  var acc = document.getElementById('acc');
+  var stat = document.getElementById('map-stat');
+  var zb = document.getElementById('btn-zoom');
+  if (!inner) return;
+
+  // ── 장소 마커 + 목록 ────────────────────────────────────────────
+  var list = document.getElementById('plist');
+  PLACES.forEach(function (p) {
+    var q = pct(p.lat, p.lng);
+    if (q.inside) {
+      var d = document.createElement('div');
+      d.className = 'mk ' + p.k;
+      d.style.left = q.x + '%';
+      d.style.top = q.y + '%';
+      d.innerHTML = '<b></b><i></i>';
+      d.querySelector('i').textContent = p.n;
+      inner.appendChild(d);
+    }
+    var a = document.createElement('a');
+    a.className = p.k;
+    a.href = 'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.innerHTML = '<b></b>';
+    a.appendChild(document.createTextNode(p.n));
+    if (list) list.appendChild(a);
+  });
+
+  // ── 이동/확대 상태 ──────────────────────────────────────────────
+  var k = 1, tx = 0, ty = 0;
+  var MAXK = 5;
+
+  function box() {
+    var cw = wrap.clientWidth;
+    return { cw: cw, ch: wrap.clientHeight, W: cw, H: cw * MAP.h / MAP.w };
+  }
+  // 최소 배율 = 뷰포트를 꽉 채우는 배율. 위아래 빈 띠가 생기지 않고,
+  // 어느 배율에서도 끌어서 움직일 여지가 남는다.
+  function minK() {
+    var d = box();
+    if (!(d.cw > 0) || !(d.H > 0)) return 1;
+    return Math.max(1, d.ch / d.H);
+  }
+  // 지도가 뷰포트 밖으로 빠져나가지 않게. 작을 땐 가운데로.
+  function clamp() {
+    var mk = minK();
+    if (k < mk) k = mk;
+    var d = box(), w = d.W * k, h = d.H * k;
+    tx = w <= d.cw ? (d.cw - w) / 2 : Math.min(0, Math.max(d.cw - w, tx));
+    ty = h <= d.ch ? (d.ch - h) / 2 : Math.min(0, Math.max(d.ch - h, ty));
+  }
+  function apply() {
+    inner.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + k + ')';
+    inner.style.setProperty('--k', k);
+    if (zb) zb.textContent = '배율 ' + (Math.round(k * 10) / 10) + '×';
+  }
+  // (cx,cy) = 뷰포트 안 좌표. 그 점을 고정한 채 배율만 바꾼다.
+  function zoomAt(nk, cx, cy) {
+    nk = Math.max(minK(), Math.min(MAXK, nk));
+    var r = nk / k;
+    tx = cx - (cx - tx) * r;
+    ty = cy - (cy - ty) * r;
+    k = nk;
+    clamp(); apply(); drawAcc();
+  }
+  function centerOn(q) {
+    var d = box();
+    tx = d.cw / 2 - q.x / 100 * d.W * k;
+    ty = d.ch / 2 - q.y / 100 * d.H * k;
+    clamp(); apply();
+  }
+  clamp(); apply();
+  addEventListener('resize', function () { clamp(); apply(); drawAcc(); });
+  // 탭 전환으로 지도가 다시 보이게 됐을 때 호출된다 (숨어 있을 땐 폭이 0이라 계산이 안 된다)
+  window.__mapRelayout = function () { clamp(); apply(); drawAcc(); };
+
+  // ── 포인터 제스처 (마우스·터치 공용) ────────────────────────────
+  var pts = new Map();
+  var pinch = 0;
+
+  wrap.addEventListener('pointerdown', function (e) {
+    try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    wrap.classList.add('drag');
+    if (pts.size === 2) pinch = dist();
+  });
+
+  function dist() {
+    var v = [];
+    pts.forEach(function (p) { v.push(p); });
+    return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y);
+  }
+  function mid() {
+    var v = [], r = wrap.getBoundingClientRect();
+    pts.forEach(function (p) { v.push(p); });
+    return { x: (v[0].x + v[1].x) / 2 - r.left, y: (v[0].y + v[1].y) / 2 - r.top };
+  }
+
+  wrap.addEventListener('pointermove', function (e) {
+    var prev = pts.get(e.pointerId);
+    if (!prev) return;
+    e.preventDefault();
+    if (pts.size === 1) {
+      tx += e.clientX - prev.x;
+      ty += e.clientY - prev.y;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      clamp(); apply();
+    } else if (pts.size === 2) {
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      var nd = dist(), m = mid();
+      if (pinch > 0 && nd > 0) zoomAt(k * nd / pinch, m.x, m.y);
+      pinch = nd;
+    }
+  });
+
+  function release(e) {
+    pts.delete(e.pointerId);
+    if (pts.size < 2) pinch = 0;
+    if (pts.size === 0) wrap.classList.remove('drag');
+  }
+  wrap.addEventListener('pointerup', release);
+  wrap.addEventListener('pointercancel', release);
+
+  // 더블탭/더블클릭 = 한 단계 확대, 이미 확대돼 있으면 원래대로
+  var lastTap = 0, lastXY = null;
+  wrap.addEventListener('pointerup', function (e) {
+    var now = Date.now(), r = wrap.getBoundingClientRect();
+    var p = { x: e.clientX - r.left, y: e.clientY - r.top };
+    if (now - lastTap < 320 && lastXY &&
+        Math.hypot(p.x - lastXY.x, p.y - lastXY.y) < 30) {
+      zoomAt(k >= minK() * 2 ? minK() : minK() * 2.5, p.x, p.y);
+      lastTap = 0;
+    } else {
+      lastTap = now; lastXY = p;
+    }
+  });
+
+  // 데스크톱: ctrl(⌘)+휠로만 확대. 그냥 휠은 페이지 스크롤로 흘려보낸다.
+  wrap.addEventListener('wheel', function (e) {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    var r = wrap.getBoundingClientRect();
+    zoomAt(k * (e.deltaY < 0 ? 1.15 : 1 / 1.15), e.clientX - r.left, e.clientY - r.top);
+  }, { passive: false });
+
+  if (zb) zb.addEventListener('click', function () {
+    var base = minK();
+    var next = k >= base * 2.9 ? base : (k >= base * 1.9 ? base * 3 : base * 2);
+    var d = box();
+    zoomAt(next, d.cw / 2, d.ch / 2);
+  });
+
+  // ── 현재 위치 ───────────────────────────────────────────────────
+  var last = null;
+
+  // 정확도 원은 실제 거리라서 지도와 함께 확대돼야 한다 → 지도 좌표계 크기로 그린다
+  function drawAcc() {
+    if (!last || !acc || acc.hidden) return;
+    var mpp = 156543.03 * Math.cos(last.coords.latitude * Math.PI / 180) / Math.pow(2, MAP.z);
+    var d = box();
+    var rpx = last.coords.accuracy / mpp * (d.W / MAP.w); // 확대 전 기준 픽셀
+    var size = Math.max(6, Math.min(2000, rpx * 2));
+    acc.style.width = size + 'px';
+    acc.style.height = size + 'px';
+  }
+
+  function draw(pos) {
+    last = pos;
+    var q = pct(pos.coords.latitude, pos.coords.longitude);
+    if (!q.inside) {
+      me.hidden = true; if (acc) acc.hidden = true;
+      stat.textContent = '현재 위치가 이 지도 범위 밖입니다 (' +
+        pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4) + ')';
+      return;
+    }
+    me.hidden = false;
+    me.style.left = q.x + '%';
+    me.style.top = q.y + '%';
+    if (acc) {
+      acc.hidden = false;
+      acc.style.left = q.x + '%';
+      acc.style.top = q.y + '%';
+      drawAcc();
+    }
+    stat.textContent = '현재 위치 표시 중 · 오차 약 ' + Math.round(pos.coords.accuracy) + 'm · ' +
+      new Date(pos.timestamp).toLocaleTimeString('ko-KR');
+    return q;
+  }
+
+  function fail(err) {
+    stat.textContent = err.code === 1
+      ? '위치 권한이 거부됐습니다. 브라우저 설정에서 이 사이트의 위치 권한을 허용해주세요.'
+      : '위치를 가져오지 못했습니다 (' + err.message + '). 실외에서 다시 시도해보세요.';
+  }
+
+  document.getElementById('btn-locate').addEventListener('click', function () {
+    if (!navigator.geolocation) { stat.textContent = '이 브라우저는 위치 기능을 지원하지 않습니다.'; return; }
+    stat.textContent = '위치를 찾는 중…';
+    navigator.geolocation.getCurrentPosition(function (p) {
+      var q = draw(p);
+      if (q) { if (k < minK() * 2) zoomAt(minK() * 2, box().cw / 2, box().ch / 2); centerOn(q); }
+    }, fail, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+    navigator.geolocation.watchPosition(draw, fail, { enableHighAccuracy: true, maximumAge: 5000 });
+  });
+
+  // ── 온라인 표시 ─────────────────────────────────────────────────
+  var net = document.getElementById('netdot');
+  function sync() {
+    if (!net) return;
+    var on = navigator.onLine;
+    net.classList.toggle('off', !on);   // className 통째 교체는 hchip 을 날린다
+    net.lastChild.textContent = on ? '온라인' : '오프라인';
+  }
+  addEventListener('online', sync); addEventListener('offline', sync); sync();
+
+  // ── 서비스워커 ──────────────────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function (e) {
+        console.warn('SW 등록 실패', e);
+      });
+    });
+  }
+})();
+
+/* 탭 전환 — 문서가 길어서 한 화면에 하나씩만 보여준다.
+   마지막으로 본 탭을 기억하고, #해시로 바로 들어올 수도 있다. */
+(function () {
+  var TABS = ['tips', 'air', 'stay', 'plan', 'shop', 'food', 'map'];
+  var links = [].slice.call(document.querySelectorAll('nav.bn a[data-tab]'));
+
+  function show(id, push) {
+    if (TABS.indexOf(id) < 0) id = 'tips';
+    TABS.forEach(function (t) {
+      var el = document.getElementById('tab-' + t);
+      if (el) el.hidden = (t !== id);
+    });
+    links.forEach(function (a) {
+      if (a.dataset.tab === id) a.classList.add('on'); else a.classList.remove('on');
+    });
+    try { localStorage.setItem('kh.tab', id); } catch (e) {}
+    if (push) {
+      scrollTo(0, 0);
+      if (location.hash !== '#' + id) history.replaceState(null, '', '#' + id);
+    }
+    // 숨어 있는 동안은 폭이 0이라 지도 위치 계산이 안 된다 — 보이는 순간 다시 잡는다
+    if (id === 'map' && window.__mapRelayout) window.__mapRelayout();
+  }
+
+  links.forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); show(a.dataset.tab, true); });
+  });
+
+  var start = (location.hash || '').replace('#', '');
+  if (TABS.indexOf(start) < 0) {
+    try { start = localStorage.getItem('kh.tab') || 'tips'; } catch (e) { start = 'tips'; }
+  }
+  show(start, false);
+
+  // 활성 알약이 가로 스크롤 밖에 있으면 끌어온다
+  function reveal(id) {
+    var a = document.querySelector('nav.bn a[data-tab="' + id + '"]');
+    if (a && a.scrollIntoView) a.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }
+  links.forEach(function (a) { a.addEventListener('click', function () { reveal(a.dataset.tab); }); });
+  reveal(start);
+
+  // 출발까지 남은 날
+  var dd = document.getElementById('dday');
+  if (dd) {
+    var go = new Date(2026, 9, 29), now = new Date();
+    var left = Math.round((go - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+    dd.textContent = left > 0 ? 'D-' + left : (left === 0 ? 'D-DAY' : '여행 종료');
+  }
+  addEventListener('hashchange', function () {
+    show((location.hash || '').replace('#', ''), false);
+  });
+})();
+</script>
+</body></html>

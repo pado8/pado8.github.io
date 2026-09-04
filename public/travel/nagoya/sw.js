@@ -1,13 +1,22 @@
-/* 여행 허브(/travel/) 오프라인 캐시.
-   허브 자체만 담당한다. 각 도시에(/travel/<도시>/)는 자기 서비스워커를 갖고 있고,
-   더 깊은 스코프가 우선이라 그쪽이 그대로 자기 페이지를 맡는다.
+/* 가오슝 도시에 오프라인 캐시.
+   문서 하나 + 지도 이미지 + 아이콘이 전부라 통째로 미리 받아둔다.
 
-   문서는 네트워크 우선 + 2.5초 타임아웃 — 온라인이면 항상 최신본, 오프라인이면 즉시 캐시본. */
-const CACHE = 'travel-hub-2026-09-04d';
+   문서(HTML)는 **네트워크 우선 + 2.5초 타임아웃**이다.
+   온라인이면 항상 최신본이 바로 뜨고(예전 stale-while-revalidate 는 한 번 더 열어야
+   새 내용이 보여서 "고쳤는데 왜 그대로냐"가 됐다), 오프라인이거나 느리면 즉시 캐시본으로 떨어진다.
+   나머지 자산(지도·아이콘)은 잘 안 바뀌므로 캐시 우선. */
+const CACHE = 'nagoya-2026-09-04a';
 const DOC = './index.html';
 const NET_TIMEOUT = 2500;
-const ASSETS = ['./', DOC, './manifest.webmanifest',
-                './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
+const ASSETS = [
+  './',
+  DOC,
+  './map.jpg',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
+];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -29,6 +38,8 @@ function save(key, res) {
   return res;
 }
 
+// 네트워크를 기다리되, 정해진 시간을 넘기면 캐시본으로 넘어간다.
+// 타임아웃으로 캐시본을 내보낸 경우에도 네트워크 응답은 계속 받아 캐시를 갱신한다.
 function docResponse() {
   return caches.match(DOC).then((cached) => {
     const net = fetch(new Request(DOC, { cache: 'reload' }))
@@ -40,22 +51,17 @@ function docResponse() {
   });
 }
 
-const HUB = new URL('./', self.registration.scope).pathname;
-
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== location.origin) return;
+  if (url.origin !== location.origin) return; // 구글 지도 링크 등은 손대지 않는다
 
-  // 허브 주소로 들어온 이동만 가로챈다. 하위 도시에 페이지는 건드리지 않는다.
   if (req.mode === 'navigate') {
-    if (url.pathname !== HUB && url.pathname !== HUB + 'index.html') return;
     e.respondWith(docResponse());
     return;
   }
 
-  if (!url.pathname.startsWith(HUB) || url.pathname.slice(HUB.length).includes('/')) return;
   e.respondWith(
     caches.match(req).then((hit) =>
       hit || fetch(req).then((res) => save(req, res)).catch(() => Response.error())
