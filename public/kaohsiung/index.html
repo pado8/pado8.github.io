@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0e0f13">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="가오슝">
+<title>가오슝 3박4일 — 부부 2쌍 여행 도시에</title>
+<style>
+  :root{--bg:#0e0f13;--card:#171922;--card2:#1f2230;--line:#2b2f3d;--ink:#e9ebf2;--dim:#98a0b4;
+        --accent:#7c9cff;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--gold:#f0b429}
+  @media(prefers-color-scheme:light){:root{--bg:#f6f7fb;--card:#fff;--card2:#eef0f6;--line:#dde1ec;
+        --ink:#15171e;--dim:#5a6076;--accent:#3b5bdb;--ok:#15803d;--warn:#b45309;--bad:#dc2626;--gold:#b45309}}
+  *{box-sizing:border-box}
+  body{margin:0;padding:32px 18px 90px;background:var(--bg);color:var(--ink);
+       font:16px/1.72 -apple-system,BlinkMacSystemFont,"Pretendard","Malgun Gothic",sans-serif}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:1.75rem;margin:0 0 6px;letter-spacing:-.02em}
+  .lead{color:var(--dim);margin:0 0 26px}
+  h2{font-size:1.2rem;margin:40px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{font-size:1.02rem;margin:24px 0 8px}
+  table{border-collapse:collapse;width:100%;font-size:14px;margin:12px 0}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:var(--card2)}
+  .tw{overflow-x:auto}
+  pre{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:13px 15px;
+      overflow-x:auto;font-size:13.5px;white-space:pre-wrap;overflow-wrap:anywhere;margin:10px 0}
+  code{background:var(--card2);padding:1.5px 6px;border-radius:4px;font-size:.9em}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin:14px 0}
+  .box.bad{border-color:var(--bad)}
+  .box.warn{border-color:var(--warn)}
+  .box.ok{border-color:var(--ok)}
+  .box.hi{border-color:var(--accent)}
+  .box b.h{display:block;margin-bottom:6px;font-size:1rem}
+  .day{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:20px 22px;margin:16px 0}
+  .day h3{margin:0 0 3px;font-size:1.1rem;display:flex;align-items:center;gap:9px}
+  .chip{background:var(--accent);color:#fff;border-radius:7px;padding:2px 9px;font-size:12px;font-weight:800}
+  .daysub{color:var(--dim);font-size:13px;margin:0 0 14px}
+  .slot{display:flex;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+  .slot:first-of-type{border-top:0}
+  .time{flex:0 0 82px;color:var(--accent);font-weight:700;font-size:13.5px;padding-top:2px}
+  .what{flex:1;min-width:0}
+  .what b{display:block}
+  .what span{color:var(--dim);font-size:13.5px}
+  ul{padding-left:21px;margin:8px 0}
+  li{margin:5px 0}
+  .pill{display:inline-block;border:1px solid currentColor;border-radius:999px;
+        padding:1px 9px;margin-right:5px;font-weight:700;font-size:11px}
+  .p-win{color:var(--ok)}.p-lose{color:var(--bad)}
+  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);color:var(--dim);font-size:13.5px}
+  /* ── 오프라인 지도 ─────────────────────────────────────────────── */
+  .mapctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 8px}
+  .mbtn{font:inherit;font-size:13px;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;
+        border:1px solid var(--line);background:var(--card);color:var(--ink)}
+  .mbtn:active{transform:translateY(1px)}
+  .mstat{color:var(--dim);font-size:12.5px;flex:1 1 100%}
+  .mapwrap{overflow:auto;border:1px solid var(--line);border-radius:12px;background:var(--card2);
+           max-height:78vh;-webkit-overflow-scrolling:touch}
+  .mapinner{position:relative;width:calc(100% * var(--mz,1));line-height:0}
+  .mapinner img{width:100%;height:auto;display:block}
+  .mk{position:absolute;transform:translate(-50%,-50%);z-index:2}
+  .mk b{display:block;width:11px;height:11px;border-radius:50%;background:var(--accent);
+        border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+  .mk.food b{background:#f59e0b}.mk.see b{background:#10b981}
+  .mk.mrt b{background:#6366f1}.mk.ferry b{background:#06b6d4}.mk.airport b{background:#ef4444}
+  .mk i{position:absolute;left:50%;top:13px;transform:translateX(-50%);font-style:normal;
+        font-size:10.5px;line-height:1.25;white-space:nowrap;color:#111;background:rgba(255,255,255,.86);
+        border-radius:4px;padding:0 3px;font-weight:700}
+  .me{position:absolute;transform:translate(-50%,-50%);z-index:5}
+  .me i{display:block;width:16px;height:16px;border-radius:50%;background:#2563eb;
+        border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 0 var(--acc,0) rgba(37,99,235,.18)}
+  .mattr{color:var(--dim);font-size:11.5px;margin:6px 0 0}
+  .mnote{color:var(--dim);font-size:13px}
+  .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px;margin:10px 0}
+  .plist a{display:flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);
+           border:1px solid var(--line);background:var(--card);border-radius:9px;padding:8px 10px;font-size:13px}
+  .plist a b{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:0 0 auto}
+  .plist a.food b{background:#f59e0b}.plist a.see b{background:#10b981}
+  .plist a.mrt b{background:#6366f1}.plist a.ferry b{background:#06b6d4}.plist a.airport b{background:#ef4444}
+  /* ── 하단 고정 내비 ────────────────────────────────────────────── */
+  nav.bn{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;gap:2px;
+         background:var(--card);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+  nav.bn a{flex:1;text-align:center;text-decoration:none;color:var(--dim);font-size:12px;font-weight:700;
+           padding:7px 2px;border-radius:8px}
+  nav.bn a:active{background:var(--card2);color:var(--accent)}
+  nav.bn .net{flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:0 8px;font-size:11px;color:var(--dim)}
+  nav.bn .net s{width:8px;height:8px;border-radius:50%;background:var(--ok);display:block}
+  nav.bn .net.off s{background:var(--dim)}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>가오슝 3박4일 — 부부 2쌍</h1>
+<p class="lead">성인 4명 · <b>2026년 10월 29일(목) ~ 11월 1일(일) 확정</b> · 서울 출발.
+항공편은 <b>2026-09-04 재조사</b>(인천·김포 직항 전수, 두 개 플랫폼 교차확인)이고,
+공휴일·기후는 공식 자료로 확인했습니다. 가격은 검색 시점 기준이라 변동합니다.</p>
+
+<h2>① 이 날짜에만 걸리는 함정</h2>
+
+<div class="box bad">
+<b class="h">🚨 10/25는 대만 공휴일입니다 — 게다가 3일 연휴</b>
+2026년 <b>10월 25일(일)은 대만 광복절(台灣光復節)</b>이고, 일요일과 겹쳐서
+<b>10월 26일(월)이 대체휴일</b>입니다. 즉 <b>10/24(토)~26(월)이 대만 전국 3일 연휴</b>입니다.<br><br>
+"수요일(10/21) 출발 → 일요일(10/25) 귀국" 안을 잡으면 <b>주말 이틀이 통째로 대만 연휴에 들어갑니다.</b>
+야시장·치진 페리·유명 식당·호텔 요금이 전부 연휴 모드가 됩니다.
+2025년부터 신설·부활된 공휴일이라 예전 여행기에는 안 나옵니다.
+</div>
+
+<div class="box warn">
+<b class="h">✈️ "수요일 밤 출발"은 이 노선에 사실상 없습니다</b>
+인천–가오슝 직항은 <b>정오 전후 출발이 주력</b>입니다. 실제 검색 결과 출발 시간대는
+BR145 11:45 / CI165 12:00 / TW671 13:25 정도이고, 밤 출발은 <b>EVA BR171(20:40 → 22:55 도착)</b>
+하나뿐인데 매일 뜨지 않습니다. <b>10/28(수)에는 밤 출발편이 잡히지 않았습니다.</b><br><br>
+→ 결론적으로 <b>목요일 낮 출발</b>이 이 노선의 자연스러운 선택이고,
+마침 그게 3박4일에 정확히 맞아떨어집니다.
+</div>
+
+<div class="box hi">
+<b class="h">💰 최대 NT$8,000 지원금 — 등록 마감이 10/22입니다</b>
+대만 관광청이 <b>재방문 외국인 관광객</b>에게 충전형 소비지원금을 추첨 지급합니다.
+공식 사이트로 확인했습니다 → <code>5000.taiwan.net.tw</code><br><br>
+<table>
+<tr><th>대상</th><td><b>2023년 1월 1일 이후 대만 입국 이력</b>이 있는 재방문객 · 체류 3~90일 · 대만 국적 아닌 여권</td></tr>
+<tr><th>금액</th><td>당첨 시 본인 <b>NT$5,000</b> + 동행자 <b>NT$3,000</b> = 최대 NT$8,000 (약 35만원)</td></tr>
+<tr><th>대상 기간</th><td>2026.10.10 ~ 2027.3.31 입국자 → <b>10/29 여행은 해당됨</b></td></tr>
+<tr><th>등록</th><td>입국 <b>7~90일 전</b> 온라인 사전등록 필수. <b>10월 1일 오전 10시(대만시간) 개시</b></td></tr>
+<tr><th>우리 마감</th><td>10/29 입국 기준 <b>10월 1일 ~ 10월 22일</b> 사이에 등록해야 합니다</td></tr>
+</table>
+<b>우리 팀 구성 (확정)</b>
+<div class="tw"><table>
+<tr><th></th><th>대만 방문 이력</th><th>해당 상</th></tr>
+<tr><td><b>우리 부부 2명</b></td><td>2025년 방문 → <b>재방문 자격 있음</b></td><td>재방문객상 (NT$5,000) 대상</td></tr>
+<tr><td><b>친구 부부 2명</b></td><td>첫 대만</td><td>재방문객상 ❌ · <b>동행 친지상</b>(NT$3,000) 가능성</td></tr>
+</table></div>
+공식 사이트에 <b>「재방문객상」과 「동행 친지상」이 별도로</b> 있는 것을 확인했습니다.
+즉 <b>우리 부부가 등록의 주체</b>가 되고, 친구 부부는 동행자로 붙는 구조입니다.<br><br>
+<b>최선의 경우</b> — 우리 부부 2명이 각각 등록해 둘 다 당첨되고 각자 친구 한 명씩을 동행자로 붙이면
+(5,000+3,000) × 2 = <b>NT$16,000</b>, 약 70만원. 다만 아래 미확인 사항 때문에 확정할 수 없습니다.
+</div>
+
+<div class="box bad">
+<b class="h">⚠ 이 지원금에 대해 아직 확정 못 한 것</b>
+공개된 자료들이 서로 어긋나서, 아래는 <b>10/1에 실제 등록 폼을 보고 확인해야 합니다.</b>
+<ul>
+<li><b>등록 시점이 출처마다 다릅니다.</b> 인스타·언론은 "입국 <b>7~90일</b> 전",
+    주한 대만대표부 페이지는 "<b>1~7일</b> 전"이라고 적혀 있습니다.
+    후자는 2023~2025년에 하던 <b>구 프로그램(재방문 조건 없던 추첨)</b> 내용으로 보입니다 —
+    재방문 조건도, 동행 친지상도 없다고 나옵니다. <b>신·구 프로그램이 섞여 도는 중</b>이라고 봐야 합니다</li>
+<li><b>동행자를 몇 명까지 붙일 수 있는지</b> 어디에도 명시돼 있지 않습니다. 1명인지, 일행 전원인지 불명</li>
+<li><b>동행자도 따로 등록해야 하는지</b> 불명. 같은 항공편·같은 일정이어야 할 가능성이 있습니다</li>
+<li><b>예산 소진 시 조기 종료</b>됩니다 — 공식 사이트에 "3/31까지 <b>또는 예산 소진 시</b>"로 적혀 있습니다</li>
+</ul>
+<b>그래서 이렇게 하세요</b> — <b>10월 1일 오전 11시(한국시간)</b>에 <code>5000.taiwan.net.tw</code>를 열어
+실제 폼을 보고 판단하세요. 대만 오전 10시 = 한국 오전 11시입니다.
+예산 소진 방식이라 <b>첫날 등록이 유리</b>합니다. 추첨이라 당첨은 어차피 보장되지 않으니
+<b>되면 보너스</b>로 생각하고, 이것 때문에 일정을 바꾸지는 마세요.
+</div>
+
+<div class="box warn">
+<b class="h">🌀 태풍 시즌의 꼬리</b>
+대만 태풍은 7~9월에 집중되고 10월엔 발생 건수가 급감하지만 <b>0은 아닙니다.</b>
+10월 말은 확률이 낮은 편이나, 항공권은 <b>일정 변경 가능 조건</b>을 확인하고
+여행자보험은 항공 지연·결항 보장이 포함된 것으로 드세요.
+</div>
+
+<h2>② 날짜 결정 — 두 안 비교</h2>
+<div class="tw">
+<table>
+<tr><th></th><th>A안 · 10/21(수)~10/25(일)</th><th>B안 · 10/29(목)~11/1(일)</th></tr>
+<tr><td><b>대만 연휴</b></td>
+    <td class="p-lose">주말 2일이 광복절 3일 연휴에 정면으로 겹침</td>
+    <td class="p-win">완전히 비켜감</td></tr>
+<tr><td><b>항공 최저가(4인)</b><br><span style="color:var(--dim);font-size:12px">9/3 조회 시점</span></td>
+    <td>1,841,927원</td>
+    <td class="p-win"><b>1,394,711원</b> — 447,216원 저렴</td></tr>
+<tr><td><b>출발</b></td><td>수요일 밤 편이 없어 낮 출발로 바뀜</td>
+    <td class="p-win">목요일 낮 출발 = 원래 대안과 일치</td></tr>
+<tr><td><b>숙박</b></td><td>3박(목·금·토) — 연휴 요금</td><td class="p-win">3박(목·금·토) — 평시 요금</td></tr>
+<tr><td><b>귀국</b></td><td>일요일 저녁 도착 가능</td><td class="p-win">일요일 저녁 도착 가능</td></tr>
+</table>
+</div>
+
+<div class="box ok">
+<b class="h">✅ 추천: B안 — 10/29(목) 출발 ~ 11/1(일) 귀국</b>
+같은 3박4일인데 <b>항공만 45만원 가까이 싸고</b>, 대만 연휴를 피하고,
+"수요일 밤이 힘들면 목요일 낮도 괜찮다"는 조건에 정확히 맞습니다.
+A안을 굳이 택할 이유가 이번엔 보이지 않습니다.
+</div>
+
+<h2 id="air">③ 항공편 — 10/29 출발 · 11/1 귀국 직항 전수</h2>
+<p>2026-09-04 재조사 · 성인 4명 · <b>직항만</b> · 원화 4인 총액 · Kiwi 기준(lastminute 교차확인)</p>
+
+<div class="box bad">
+<b class="h">🚨 10/29(목)은 인천발 직항이 단 2편입니다</b>
+9/3에 적어둔 <b>BR145(11:45)·CI165(12:00)는 목요일에 뜨지 않습니다.</b>
+에바항공은 낮편(화·수·금·토)과 밤편 BR171(일·월·목)이 요일을 나눠 맡는데 10/29는 밤편 날이고,
+중화항공 CI165는 10/28·10/30·11/1엔 잡히는데 10/29만 비어 있습니다.
+두 개 검색 플랫폼에서 1인 기준으로 재조회해도 동일합니다.
+</div>
+
+<h3>가는 편 — 10/29(목) 인천(ICN) 출발</h3>
+<div class="tw">
+<table>
+<tr><th>편명</th><th>시각</th><th>소요 / 기종</th><th>터미널</th><th>위탁</th><th>4인 총액</th><th>메모</th></tr>
+<tr><td><b>티웨이 TW671</b></td><td>13:25 → 15:55</td><td>3h30 · B737-800</td><td>인천 T1</td>
+    <td class="p-lose">미포함</td><td class="p-win"><b>616,173원</b><br>(1인 154,043)</td>
+    <td>유일한 낮 출발. 매일 운항</td></tr>
+<tr><td>에바 BR171</td><td>20:40 → 22:55</td><td>3h15 · A321neo</td><td>인천 T1</td>
+    <td class="p-win">1개 23kg</td><td>1,289,077원<br>(1인 322,269)</td>
+    <td>23시 도착 = 첫날은 이동만</td></tr>
+<tr><td>아시아나 OZ6875</td><td>20:40 → 22:55</td><td>BR171 코드셰어</td><td><b>인천 T1</b></td>
+    <td class="p-win">1개 23kg</td><td class="p-lose">2,033,351원</td>
+    <td>같은 비행기인데 74만원 비쌈 — <b>살 이유 없음</b></td></tr>
+</table>
+</div>
+
+<h3>가는 편 — 10/29(목) 김포(GMP) 출발 ★ 도착이 가장 빠름</h3>
+<div class="tw">
+<table>
+<tr><th>편명</th><th>시각</th><th>소요 / 기종</th><th>위탁</th><th>4인 총액</th><th>메모</th></tr>
+<tr><td><b>제주항공 7C6121</b></td><td><b>11:00 → 13:15</b></td><td>3h15 · B737-800</td>
+    <td class="p-lose">미포함<br>(사전구매 1.5만/인)</td><td><b>784,127원</b><br>(1인 196,032)</td>
+    <td class="p-win">TW671보다 <b>2시간 40분 빠른 도착</b>. 화·목·토 주 3회</td></tr>
+<tr><td>중화항공 CI185</td><td>12:00 → 14:10</td><td>3h10</td><td class="p-win">1개 23kg</td>
+    <td>1,045,007원<br>(1인 261,252)</td><td>위탁 포함 최저가. 10/29 운항 확인</td></tr>
+<tr><td>타이거에어 IT663</td><td>20:35 → 22:40</td><td>3h05 · A320</td><td class="p-lose">미포함</td>
+    <td class="p-win"><b>528,128원</b><br>(1인 132,032)</td><td>전 노선 최저가지만 22:40 도착</td></tr>
+</table>
+</div>
+
+<div class="box ok">
+<b class="h">✅ 7C6121 운항 확인 완료 — 10/29 정상 운항</b>
+제주항공 자체 운항 스케줄 시스템에서 김포→가오슝 날짜별 상태를 직접 확인했습니다.
+<b>화·목·토 주 3회 노선</b>이고, 9/4~10/31 58일치가 예외 없이 같은 패턴입니다.
+<b>2026-10-29(목) = 정상(Normal).</b> 판매 데이터(10/27·10/29·10/31만 판매)와도 100% 일치합니다.<br>
+※ 처음에 트립닷컴에서 "결항"으로 보였던 건 조회한 날(9/4 금)이 <b>비운항 요일</b>이었기 때문입니다 — 신뢰도 문제가 아닙니다.<br>
+※ 단, 주 3회라 만에 하나 결항하면 다음 제주항공 편은 <b>이틀 뒤</b>입니다(TW671은 매일 운항).
+</div>
+
+<h3>오는 편 — 11/1(일) 가오슝 출발</h3>
+<div class="tw">
+<table>
+<tr><th>편명</th><th>시각</th><th>도착지</th><th>기종</th><th>위탁</th><th>4인 총액</th><th>마지막 날</th></tr>
+<tr><td><b>티웨이 TW672</b></td><td>17:00 → 20:45</td><td>인천 T1</td><td>B737-800</td>
+    <td class="p-lose">미포함</td><td class="p-win"><b>692,152원</b><br>(1인 173,038)</td>
+    <td class="p-win">✅ 15:00 공항 = 오전+점심 확보</td></tr>
+<tr><td>에바 BR172</td><td>15:45 → 19:40</td><td>인천 T1</td><td>A321neo</td>
+    <td class="p-win">1개 23kg</td><td>1,414,806원</td><td>△ 13:45 공항 = 오전 반나절</td></tr>
+<tr><td>중화항공 CI164</td><td>07:05 → 10:55</td><td><b>인천 T2</b></td><td>A321neo</td>
+    <td class="p-win">1개 23kg</td><td>1,259,593원</td><td class="p-lose">❌ 05:00 공항 = 4일차 증발</td></tr>
+<tr><td>대한항공 KE5700</td><td>07:05 → 10:55</td><td>인천 T2</td><td>CI164 코드셰어</td>
+    <td class="p-win">1개 23kg</td><td class="p-lose">1,866,413원</td><td class="p-lose">❌ 동일 + 61만원 비쌈</td></tr>
+<tr><td>티웨이 TW652</td><td>14:05 → 17:55</td><td><b>김포</b></td><td>B737-800</td>
+    <td class="p-lose">미포함</td><td>999,595원</td><td>일요일 <b>19시엔 집</b>. 대신 30만원 비쌈</td></tr>
+</table>
+</div>
+<p>※ 겨울 스케줄(10/25~)로 <b>TW672가 16:10 → 17:00 출발</b>로 바뀌었습니다. 9/3 자료와 다릅니다.
+11/1 김포 도착 편은 TW652 하나뿐입니다.</p>
+
+<h2>③-2 최종 후보 두 개</h2>
+<div class="tw">
+<table>
+<tr><th></th><th>A안 · 인천 왕복</th><th>B안 · 김포 출발 + 인천 귀국</th></tr>
+<tr><td><b>조합</b></td><td>TW671 13:25 → / TW672 → 20:45</td><td>7C6121 11:00 → / TW672 → 20:45</td></tr>
+<tr><td><b>가오슝 도착</b></td><td>15:55</td><td class="p-win"><b>13:15</b></td></tr>
+<tr><td><b>항공권(기내만)</b></td><td class="p-win">1,308,325원</td><td>1,476,279원</td></tr>
+<tr><td><b>위탁 15kg × 4인 왕복</b></td><td class="p-lose">400,000원<br>(티웨이 5만 × 8구간)</td>
+    <td class="p-win">260,000원<br>(제주 1.5만×4 + 티웨이 5만×4)</td></tr>
+<tr><td><b>실질 합계</b></td><td class="p-win"><b>1,708,325원</b></td><td><b>1,736,279원</b> (+27,954)</td></tr>
+<tr><td><b>집에서 출발</b></td><td class="p-win">09:40경</td><td>08:20경 (1시간 20분 일찍)</td></tr>
+<tr><td><b>발권</b></td><td class="p-win">티웨이 왕복 1건 = 결항 시 보호</td>
+    <td class="p-lose">제주 + 티웨이 2건 분리 = 앞 구간 깨져도 귀국편 무보호</td></tr>
+<tr><td><b>공항</b></td><td>인천 왕복</td><td>갈 때 김포 / 올 때 인천 — <b>차 주차 불가</b></td></tr>
+</table>
+</div>
+
+<div class="box hi">
+<b class="h">판단</b>
+<b>차를 안 쓴다면 두 안의 실질 차액은 2만 8천원</b>입니다. 티웨이 위탁이 제주항공의 3배(5만 vs 1.5만)라
+항공권 가격차가 수하물에서 거의 상쇄됩니다. <b>첫날 오후 3시간을 2만 8천원에 사는 셈</b>이라
+출발을 앞당기고 싶다면 B안이 합리적입니다.<br>
+안전을 우선한다면 A안 — 매일 운항 + 왕복 한 건이라 결항 시 복구가 빠릅니다.
+</div>
+
+<div class="box warn">
+<b class="h">예약 시 반드시</b>
+<ul>
+<li><b>수하물은 예약 직후 온라인 사전구매.</b> 제주항공 대만 노선 15kg <b>사전 15,000원 / 공항 40,000원</b>,
+    티웨이 대만 노선 15kg <b>사전 50,000원</b>(2026-03-30 인상). 공항 구매는 무조건 손해입니다.</li>
+<li><b>코드셰어는 사지 마세요.</b> OZ6875 = BR171, KE5700 = CI164. 같은 비행기에 4인 기준 +74만 / +61만원입니다.</li>
+<li><b>터미널.</b> 티웨이·에바·(OZ 코드셰어 포함) 인천 T1, 중화항공만 인천 T2. 김포는 국제선 청사 하나입니다.</li>
+<li><b>티웨이 운임 비교.</b> 스마트운임(위탁 15kg 포함)이 이벤트운임+5만원보다 쌀 수 있습니다.</li>
+<li><b>여행자보험</b>은 항공 지연·결항 보장 포함으로. 특히 B안(분리 발권)이면 필수에 가깝습니다.</li>
+<li>4명 전원 <b>같은 항공편</b>으로. 대만 지원금 동행자 조건이 동일 항공편일 가능성이 있습니다.</li>
+</ul>
+</div>
+
+<div class="box">
+<b class="h">7C가 매진되면 — 대안 사다리</b>
+<b>1순위</b> 7C6121 김포 11:00 → 13:15 (844,127원 · 위탁 포함) →
+<b>2순위</b> CI185 김포 12:00 → 14:10 (1,045,007원 · 위탁 이미 포함, 풀서비스) →
+<b>3순위</b> TW671 인천 13:25 → 15:55 (816,173원 · 매일 운항, 왕복 묶기 가능)
+</div>
+
+<h2>④ 숙소 — 어느 역에 잡느냐가 전부</h2>
+<p>가오슝은 MRT 두 노선(레드·오렌지)이 <b>美麗島(메이리다오)역</b>에서 교차합니다. 여기를 중심으로 보세요.</p>
+<div class="tw">
+<table>
+<tr><th>지역</th><th>추천도</th><th>이유</th></tr>
+<tr><td><b>美麗島 · 中央公園</b> (메이리다오·중앙공원)</td><td>★★★</td>
+    <td>두 노선 교차 + 六合야시장 도보. 4인 이동에 가장 유리. <b>1순위</b></td></tr>
+<tr><td><b>高雄車站</b> (가오슝역)</td><td>★★</td><td>교통 최상이나 밤에 다소 삭막</td></tr>
+<tr><td><b>鹽埕埔</b> (옌청푸)</td><td>★★</td><td>보얼예술특구·페리 도보권. 감성은 최고, 대신 MRT 한 노선만</td></tr>
+<tr><td><b>左營</b> (쭤잉)</td><td>★</td><td>고속철도역. 타이난 당일치기가 주목적일 때만</td></tr>
+</table>
+</div>
+<p><b>부부 2쌍이면 방 2개</b>입니다. 트윈/더블을 미리 지정하고, 같은 층 인접 객실을 요청해두면
+아침에 모이기가 훨씬 편합니다. 조식 포함 여부는 4인 × 3일이면 금액 차이가 커지니 계산해보세요.</p>
+
+<h2 id="plan">⑤ 일정표</h2>
+
+<div class="day">
+<h3><span class="chip">DAY 1</span>10/29 목 — 도착 &amp; 야시장</h3>
+<p class="daysub">공항에서 시내까지 MRT 15분. 첫날은 무리하지 않습니다. <b>아래는 TW671(15:55 도착) 기준</b> — 7C6121(13:15 도착)을 타면 전체가 2시간 40분 앞당겨지고, 15:00~18:00에 보얼예술특구를 첫날로 당길 수 있습니다.</p>
+<div class="slot"><div class="time">15:55</div><div class="what"><b>가오슝 국제공항 도착</b>
+  <span>입국 → 유심/이심 개통 → MRT 레드라인. 공항역이 터미널 지하에 바로 있습니다.</span></div></div>
+<div class="slot"><div class="time">17:00</div><div class="what"><b>호텔 체크인</b>
+  <span>짐 풀고 잠깐 쉽니다. 4인이 모이는 시간을 여기서 한 번 맞춰두세요.</span></div></div>
+<div class="slot"><div class="time">18:30</div><div class="what"><b>美麗島역 光之穹頂 (빛의 돔)</b>
+  <span>세계에서 가장 큰 유리 공공미술. 역 안이라 5분이면 봅니다. 저녁 시간대 조명이 예쁩니다.</span></div></div>
+<div class="slot"><div class="time">19:00</div><div class="what"><b>六合夜市 (리우허 야시장)</b>
+  <span><b>MRT 미려도역 11번 출구 · 매일 16:30~24:00.</b> 관광객 비중이 높지만 첫날 접근성으로는 최적입니다.<br>
+  먹거리 — 찹쌀소세지, 지파이, 오징어 구이, 삼겹살 김치롤, 돼지계란 볶음밥, 파파야 우유</span></div></div>
+<div class="slot"><div class="time">21:00</div><div class="what"><b>마사지 또는 호텔 복귀</b>
+  <span>대만 마사지는 한국보다 저렴합니다. 4인 예약은 미리 전화해두는 편이 안전합니다.</span></div></div>
+</div>
+
+<div class="day">
+<h3><span class="chip">DAY 2</span>10/30 금 — 항구 &amp; 섬</h3>
+<p class="daysub">가오슝의 핵심. 걷는 양이 많으니 편한 신발 필수.</p>
+<div class="slot"><div class="time">09:30</div><div class="what"><b>駁二藝術特區 (보얼예술특구, Pier-2)</b>
+  <span><b>MRT 옌청푸역 1번 출구 도보 6분.</b> 옛 항만 창고·부두를 리모델링한 문화예술공간.
+  넓게 퍼져 있어 <b>경전철(輕軌)</b>로 구간 이동하는 게 편합니다. 소품샵과 포토존이 많고,
+  <b>써니힐</b>에서 펑리수와 차 시음이 가능합니다 — 기념품을 여기서 미리 봐두세요.</span></div></div>
+<div class="slot"><div class="time">12:00</div><div class="what"><b>점심 — 옌청푸 일대</b>
+  <span>보얼 주변에 로컬 식당이 많습니다. 4인 좌석이 있는지 미리 확인하세요.</span></div></div>
+<div class="slot"><div class="time">13:30</div><div class="what"><b>鼓山 페리 → 旗津 (치진섬)</b>
+  <span><b>구산 페리 선착장에서 7분.</b> 섬에서는 자전거를 빌려 해안도로를 도는 게 정석입니다(유바이크 있음).<br>
+  볼거리 — 올드 스트리트, 치진 해수욕장, <b>무지개 교회</b>, 대왕 조개, 치허우 포대, 가오슝 등대</span></div></div>
+<div class="slot"><div class="time">16:30</div><div class="what"><b>치진 해산물 거리</b>
+  <span>즉석에서 고른 해산물을 조리해줍니다. <b>주문 전에 가격을 반드시 확인하세요</b> — 시가로 부르는 집이 있습니다.</span></div></div>
+<div class="slot"><div class="time">18:00</div><div class="what"><b>西子灣 (시쯔완) 일몰 · 打狗英國領事館</b>
+  <span>가오슝 최고의 일몰 포인트. 옛 영국 영사관 언덕에서 항구를 내려다봅니다.
+  일몰 시각은 10월 말 기준 17:20 전후이니 <b>시간을 앞당겨 조정하세요.</b></span></div></div>
+<div class="slot"><div class="time">20:00</div><div class="what"><b>高雄流行音樂中心 야경</b>
+  <span>항구변 건축물 조명. 페리 복귀 동선과 자연스럽게 이어집니다.</span></div></div>
+</div>
+
+<div class="day">
+<h3><span class="chip">DAY 3</span>10/31 토 — 사원 &amp; 선택 코스</h3>
+<p class="daysub">토요일이라 어디든 붐빕니다. 오전을 일찍 시작하는 게 유리합니다.</p>
+<div class="slot"><div class="time">09:00</div><div class="what"><b>蓮池潭 龍虎塔 (롄츠탄 용호탑)</b>
+  <span><b>MRT 생태공원역 2번 출구</b>에서 유바이크 추천. <b>용 입으로 들어가 호랑이 입으로 나오는</b> 것이 순서입니다.<br>
+  관람 동선은 <b>용호탑 → 춘추각 → 현천상제신상</b> 순서. 묶어서 2시간.<br>
+  근처 <b>과무사구 아파트</b>(1.6km, 유바이크) — 9동 앞 놀이터가 포토존인데 <b>실거주 단지라 조용히</b>.</span></div></div>
+<div class="slot"><div class="time">12:00</div><div class="what"><b>점심 후 갈림길 — 셋 중 하나</b>
+  <span>4명 취향에 맞춰 고르세요. 아래 ⑥번에 각각 정리했습니다.</span></div></div>
+<div class="slot"><div class="time">18:30</div><div class="what"><b>瑞豐夜市 (루이펑 야시장)</b>
+  <span><b>MRT 가오슝 아레나역 1번 출구 · 17:00~24:00.</b> 리우허보다 현지인 비중이 훨씬 높고 규모도 큽니다.<br>
+  <b>월·수요일 휴무</b>라 토요일이 딱 맞습니다(두 개 출처에서 동일하게 확인).<br>
+  먹거리 — 호호미 소보루, 천사지파이, 고구마볼, 꿔바로우, 닭꼬치</span></div></div>
+</div>
+
+<div class="day">
+<h3><span class="chip">DAY 4</span>11/1 일 — 마무리</h3>
+<p class="daysub">17:00 비행기. 공항에 15:00까지 도착하면 넉넉합니다.</p>
+<div class="slot"><div class="time">09:00</div><div class="what"><b>체크아웃 · 짐 보관</b>
+  <span>호텔 프런트에 맡기거나 MRT역 코인락커를 씁니다.</span></div></div>
+<div class="slot"><div class="time">10:00</div><div class="what"><b>衛武營國家藝術文化中心</b>
+  <span>거대한 곡면 건축물. 실내라 날씨와 무관하고 사진이 잘 나옵니다. 공연이 없어도 로비 개방.</span></div></div>
+<div class="slot"><div class="time">12:00</div><div class="what"><b>마지막 식사 + 기념품</b>
+  <span>펑리수·누가크래커는 시내에서 사는 게 공항보다 쌉니다. <b>4인 몫을 미리 계산해서 한 번에</b> 사세요.</span></div></div>
+<div class="slot"><div class="time">14:30</div><div class="what"><b>공항 이동</b>
+  <span>MRT 레드라인 15분. 짐 찾아 이동하는 시간까지 여유 있게.</span></div></div>
+<div class="slot"><div class="time">17:00</div><div class="what"><b>TW672 출발 → 인천 20:45 도착</b></div></div>
+</div>
+
+<h2>⑥ DAY 3 오후 — 세 가지 선택지</h2>
+<div class="tw">
+<table>
+<tr><th></th><th>내용</th><th>이동</th><th>이런 팀에게</th></tr>
+<tr><td><b>A. 佛光山</b><br>불광산 불타기념관</td>
+    <td>동양 최대급 불교 성지. 대불과 박물관 규모가 압도적. A(불타기념관)만 봐도 충분</td>
+    <td><b>고속철 쭤잉역 1번 출구 앞 3번 정류장 → E02 버스 40분</b></td>
+    <td>"가오슝에서만 볼 수 있는 것"을 원하는 팀</td></tr>
+<tr><td><b>B. 台南</b><br>타이난 당일치기</td>
+    <td>대만에서 가장 오래된 도시. 사원·먹거리 밀도 최고</td>
+    <td>고속철 또는 일반열차 편도 30~50분</td>
+    <td>체력 좋고 도시 한 곳 더 보고 싶은 팀</td></tr>
+<tr><td><b>C. 시내 여유</b></td>
+    <td>대형 백화점·카페·마사지·夢時代 관람차</td>
+    <td>MRT 내</td>
+    <td>부부 2쌍이면 <b>현실적으로 이게 가장 무난</b></td></tr>
+</table>
+</div>
+<div class="box">
+넷이 움직이면 <b>이동 시간이 인원수만큼 늘어납니다.</b> 화장실·간식·사진 한 번에 5~10분씩 붙어서,
+2인 여행 기준 일정표를 그대로 쓰면 반드시 밀립니다.
+욕심내지 말고 <b>C안을 기본으로 잡고, 컨디션이 좋으면 B안</b>으로 올리는 걸 권합니다.
+</div>
+
+<h2>⑦ 예산 (4인 합계)</h2>
+<div class="tw">
+<table>
+<tr><th>항목</th><th>금액</th><th>산출</th></tr>
+<tr><td>항공</td><td>171~174만원</td><td>9/4 재조사. <b>위탁 15kg×4인 왕복 포함</b> — A안 1,708,325원 / B안 1,736,279원</td></tr>
+<tr><td>숙소 3박</td><td>60~90만원</td><td>4성급 2실 × 3박, 1실 10~15만원/박</td></tr>
+<tr><td>식비</td><td>50~60만원</td><td>4인 하루 15만원 × 3.5일. 야시장은 이보다 훨씬 저렴</td></tr>
+<tr><td>교통·입장</td><td>15~20만원</td><td>MRT·페리·택시·전동자전거·입장료</td></tr>
+<tr><td>기타</td><td>20~30만원</td><td>마사지·기념품·유심</td></tr>
+<tr><td><b>합계</b></td><td><b>316~384만원</b></td><td><b>1인 약 79~96만원</b></td></tr>
+</table>
+</div>
+<p>대만 물가는 한국보다 <b>식비가 확실히 쌉니다.</b> 야시장 위주로 먹으면 식비는 절반까지 내려갑니다.
+반대로 호텔은 성수기·연휴에 크게 뛰므로 B안(연휴 회피)의 이점이 여기서도 나옵니다.</p>
+
+<h2 id="prep">⑧ 실무 준비</h2>
+<h3>입국·통신</h3>
+<ul>
+<li><b>비자 면제</b> — 한국 여권 90일. 여권 유효기간이 <b>귀국일 기준 6개월 이상</b> 남아야 안전합니다</li>
+<li><b>입국신고서는 온라인</b>으로 미리 제출할 수 있습니다. 4명 각자 해야 하니 출발 전날 한 번에 처리하세요</li>
+<li><b>유심/이심</b> — 한국에서 이심을 미리 사두면 도착 즉시 켜집니다. 4인 중 최소 2명은 데이터가 있어야 길찾기가 편합니다</li>
+</ul>
+<h3>돈</h3>
+<ul>
+<li>대만은 <b>현금 비중이 아직 높습니다.</b> 야시장·페리·소규모 식당은 카드가 안 되는 곳이 많습니다</li>
+<li>4인 기준 <b>현금 2~3만 NTD</b>는 준비하고, 부족하면 현지 ATM에서 인출</li>
+<li><b>悠遊卡(이지카드)</b> 또는 <b>一卡通(아이패스)</b>를 4장 사서 MRT·경전철·버스·편의점에 쓰세요. 편의점에서 충전됩니다</li>
+</ul>
+<h3>날씨·복장</h3>
+<ul>
+<li>10월 말 가오슝 <b>평균 27℃, 낮 30℃ 근처</b>. 반팔로 다닙니다</li>
+<li>하순부터 습도가 떨어져 쾌적한 편이지만 <b>햇볕이 강합니다</b> — 선크림·모자·선글라스</li>
+<li>실내 냉방이 세고 저녁엔 선선하니 <b>얇은 겉옷 한 장</b>씩</li>
+<li>치진·보얼은 걷는 양이 많습니다. <b>편한 신발</b>이 이번 여행 최대 변수</li>
+</ul>
+<h3>앱</h3>
+<ul>
+<li><b>Google 지도</b> — 대만 대중교통 안내가 정확합니다</li>
+<li><b>Uber</b> — 대만에서 정상 작동. 4인이면 택시가 MRT보다 나은 구간이 많고, 언어 문제도 없습니다</li>
+<li>번역 앱 — 메뉴판 카메라 번역이 야시장에서 유용합니다</li>
+</ul>
+
+<h2>⑨ 갈 만한 곳 전체 목록 — 골라 쓰세요</h2>
+<p>위 일정은 하나의 안일 뿐입니다. 그날 컨디션대로 바꿔도 되도록 후보를 전부 펼쳐둡니다.
+접근 정보는 실제 다녀온 사람의 정리를 옮긴 것이라 구체적입니다.</p>
+
+<h3>◎ 안 가면 아쉬운 것 (4곳)</h3>
+<div class="tw"><table>
+<tr><th>장소</th><th>가는 법</th><th>메모</th></tr>
+<tr><td><b>연지담 · 용호탑</b></td><td>MRT 생태공원역 2번 출구 + 유바이크</td>
+    <td>용 입 → 호랑이 입. 용호탑 → 춘추각 → 현천상제신상 순. <b>야경도 예뻐서 두 번 가도 좋음</b></td></tr>
+<tr><td><b>보얼예술특구</b></td><td>MRT 옌청푸역 1번 출구 도보 6분</td>
+    <td>소품샵·포토존 다수. 써니힐에서 펑리수 시음</td></tr>
+<tr><td><b>치진섬</b></td><td>구산 페리 7분</td>
+    <td>올드스트리트, 해수욕장, <b>무지개 교회</b>, 대왕 조개, 치허우 포대, 등대</td></tr>
+<tr><td><b>미려도역 빛의 돔</b></td><td>MRT 미려도역 개찰구 앞</td>
+    <td>세계에서 가장 아름다운 지하철역 2위. 5분이면 봄</td></tr>
+</table></div>
+
+<h3>◎ 시간 남으면 (도심권)</h3>
+<div class="tw"><table>
+<tr><th>장소</th><th>가는 법</th><th>메모</th></tr>
+<tr><td>다카오 영국 영사관</td><td>MRT 하마센역 1.1km</td><td>입장료 <b>99 TWD</b>. 대만 최초 영국 영사관, 항구 전망</td></tr>
+<tr><td>시립역사박물관</td><td>MRT 옌청푸역 2번 출구</td><td><b>무료</b> · 09:00~17:00 · <b>월요일 휴무</b></td></tr>
+<tr><td>하마센 철도문화공원</td><td>MRT/LRT 하마센역</td><td>철도 부지를 공원으로. 보얼과 붙어 있어 묶기 좋음</td></tr>
+<tr><td>LRT 그린터널</td><td>LRT 시립미술관역</td><td>가로수가 직선으로 늘어선 구간. 미술관과 연계</td></tr>
+<tr><td>아이허강</td><td>LRT 진애부두역</td><td>산책 + <b>유람선 야경</b></td></tr>
+<tr><td>중앙공원</td><td>MRT 중앙공원역</td><td>도심 공원. 안에 <b>카피바라 동물카페</b>(유료)</td></tr>
+<tr><td>과무사구 아파트</td><td>용호탑에서 1.6km</td><td>9동 앞 놀이터가 포토존. <b>실거주 단지라 조용히</b></td></tr>
+<tr><td>소우산 커플 관경대</td><td>LRT 소우산공원역 도보 14분</td><td>언덕길. <b>야생 원숭이 주의</b></td></tr>
+<tr><td>서우산 동물원</td><td>56번 버스 또는 택시</td><td>입장료 <b>40 TWD</b>. 원숭이가 자유롭게 돌아다님</td></tr>
+<tr><td>웨이우잉 예술문화센터</td><td>MRT 웨이우잉역</td><td>거대 곡면 건축. 실내라 날씨 무관</td></tr>
+</table></div>
+
+<h3>◎ 반나절 이상 빼야 하는 곳</h3>
+<div class="tw"><table>
+<tr><th>장소</th><th>가는 법</th><th>주의</th></tr>
+<tr><td><b>불광산 불타기념관</b></td><td>고속철 쭤잉역 1번 출구 앞 <b>3번 정류장 E02 버스, 40분</b></td>
+    <td><b>배차 1시간</b>일 수 있고, <b>인원 차면 그냥 출발</b>합니다(입석 불가). 4명이면 특히 시간 계산 필수</td></tr>
+<tr><td><b>타이난</b></td><td>일반열차(TRA) 또는 고속철(THSR)</td>
+    <td>쓰차오 녹색터널, 안평수옥, 안평고성, 치메이 박물관</td></tr>
+<tr><td><b>컨딩</b></td><td>고속철 쭤잉역 <b>9189번 버스</b> 또는 일일투어</td>
+    <td>대만 최남단. 닉슨 바위, 어롼비 등대, 롱판공원. <b>3박4일엔 무리</b></td></tr>
+</table></div>
+
+<h2>⑩ 식당 — 로컬 위주</h2>
+<div class="box hi">
+<b class="h">동선의 핵심: 鹽埕(옌청푸)</b>
+가오슝 노포가 가장 빽빽한 곳이 <b>鹽埕 일대</b>인데, 마침 <b>보얼예술특구 바로 옆</b>입니다.
+DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 몰아서 먹을 수 있습니다.
+<b>大溝頂</b> 골목이 그 중심입니다.
+</div>
+
+<h3>로컬 노포 — 鹽埕 일대</h3>
+<div class="tw"><table>
+<tr><th>가게</th><th>무엇</th><th>메모</th></tr>
+<tr><td><b>港園牛肉麵</b><br>강위안 우육면</td><td>우육면</td><td>가오슝 우육면 하면 나오는 이름. 점심에 줄이 깁니다</td></tr>
+<tr><td><b>鴨肉珍</b><br>야로우전</td><td>오리고기 + 미가오(찹쌀밥)</td><td>가오슝 로컬이 아침·점심에 먹는 조합. <b>일찍 소진</b>됩니다</td></tr>
+<tr><td><b>阿財雞絲麵</b><br>아차이 지쓰몐</td><td>닭고기 국수</td><td>야식으로도 열려 있는 편</td></tr>
+<tr><td><b>婆婆冰</b><br>포포빙</td><td>과일 빙수</td><td>더위 식히기용. 보얼 다녀와서 먹기 좋은 위치</td></tr>
+<tr><td><b>老江紅茶牛奶</b><br>라오장 홍차우유</td><td>홍차우유 + 토스트</td><td>24시간 운영으로 알려진 곳. 야시장 후 마무리로</td></tr>
+</table></div>
+
+<h3>아침 — 호텔 조식 대신</h3>
+<p>대만은 <b>아침식당 문화가 진짜</b>입니다. 1인 1만원 이하로 훨씬 대만다운 식사가 됩니다.</p>
+<ul>
+<li><b>蛋餅(단빙)</b> — 대만식 계란전병. 아침식당 어디든 있습니다</li>
+<li><b>豆漿(또우장)</b> — 두유. 따뜻한 것(熱)/찬 것(冰), 단 것/무당 선택</li>
+<li><b>飯糰(판투안)</b> — 대만식 주먹밥. 든든합니다</li>
+<li><b>興隆居(싱룽쥐)</b> — 湯包와 두유로 유명한 아침집. 오전에 소진됩니다</li>
+</ul>
+
+<h3>야시장에서 뭘 먹나</h3>
+<div class="tw"><table>
+<tr><th>야시장</th><th>추천 먹거리</th></tr>
+<tr><td><b>리우허</b> (미려도역 11번 출구, 매일 16:30~24:00)</td>
+    <td>찹쌀소세지, 지파이, 오징어 구이, 삼겹살 김치롤, 돼지계란 볶음밥, <b>파파야 우유</b></td></tr>
+<tr><td><b>루이펑</b> (아레나역 1번 출구, 17:00~24:00, <b>월·수 휴무</b>)</td>
+    <td>호호미 소보루, 천사지파이, 고구마볼, 꿔바로우, 닭꼬치</td></tr>
+</table></div>
+
+<h3>치진섬 해산물</h3>
+<p>페리에서 내리면 해산물 거리가 이어집니다. 수족관에서 고르면 즉석 조리해줍니다.</p>
+<div class="box warn">
+<b>주문 전에 가격을 반드시 확인하세요.</b> 시가로 부르는 집이 있어 4인분을 시키면 예상보다 크게 나올 수 있습니다.
+메뉴판에 가격이 적힌 집을 고르거나, 고른 뒤 <b>총액을 먼저 물어보고</b> 진행하세요.
+</div>
+
+<h3>가오슝에서만 되는 별미</h3>
+<ul>
+<li><b>丹丹漢堡(단단 햄버거)</b> — <b>대만 남부에만 있는</b> 로컬 패스트푸드 체인입니다.
+    햄버거에 <b>麵線(미센, 국수)</b>을 세트로 주는 기묘한 조합인데, 이게 가오슝다운 경험입니다.
+    한국인 후기에는 거의 안 나옵니다</li>
+<li><b>木瓜牛奶(파파야 우유)</b> — 가오슝의 상징 음료. 리우허 야시장에서</li>
+<li><b>鹽酥雞(옌수지)</b> — 대만식 닭튀김. 야시장 어디든</li>
+</ul>
+
+<h3>주문할 때 쓰는 말</h3>
+<pre><code>無糖 (우탕)    무당
+半糖 (반탕)    반당
+去冰 (취빙)    얼음 빼기
+不要香菜       고수 빼주세요
+四位 (쓰웨이)  4명이요
+多少錢         얼마예요</code></pre>
+
+<div class="box warn">
+<b class="h">⚠ 가게 정보는 반드시 현장 확인</b>
+위 가게 이름들은 <b>널리 알려진 노포 위주로 골랐지만, 영업시간·휴무·존폐를 확인하지 않았습니다.</b>
+대만 노포는 재료 소진 시 조기 마감하는 곳이 많고, 이전·폐업도 잦습니다.
+<b>가기 전에 구글맵으로 영업 여부를 확인</b>하고, 한 곳이 닫혔을 때를 대비해 대안을 하나씩 잡아두세요.
+그리고 <b>구글맵 별점이 낮아도 맛있는 로컬집이 많습니다</b> — 별점보다 현지인 비율을 보세요.
+</div>
+
+<h2>⑪ 대만에서 모르면 벌금 나오는 것</h2>
+<div class="box bad">
+<b class="h">🚫 전자담배 반입 전면 금지</b>
+대만은 전자담배 반입이 <b>전면 금지</b>입니다. 적발 시 몰수 + 고액 과태료.
+넷 중 쓰는 사람이 있으면 <b>아예 두고 가세요.</b> 실수로 캐리어에 남아있는 경우가 많습니다.
+</div>
+<div class="box warn">
+<b class="h">🚇 MRT 안에서는 물도 못 마십니다</b>
+개찰구 안쪽부터 <b>음식·음료 전부 금지</b>이고 <b>물도 포함</b>입니다. 버블티 들고 타면 안 됩니다.
+과태료는 NT$1,500~7,500 (약 6만~30만원). 마시던 음료는 개찰구 전에 정리하세요.
+</div>
+<div class="box warn">
+<b class="h">🍖 육류·과일·채소 반입 금지</b>
+입국 시 육류·과일·채소·발효식품 반입이 금지됩니다. 기내식으로 받은 과일도 들고 내리지 마세요.
+</div>
+<h3>알아두면 편한 것</h3>
+<ul>
+<li><b>온라인 입국신고서가 필수입니다.</b> 종이 신고서가 폐지돼서 온라인으로만 제출합니다.
+    도착 7일 전부터 가능하니 <b>출발 전날 4명 것을 한 번에</b> 처리하세요</li>
+<li><b>영수증은 복권입니다.</b> 대만 영수증에는 복권 번호가 있어 당첨되면 실제로 돈을 받습니다.
+    앱으로 QR만 찍어두고 종이는 버려도 됩니다</li>
+<li><b>음료 당도는 "우탕"</b> — 기본 당도가 꽤 답니다. 무당은 <b>無糖(우탕)</b>, 반당은 <b>半糖(반탕)</b>.
+    이 두 단어만 알아도 실패를 줄입니다</li>
+<li><b>컨택리스 카드로 대중교통 탑승 가능</b> — 이지카드가 없어도 됩니다.
+    버스는 <b>탈 때와 내릴 때 모두 태그</b>해야 하고, 정류장에서 <b>손을 흔들지 않으면 그냥 지나갑니다</b></li>
+<li><b>유바이크(YouBike)는 현지 번호 인증이 필요할 수 있습니다.</b> 가오슝은 명소 간 거리가 애매해서
+    자전거가 유용한데, 이심에 현지 번호가 안 붙으면 등록이 막힐 수 있습니다 — 이심 살 때 확인하세요</li>
+<li><b>호텔 조식은 계산해보고 결정</b> — 1인 3~5만원 하는 곳도 있는데,
+    현지 아침(단빙·또우장)은 1만원 이하로 훨씬 대만답습니다. 4인 × 3일이면 차이가 큽니다</li>
+<li><b>구글맵 별점을 너무 믿지 마세요</b> — 로컬 맛집은 별점이 낮아도 맛있는 곳이 많습니다. 특히 아침식당</li>
+</ul>
+
+<h2>⑫ 4인 여행에서만 생기는 함정</h2>
+<div class="box warn">
+<ul>
+<li><b>식당 4인석</b> — 인기 로컬 식당은 2인석 위주라 4명이 같이 앉기 어렵습니다. 저녁은 미리 예약하거나 시간을 당기세요</li>
+<li><b>택시</b> — 일반 택시는 4인+짐이 빠듯합니다. 공항 이동은 <b>MRT가 오히려 편합니다</b></li>
+<li><b>결제 분담</b> — 매번 나누면 피곤합니다. 공동 지갑을 만들어 한 명이 결제하고 마지막에 정산하는 방식을 추천합니다</li>
+<li><b>일정 합의</b> — DAY 3 갈림길처럼 <b>선택지가 갈리는 지점을 미리 정해두세요.</b> 현장에서 정하면 반드시 시간이 샙니다</li>
+<li><b>페이스 차이</b> — 부부마다 체력이 다릅니다. 오후에 <b>2시간쯤 각자 시간</b>을 넣어두면 오히려 전체 만족도가 올라갑니다</li>
+</ul>
+</div>
+
+<h2>⑬ 예약 순서 (지금부터)</h2>
+<div class="tw">
+<table>
+<tr><th>언제</th><th>할 일</th><th>메모</th></tr>
+<tr><td><b>이번 주</b></td><td>항공권 4인 확정</td><td>B안. 위탁 수하물 온라인으로 같이 추가</td></tr>
+<tr><td><b>이번 주</b></td><td>호텔 2실</td><td>메이리다오·중앙공원 일대. 무료 취소 조건으로 먼저 잡아두기</td></tr>
+<tr><td><b>10/1 (목)<br>오전 11시</b></td><td><b>재방문 지원금 등록 — 우리 부부 2명</b></td>
+    <td>한국시간 11시 = 대만 10시 개시. <b>예산 소진 시 조기 종료</b>라 첫날이 유리.
+    폼에서 동행자 인원·등록 시점 규칙을 직접 확인하고, 친구 부부를 동행자로 연결</td></tr>
+<tr><td>D-30</td><td>여권 유효기간 4명 확인</td><td>6개월 미만이면 재발급 기간이 필요합니다</td></tr>
+<tr><td>D-14</td><td>이심/유심, 여행자보험</td><td>보험은 항공 지연·결항 보장 포함 여부 확인</td></tr>
+<tr><td>D-7</td><td>DAY 3 코스 4인 합의</td><td>A/B/C 중 하나로 확정</td></tr>
+<tr><td>D-3</td><td>온라인 입국신고, 식당 예약</td><td>4명 각자 제출</td></tr>
+<tr><td>D-1</td><td>현금 환전, 짐 분배</td><td>위탁 2개를 4인이 나눠 담기</td></tr>
+</table>
+</div>
+
+<h2 id="map">⑨ 오프라인 지도 — GPS 켜면 현재 위치가 뜹니다</h2>
+<p>이 지도는 <b>문서 안에 저장</b>돼 있어서 데이터·와이파이가 없어도 열립니다.
+비행기모드에서도 GPS는 동작하므로 <b>파란 점(현재 위치)</b>도 그대로 뜹니다.</p>
+
+<div class="mapctl">
+  <button class="mbtn" id="btn-locate">📍 내 위치 찾기</button>
+  <button class="mbtn" id="btn-zoom" data-z="1">배율 1×</button>
+  <span class="mstat" id="map-stat">위치 권한을 허용하면 파란 점이 표시됩니다</span>
+</div>
+
+<div class="mapwrap" id="mapwrap">
+  <div class="mapinner" id="mapinner">
+    <img src="map.jpg" alt="가오슝 시내 지도" id="mapimg" width="1536" height="2048">
+    <div class="me" id="me" hidden><i></i></div>
+  </div>
+</div>
+<p class="mattr">지도 © <b>OpenStreetMap</b> 기여자 · ODbL. 개인 여행용으로 내려받아 넣은 이미지입니다.</p>
+
+<h3>장소 — 누르면 구글 지도가 열립니다</h3>
+<p class="mnote">구글 지도 앱에 <b>가오슝 오프라인 지도를 미리 받아두면</b> 이 링크들이 데이터 없이도 열립니다.
+받는 법: 구글 지도 → 프로필 → <b>오프라인 지도</b> → 직접 지도 선택 → 가오슝 전체가 들어오게 범위 조절 → 다운로드.
+<b>출국 전 와이파이에서 반드시 받아두세요.</b></p>
+<div class="plist" id="plist"></div>
+
+<div class="box hi">
+<b class="h">📲 홈 화면에 추가해두세요 (이게 오프라인의 핵심)</b>
+<b>아이폰</b> — 사파리로 이 페이지를 열고 공유 버튼 → <b>홈 화면에 추가</b>.<br>
+<b>안드로이드</b> — 크롬에서 ⋮ → <b>홈 화면에 추가</b>(또는 앱 설치).<br>
+한 번 추가하면 아이콘으로 실행되고, <b>비행기모드·데이터 없음 상태에서도</b> 문서 전체와 지도가 그대로 열립니다.
+추가 직후 한 번은 온라인 상태에서 열어 저장을 끝내주세요.
+</div>
+
+<footer>
+<b>검증 상태</b> — 항공편·요금은 <b>2026-09-04 재조사</b>(성인 4명, 직항, 원화)입니다. Kiwi와 lastminute 두 플랫폼을 교차확인했고, <b>제주항공 7C6121의 10/29 운항은 제주항공 자체 운항 스케줄 시스템에서 직접 확인</b>했습니다(김포–가오슝 화·목·토 주 3회). 수하물 요금은 각 항공사 공식 요금표 기준입니다.
+대만 광복절 공휴일과 10/26 대체휴일은 대만 2026년 행사력으로 확인했습니다.
+기온·태풍 경향도 공개 자료로 확인했습니다.<br><br>
+재방문 소비지원금은 대만 관광청 공식 사이트(<code>5000.taiwan.net.tw</code>)로 확인했습니다.<br><br>
+<b>인스타 저장분 반영</b> — 명소 접근 정보(MRT 출구·버스 번호·입장료·야시장 시간)와
+대만 실무 규칙은 저장해둔 게시물에서 가져와 반영했습니다.
+루이펑 야시장 월·수 휴무는 <b>두 개의 독립된 출처에서 동일하게</b> 확인됐습니다.<br><br>
+<b>확인하지 않은 것</b> — <b>식당 이름은 널리 알려진 노포 위주로 골랐을 뿐 영업 여부를 확인하지 않았습니다.</b>
+대만 노포는 재료 소진 시 조기 마감하고 이전·폐업도 잦으니 반드시 구글맵으로 먼저 확인하세요.
+각 명소의 최신 운영시간·휴무일·입장료, 숙소 실제 요금도 예약 시점에 직접 확인이 필요합니다.
+페리 운항 시간은 계절마다 바뀝니다.<br><br>
+항공 요금은 검색 시점 기준이며 실시간으로 변합니다. 예약 전 최종 금액을 반드시 다시 확인하세요.
+</footer>
+
+</div>
+<nav class="bn"><a href="#air">항공</a><a href="#plan">일정</a><a href="#map">지도</a><a href="#prep">실무</a><span class="net" id="netdot"><s></s>온라인</span></nav>
+<script>
+/* 오프라인 지도 + 현재 위치 + PWA 등록 */
+(function () {
+  var MAP = {"z": 14, "x0": 13664, "y0": 7130, "w": 1536, "h": 2048};
+  var PLACES = [{"n": "공항", "lat": 22.5750233, "lng": 120.3518671, "k": "airport"}, {"n": "메이리다오", "lat": 22.6313941, "lng": 120.3018602, "k": "mrt"}, {"n": "리우허야시장", "lat": 22.632315, "lng": 120.2998114, "k": "food"}, {"n": "보얼예술특구", "lat": 22.6208221, "lng": 120.2849755, "k": "see"}, {"n": "구산페리", "lat": 22.6198948, "lng": 120.2700121, "k": "ferry"}, {"n": "치진", "lat": 22.6071214, "lng": 120.2690771, "k": "see"}, {"n": "영국영사관", "lat": 22.6182838, "lng": 120.2672142, "k": "see"}, {"n": "음악센터", "lat": 22.6183599, "lng": 120.2921417, "k": "see"}, {"n": "용호탑", "lat": 22.6805069, "lng": 120.2923758, "k": "see"}, {"n": "루이펑야시장", "lat": 22.6662453, "lng": 120.2993655, "k": "food"}, {"n": "웨이우잉", "lat": 22.6229194, "lng": 120.3423978, "k": "see"}, {"n": "가오슝역", "lat": 22.6394421, "lng": 120.304021, "k": "mrt"}, {"n": "쭤잉역", "lat": 22.6872433, "lng": 120.3076744, "k": "mrt"}];
+
+  function lng2x(lng, z) { return (lng + 180) / 360 * Math.pow(2, z); }
+  function lat2y(lat, z) {
+    var r = lat * Math.PI / 180;
+    return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * Math.pow(2, z);
+  }
+  // 지도 이미지 안에서의 위치를 % 로. 이미지가 어떤 배율로 그려져도 그대로 맞는다.
+  function pct(lat, lng) {
+    var px = (lng2x(lng, MAP.z) - MAP.x0) * 256;
+    var py = (lat2y(lat, MAP.z) - MAP.y0) * 256;
+    return { x: px / MAP.w * 100, y: py / MAP.h * 100,
+             inside: px >= 0 && py >= 0 && px <= MAP.w && py <= MAP.h };
+  }
+
+  var inner = document.getElementById('mapinner');
+  var wrap = document.getElementById('mapwrap');
+  var me = document.getElementById('me');
+  var stat = document.getElementById('map-stat');
+  if (!inner) return;
+
+  // ── 장소 마커 + 목록 ────────────────────────────────────────────
+  var list = document.getElementById('plist');
+  PLACES.forEach(function (p) {
+    var q = pct(p.lat, p.lng);
+    if (q.inside) {
+      var d = document.createElement('div');
+      d.className = 'mk ' + p.k;
+      d.style.left = q.x + '%';
+      d.style.top = q.y + '%';
+      d.innerHTML = '<b></b><i></i>';
+      d.querySelector('i').textContent = p.n;
+      inner.appendChild(d);
+    }
+    var a = document.createElement('a');
+    a.className = p.k;
+    a.href = 'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.innerHTML = '<b></b>';
+    a.appendChild(document.createTextNode(p.n));
+    if (list) list.appendChild(a);
+  });
+
+  // ── 배율 ────────────────────────────────────────────────────────
+  var zb = document.getElementById('btn-zoom');
+  zb.addEventListener('click', function () {
+    var z = (parseInt(zb.dataset.z, 10) % 3) + 1;
+    zb.dataset.z = z;
+    zb.textContent = '배율 ' + z + '×';
+    inner.style.setProperty('--mz', z);
+  });
+
+  // ── 현재 위치 ───────────────────────────────────────────────────
+  var last = null;
+
+  function draw(pos) {
+    last = pos;
+    var q = pct(pos.coords.latitude, pos.coords.longitude);
+    if (!q.inside) {
+      me.hidden = true;
+      stat.textContent = '현재 위치가 이 지도 범위 밖입니다 (' +
+        pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4) + ')';
+      return;
+    }
+    me.hidden = false;
+    me.style.left = q.x + '%';
+    me.style.top = q.y + '%';
+    // 정확도 원 — 이 줌에서 1픽셀이 몇 m 인지로 환산
+    var mpp = 156543.03 * Math.cos(pos.coords.latitude * Math.PI / 180) / Math.pow(2, MAP.z);
+    var scale = inner.getBoundingClientRect().width / MAP.w;
+    var r = Math.max(0, Math.min(60, pos.coords.accuracy / mpp * scale));
+    me.querySelector('i').style.setProperty('--acc', r.toFixed(1) + 'px');
+    stat.textContent = '현재 위치 표시 중 · 오차 약 ' + Math.round(pos.coords.accuracy) + 'm · ' +
+      new Date(pos.timestamp).toLocaleTimeString('ko-KR');
+  }
+
+  function fail(err) {
+    stat.textContent = err.code === 1
+      ? '위치 권한이 거부됐습니다. 브라우저 설정에서 이 사이트의 위치 권한을 허용해주세요.'
+      : '위치를 가져오지 못했습니다 (' + err.message + '). 실외에서 다시 시도해보세요.';
+  }
+
+  function center() {
+    if (!last) return;
+    var q = pct(last.coords.latitude, last.coords.longitude);
+    if (!q.inside) return;
+    var b = inner.getBoundingClientRect();
+    wrap.scrollTo({ left: q.x / 100 * b.width - wrap.clientWidth / 2,
+                    top: q.y / 100 * b.height - wrap.clientHeight / 2, behavior: 'smooth' });
+  }
+
+  document.getElementById('btn-locate').addEventListener('click', function () {
+    if (!navigator.geolocation) { stat.textContent = '이 브라우저는 위치 기능을 지원하지 않습니다.'; return; }
+    stat.textContent = '위치를 찾는 중…';
+    navigator.geolocation.getCurrentPosition(function (p) { draw(p); center(); }, fail,
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+    navigator.geolocation.watchPosition(draw, fail, { enableHighAccuracy: true, maximumAge: 5000 });
+  });
+
+  // ── 온라인 표시 ─────────────────────────────────────────────────
+  var net = document.getElementById('netdot');
+  function sync() {
+    if (!net) return;
+    var on = navigator.onLine;
+    net.className = 'net' + (on ? '' : ' off');
+    net.lastChild.textContent = on ? '온라인' : '오프라인';
+  }
+  addEventListener('online', sync); addEventListener('offline', sync); sync();
+
+  // ── 서비스워커 ──────────────────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function (e) {
+        console.warn('SW 등록 실패', e);
+      });
+    });
+  }
+})();
+</script>
+</body></html>
