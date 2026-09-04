@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>이사했습니다 — /travel/kaohsiung/</title>
+<link rel="canonical" href="/travel/kaohsiung/">
+<meta http-equiv="refresh" content="2;url=/travel/kaohsiung/">
+<style>
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0e0f13;color:#e9ebf2;
+       font:16px/1.7 -apple-system,BlinkMacSystemFont,"Pretendard","Malgun Gothic",sans-serif;text-align:center;padding:24px}
+  @media(prefers-color-scheme:light){body{background:#f6f7fb;color:#15171e}}
+  a{color:#7c9cff}
+</style>
+</head>
+<body>
+<div>
+  <p>가오슝 도시에가 <b>/travel/kaohsiung/</b> 으로 옮겨졌습니다.</p>
+  <p><a href="/travel/kaohsiung/">지금 이동하기</a></p>
+</div>
+<script>
+  /* 이 주소는 아주 잠깐 실제 문서를 서비스했다. 그때 서비스워커를 등록한 기기가 있다면
+     낡은 사본을 계속 붙들고 있게 되므로, 등록과 캐시를 먼저 지우고 새 주소로 보낸다. */
+  (function () {
+    var go = function () { location.replace('/travel/kaohsiung/'); };
+    var jobs = [];
+    if ('serviceWorker' in navigator) {
+      jobs.push(navigator.serviceWorker.getRegistrations()
+        .then(function (rs) { return Promise.all(rs.filter(function (r) {
+          return r.scope.indexOf('/kaohsiung/') > -1 && r.scope.indexOf('/travel/') === -1;
+        }).map(function (r) { return r.unregister(); })); })
+        .catch(function () {}));
+    }
+    if (window.caches) {
+      jobs.push(caches.keys()
+        .then(function (ks) { return Promise.all(ks.filter(function (k) { return k.indexOf('kaohsiung-') === 0; })
+          .map(function (k) { return caches.delete(k); })); })
+        .catch(function () {}));
+    }
+    Promise.all(jobs).then(go);
+    setTimeout(go, 2500);
+  })();
+</script>
+</body>
+</html>
