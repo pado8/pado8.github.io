@@ -5,6 +5,52 @@
    - localStorage 에 남으므로 새로고침해도 유지된다 */
 (function () {
   var NS = 'apick';
+
+  // ── 진입 ─────────────────────────────────────────────────────────
+  // 1) 페이지에 심어둔 경우: 우하단 런처 버튼만 띄우고 대기 (폰에서 이게 유일하게 편하다)
+  // 2) 북마클릿으로 부른 경우: 바로 켠다
+  // 공개 사이트에서는 ?apick=on 을 한 번 열어야 런처가 보인다 — 방문자에게는 안 보인다
+  var SW = 'apick.enabled';
+  var q = (location.search + location.hash).match(/[?&#]apick=(on|off|now)/);
+  if (q) {
+    try {
+      if (q[1] === 'off') { localStorage.removeItem(SW); }
+      else { localStorage.setItem(SW, '1'); }
+    } catch (e) {}
+  }
+  // currentScript 가 null 인 경우를 대비해 태그를 직접 찾는다
+  var me = document.currentScript || document.querySelector('script[src*="pick.js"]:not([data-boot])');
+  var embedded = !!me && !/[?&]now/.test(me.src || '');
+  if (embedded) {
+    var allowed = true;
+    try { allowed = localStorage.getItem(SW) === '1'; } catch (e) {}
+    // data-open="always" 를 붙인 개인 페이지는 스위치 없이 항상 보인다
+    if (me.getAttribute('data-open') === 'always') allowed = true;
+    if (!allowed || (q && q[1] === 'off')) return;
+    launcher();
+    return;
+  }
+  boot();
+
+  function launcher() {
+    if (document.querySelector('.' + NS + '-launch')) return;
+    var st = document.createElement('style');
+    st.textContent = '.' + NS + '-launch{position:fixed;right:14px;bottom:74px;z-index:2147482900;' +
+      'width:46px;height:46px;border-radius:15px;border:0;background:#0f172a;color:#fff;' +
+      'font:800 17px/1 sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.4);' +
+      'display:grid;place-items:center;opacity:.82}' +
+      '.' + NS + '-launch:active{transform:scale(.94)}';
+    document.documentElement.appendChild(st);
+    var b = document.createElement('button');
+    b.className = NS + '-launch';
+    b.type = 'button';
+    b.title = '이 화면에 코멘트 남기기';
+    b.textContent = '◎';
+    b.addEventListener('click', function () { b.remove(); st.remove(); boot(); });
+    document.body.appendChild(b);
+  }
+
+  function boot() {
   if (window.__apick) { window.__apick.toggle(); return; }
 
   var KEY = 'apick.notes.' + location.pathname;
@@ -50,7 +96,11 @@
     '.' + NS + '-list .tx{flex:1;min-width:0}.' + NS + '-list .tx small{color:#94a3b8;font:600 10.5px/1.4 monospace;',
     'display:block;word-break:break-all;margin-top:2px}',
     '.' + NS + '-list .x{flex:0 0 auto;background:none;border:0;color:#94a3b8;cursor:pointer;font-size:15px}',
-    'body.' + NS + '-picking *{cursor:crosshair !important}'
+    'body.' + NS + '-picking *{cursor:crosshair !important}',
+    'body.' + NS + '-area{touch-action:none;-webkit-user-select:none;user-select:none}',
+    '@media(max-width:520px){.' + NS + '-bar{flex-wrap:wrap;gap:5px;padding:7px 8px}',
+    '.' + NS + '-bar button{padding:7px 10px;font-size:12px}.' + NS + '-bar b{width:100%;margin:0 0 2px}',
+    '.' + NS + '-bar .sp{display:none}}'
   ].join('');
   document.documentElement.appendChild(css);
 
@@ -171,6 +221,7 @@
   // ── 요소 고르기 ──────────────────────────────────────────────────
   function onMove(e) {
     if (mode !== 'el') return;
+    if (e.touches && e.touches[0]) { e = e.touches[0]; }
     var el = document.elementFromPoint(e.clientX, e.clientY);
     if (!el || el.className && String(el.className).indexOf(NS) === 0) return;
     var r = el.getBoundingClientRect();
@@ -301,6 +352,7 @@
   function setMode(m) {
     mode = m;
     document.body.classList.toggle(NS + '-picking', !!m);
+    document.body.classList.toggle(NS + '-area', m === 'area');
     hi.style.display = m === 'el' ? 'block' : 'none';
     tag.style.display = m === 'el' ? 'block' : 'none';
     bar.querySelector('.' + NS + '-el').classList.toggle('on', m === 'el');
@@ -319,6 +371,8 @@
   bar.querySelector('.' + NS + '-close').addEventListener('click', function () { api.off(); });
 
   document.addEventListener('mousemove', onMove, true);
+  document.addEventListener('touchstart', onMove, { capture: true, passive: true });
+  document.addEventListener('touchmove', onMove, { capture: true, passive: true });
   document.addEventListener('click', onClick, true);
   document.addEventListener('pointerdown', onDown, true);
   document.addEventListener('pointermove', onDrag, true);
@@ -335,11 +389,15 @@
       [].forEach.call(document.querySelectorAll('.' + NS + '-pin,.' + NS + '-pop'), function (e) { e.remove(); });
       document.body.style.paddingTop = '';
       document.removeEventListener('mousemove', onMove, true);
+      document.removeEventListener('touchstart', onMove, true);
+      document.removeEventListener('touchmove', onMove, true);
+      document.body.classList.remove(NS + '-area');
       document.removeEventListener('click', onClick, true);
       document.removeEventListener('pointerdown', onDown, true);
       document.removeEventListener('pointermove', onDrag, true);
       document.removeEventListener('pointerup', onUp, true);
       window.__apick = null;
+      if (embedded) launcher();   // 닫아도 다시 부를 수 있게
     },
     toggle: function () { api.off(); },
     notes: notes, copy: copy
@@ -348,4 +406,5 @@
 
   setMode('el');
   paint();
+  }   // boot()
 })();

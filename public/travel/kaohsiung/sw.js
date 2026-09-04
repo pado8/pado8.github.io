@@ -5,9 +5,10 @@
    온라인이면 항상 최신본이 바로 뜨고(예전 stale-while-revalidate 는 한 번 더 열어야
    새 내용이 보여서 "고쳤는데 왜 그대로냐"가 됐다), 오프라인이거나 느리면 즉시 캐시본으로 떨어진다.
    나머지 자산(지도·아이콘)은 잘 안 바뀌므로 캐시 우선. */
-const CACHE = 'kaohsiung-2026-09-05b';
+const CACHE = 'kaohsiung-2026-09-05c';
 const DOC = './index.html';
 const NET_TIMEOUT = 2500;
+const SCOPE = new URL('./', self.registration.scope).pathname;
 const ASSETS = [
   './',
   DOC,
@@ -56,6 +57,8 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return; // 구글 지도 링크 등은 손대지 않는다
+  // 내 폴더 밖(예: /tools/pick.js)은 캐시하지 않는다 — 한 번 캐시되면 영영 옛 버전을 물고 있다
+  if (!url.pathname.startsWith(SCOPE)) return;
 
   if (req.mode === 'navigate') {
     e.respondWith(docResponse());
