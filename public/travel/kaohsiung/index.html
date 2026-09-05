@@ -158,6 +158,10 @@
             will-change:transform}
   .mapinner img{width:100%;height:auto;display:block;pointer-events:none;image-rendering:auto;
                 -webkit-user-drag:none;user-select:none}
+  /* 확대용 상세 레이어 — 기본 지도 위에 같은 자리로 겹친다 */
+  .mapinner img.dtl{position:absolute;display:block;opacity:0;z-index:1;
+                    transition:opacity .18s linear}
+  .mapinner img.dtl.on{opacity:1}
   .mk{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
       z-index:3;pointer-events:none}
   .mk b{display:block;width:12px;height:12px;border-radius:50%;background:var(--accent);
@@ -349,7 +353,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-05u</span>
+  <span class="ver">v09-06c</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1407,6 +1411,22 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 <h2 id="map">오프라인 지도 — GPS 켜면 현재 위치가 뜹니다</h2>
 <p>이 지도는 <b>문서 안에 저장</b>돼 있어서 데이터·와이파이가 없어도 열립니다.
 비행기모드에서도 GPS는 동작하므로 <b>파란 점(현재 위치)</b>도 그대로 뜹니다.</p>
+<div class="box hi">
+<b class="h">🔍 확대하면 더 선명해집니다 (2026-09-06 개선)</b>
+전에는 지도가 <b>한 장짜리</b>였습니다. 6배까지 키우면 원본 픽셀에 딱 닿아서,
+그 이상은 <b>커지기만 하고 글씨는 그대로</b>였습니다. 이제 <b>사진을 세 벌 준비해 두고
+확대 정도에 따라 갈아끼웁니다.</b><br>
+<b>기본</b> 전체 지도 → <b>더 키우면</b> 2배 해상도 사진(전 지역) →
+<b>더 키우면</b> 4배 해상도 사진(도심)<br>
+갈아끼우는 시점은 <b>화면에 그려지는 크기가 원본 크기의 절반을 넘을 때</b>입니다 —
+휴대폰이든 PC든 각자 화면 폭에 맞춰 알아서 바뀝니다.
+<b>최대 배율도 6배에서 최대 16배까지</b> 올렸습니다.<br>
+4배 사진이 덮는 구역은 <b>옌청푸·하마싱·시쯔완·중앙공원·메이리다오</b> —
+실제로 걸어 다니는 곳입니다. 그 밖은 2배까지 선명합니다.<br>
+<b>고해상도 사진은 화면에 들어온 조각만 내려받습니다</b> — 처음 열 때 느려지지 않게 한 것입니다.
+그래도 <b>출발 전에 와이파이에서 한 번씩 확대해 두면</b> 그 구역이 통째로 저장돼
+현지에서 데이터 없이 그대로 보입니다.
+</div>
 
 <div class="mapctl">
   <button class="mbtn" id="btn-locate">📍 내 위치 찾기</button>
@@ -1449,6 +1469,8 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
    두 손가락으로 확대/축소. 스크롤바가 없고 페이지 스크롤과도 싸우지 않는다. */
 (function () {
   var MAP = {"z": 15, "x0": 27329, "y0": 14262, "w": 2560, "h": 3328};
+  // 확대하면 켜지는 고해상도 겹치기 레이어(z16=2배 전역, z17=4배 도심)
+  var LEVELS = [{"f": "map16_00.jpg?v=1", "z": 16, "px": 13992448, "py": 7302144, "w": 2560, "h": 3328, "k": 1.6}, {"f": "map16_01.jpg?v=1", "z": 16, "px": 13992448, "py": 7305472, "w": 2560, "h": 3328, "k": 1.6}, {"f": "map16_10.jpg?v=1", "z": 16, "px": 13995008, "py": 7302144, "w": 2560, "h": 3328, "k": 1.6}, {"f": "map16_11.jpg?v=1", "z": 16, "px": 13995008, "py": 7305472, "w": 2560, "h": 3328, "k": 1.6}, {"f": "map17_00.jpg?v=1", "z": 17, "px": 27986432, "py": 14609664, "w": 2176, "h": 3328, "k": 3.2}, {"f": "map17_10.jpg?v=1", "z": 17, "px": 27988608, "py": 14609664, "w": 2176, "h": 3328, "k": 3.2}];
   var PLACES = [{"n": "공항", "lat": 22.5750233, "lng": 120.3518671, "k": "airport"}, {"n": "메이리다오", "lat": 22.6313941, "lng": 120.3018602, "k": "mrt"}, {"n": "리우허야시장", "lat": 22.632315, "lng": 120.2998114, "k": "food"}, {"n": "보얼예술특구", "lat": 22.6208221, "lng": 120.2849755, "k": "see"}, {"n": "구산페리", "lat": 22.6198948, "lng": 120.2700121, "k": "ferry"}, {"n": "치진", "lat": 22.6071214, "lng": 120.2690771, "k": "see"}, {"n": "영국영사관", "lat": 22.6182838, "lng": 120.2672142, "k": "see"}, {"n": "음악센터", "lat": 22.6183599, "lng": 120.2921417, "k": "see"}, {"n": "용호탑", "lat": 22.6805069, "lng": 120.2923758, "k": "see"}, {"n": "루이펑야시장", "lat": 22.6662453, "lng": 120.2993655, "k": "food"}, {"n": "웨이우잉", "lat": 22.6229194, "lng": 120.3423978, "k": "see"}, {"n": "가오슝역", "lat": 22.6394421, "lng": 120.304021, "k": "mrt"}, {"n": "쭤잉역", "lat": 22.6872433, "lng": 120.3076744, "k": "mrt"}, {"n": "삼다상권", "lat": 22.6141528, "lng": 120.3044216, "k": "shop"}, {"n": "드림몰", "lat": 22.5950454, "lng": 120.3069875, "k": "shop"}];
 
   function lng2x(lng, z) { return (lng + 180) / 360 * Math.pow(2, z); }
@@ -1472,16 +1494,66 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   var zb = document.getElementById('btn-zoom');
   if (!inner) return;
 
+  // ── 고해상도 겹치기 레이어 ──────────────────────────────────────
+  // 기본 지도(z15)는 6배쯤에서 원본 픽셀에 닿는다. 그 이상은 커지기만 하고
+  // 선명해지지 않으므로, 같은 자리를 덮는 z16/z17 이미지를 위에 얹는다.
+  // 화면에 들어온 조각만 실제로 내려받는다(처음 열 때 느려지지 않게).
+  var layers = LEVELS.map(function (d) {
+    var sc = Math.pow(2, d.z - MAP.z);
+    var f = {
+      d: d,
+      l: (d.px / sc - MAP.x0 * 256) / MAP.w,
+      t: (d.py / sc - MAP.y0 * 256) / MAP.h,
+      w: (d.w / sc) / MAP.w,
+      h: (d.h / sc) / MAP.h,
+      el: document.createElement('img')
+    };
+    f.el.className = 'dtl';
+    f.el.alt = '';
+    f.el.decoding = 'async';
+    f.el.style.left = (f.l * 100) + '%';
+    f.el.style.top = (f.t * 100) + '%';
+    f.el.style.width = (f.w * 100) + '%';
+    f.el.style.height = (f.h * 100) + '%';
+    inner.appendChild(f.el);
+    return f;
+  });
+
+  function syncLayers() {
+    if (!layers.length) return;
+    var d = box();
+    if (!(d.cw > 0)) return;
+    var vw = d.W * k, vh = d.H * k;
+    // 여유분은 '지도 전체의 몇 %'가 아니라 '지금 보이는 폭의 몇 %'여야 한다.
+    // 전자로 잡으면 확대했을 때 안 보이는 조각까지 전부 받아버린다.
+    var padX = d.cw / vw * 0.25, padY = d.ch / vh * 0.25;
+    var l = -tx / vw - padX, t = -ty / vh - padY;
+    var r = (d.cw - tx) / vw + padX, b = (d.ch - ty) / vh + padY;
+    layers.forEach(function (f) {
+      var near = f.l < r && f.l + f.w > l && f.t < b && f.t + f.h > t;
+      // 화면에 그려질 폭 ÷ 원본 폭. 절반을 넘으면 이 레이어를 쓸 만하다.
+      // 배율(k)로 직접 자르면 화면 폭에 따라 기준이 달라져서 데스크톱에서 안 켜진다.
+      var ratio = f.w * d.W * k / f.d.w;
+      var on = near && ratio >= 0.5;
+      if (on && !f.el.getAttribute('src')) f.el.setAttribute('src', f.d.f);
+      f.el.classList.toggle('on', on);
+    });
+  }
+
   // 마커는 planner 가 그린다(일정에 담긴 곳은 번호 핀, 나머지는 점).
 
   // ── 이동/확대 상태 ──────────────────────────────────────────────
   var k = 1, tx = 0, ty = 0;
   // 이미지 원본 픽셀에 닿는 배율 이상으로 키우면 흐려지기만 한다.
   // 화면 폭 대비 원본 폭의 비율 + 약간의 여유까지만 허용한다.
+  // 겹치기 레이어가 생긴 뒤로는 z16(전역 2배)·z17(도심 4배)까지 원본이 있으므로
+  // 예전의 6배 상한이 필요 없다. 가장 촘촘한 레이어의 원본 픽셀에 닿는 선까지 허용한다.
   function maxK() {
     var d = box();
     if (!(d.cw > 0)) return 4;
-    return Math.max(minK() * 1.5, Math.min(6, MAP.w / d.cw * 1.35));
+    var deepest = LEVELS.reduce(function (a, x) { return Math.max(a, x.z); }, MAP.z);
+    var cap = MAP.w * Math.pow(2, deepest - MAP.z) / d.cw * 0.9;
+    return Math.max(minK() * 1.5, Math.min(16, cap));
   }
 
   function box() {
@@ -1506,6 +1578,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   function apply() {
     inner.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + k + ')';
     inner.style.setProperty('--k', k);
+    syncLayers();
     if (zb) zb.textContent = '배율 ' + (Math.round(k * 10) / 10) + '×';
   }
   // (cx,cy) = 뷰포트 안 좌표. 그 점을 고정한 채 배율만 바꾼다.
@@ -1614,7 +1687,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     // base → 2배 → 3배 → 원본해상도 → 다시 base 로 순환한다.
     // 이전 로직은 3배에서 갇혀 더 확대되지도, 돌아오지도 않았다.
     var base = minK(), top = maxK();
-    var steps = [base, base * 2, base * 3, top].filter(function (v, i, a) {
+    var steps = [base, base * 2, base * 3, base * 5, base * 8, top].filter(function (v, i, a) {
       return v <= top + 0.01 && (i === 0 || v > a[i - 1] + 0.05);
     });
     var next = base;
