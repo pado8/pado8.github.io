@@ -210,6 +210,9 @@
   }
   /* ── 장소 카드 + 담기 ─────────────────────────────────────────── */
   .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px;margin:14px 0}
+  /* .pc 에 display 를 주면 브라우저 기본 [hidden]{display:none} 을 눌러버린다 —
+     '더 보기'로 감춘 카드가 그대로 보였다. 명시적으로 되돌린다. */
+  .pc[hidden]{display:none}
   .pc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px;
       box-shadow:var(--sh);display:flex;flex-direction:column;gap:7px;position:relative;
       transition:transform .14s,box-shadow .14s,border-color .14s}
@@ -227,6 +230,23 @@
   .pc .m.cat.air{background:#0f172a}.pc .m.cat.cafe{background:#b45309}
   .pc .acc{font-size:12px;color:var(--dim);font-weight:700}
   .pc .why{font-size:13px;color:var(--ink2);line-height:1.55;flex:1}
+  /* 한자 대조표 — 표로 두면 폰에서 한 행이 네 줄로 펴져 아홉 화면이 된다.
+     한 줄짜리 목록이면 같은 내용이 두 화면에 들어간다. */
+  .morebtn{grid-column:1/-1;font:inherit;font-size:13.5px;font-weight:800;width:100%;
+           padding:12px;border-radius:12px;border:1px dashed var(--line);background:var(--card2);
+           color:var(--ink2);cursor:pointer}
+  .morebtn:hover{border-color:var(--accent);color:var(--accent)}
+  .glos{list-style:none;margin:8px 0 14px;padding:0}
+  .glos li{padding:7px 2px;border-top:1px solid var(--line);font-size:14px;line-height:1.5}
+  .glos li:first-child{border-top:0}
+  .glos li b{font-weight:800;letter-spacing:-.02em}
+  .glos li em{font-style:normal;font-weight:700;color:var(--ink2)}
+  .glos li i{color:var(--dim);font-size:12.5px}
+  .glos li span{display:block;color:var(--dim);font-size:12.5px;margin-top:1px}
+  @media(min-width:760px){
+    .glos{display:grid;grid-template-columns:1fr 1fr;column-gap:24px}
+    .glos li:nth-child(2){border-top:0}
+  }
   /* 버튼 3개가 카드 폭을 넘겨 밖으로 나갔다 — 줄바꿈을 허용하고 줄어들 수 있게 한다 */
   .pc .act{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;min-width:0}
   .pc .act button,.pc .act a{font:inherit;font-size:12.5px;font-weight:750;padding:7px 10px;
@@ -337,6 +357,19 @@
     .tw td.wl{display:block}
     .tw td.wl::before{display:block;margin-bottom:3px;flex:none}
     .pc .r,.chip{font-size:12px}
+    /* 25px 짜리 ↑↓×◎ 는 폰에서 손가락으로 못 누른다 */
+    .pi .ops button{width:33px;height:33px;font-size:14px}
+    .pi .ops{gap:4px}
+    .pi{gap:6px}
+    /* 카드 하나가 243px 이라 24장이면 일곱 화면이다. 설명을 두 줄로 줄이고
+       누르면 펼치게 한다. 목록을 훑는 동안에는 이름·평점·위치만 보면 된다. */
+    .pc{gap:6px;padding:12px 13px}
+    .pc .why{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+             overflow:hidden;cursor:pointer}
+    .pc.exp .why{-webkit-line-clamp:unset}
+    .pc .why::after{content:' ⌄';color:var(--dim);font-weight:800}
+    .pc.exp .why::after{content:' ⌃'}
+    .pc .acc{font-size:12.5px}
   }
   @media(max-width:400px){
     .tw td::before{flex-basis:70px;font-size:11.5px}
@@ -353,7 +386,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-06e</span>
+  <span class="ver">v09-06k</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -517,90 +550,77 @@ BR145 11:45 / CI165 12:00 / TW671 13:25 정도이고, 밤 출발은 <b>EVA BR171
 <li><b>구글맵 별점을 너무 믿지 마세요</b> — 로컬 맛집은 별점이 낮아도 맛있는 곳이 많습니다. 특히 아침식당</li>
 </ul>
 <h2>한자 대조표 — 문서에 나오는 것 전부</h2>
-<p class="mnote"><b>왼쪽이 우리가 부르는 이름, 가운데가 간판에 적힌 한자</b>입니다.
-문서 안에서도 <b>한국 명칭(한자)</b> 순서로 적어 뒀습니다 — 예: 가오슝역(高雄車站).
-현지 발음은 택시 기사에게 말할 때만 쓰세요.</p>
+<p class="mnote"><b>굵은 글씨가 우리가 부르는 이름, 옆이 간판에 적힌 한자</b>입니다.
+문서 전체를 <b>한국 명칭(한자)</b> 순서로 적어 뒀습니다 — 예: 가오슝역(高雄車站).
+<i>기울인 글씨</i>는 현지 발음으로, 택시에서 말할 때만 쓰세요.</p>
 
 <h3>역 · 지역</h3>
-<div class="tw">
-<table>
-<tr><th>한국 명칭</th><th>한자(간판)</th><th>현지 발음</th><th>무엇</th></tr>
-<tr><td><b>메이리다오역</b></td><td>美麗島</td><td>메이리다오</td><td>MRT 두 노선이 만나는 환승역. 빛의 돔이 있는 곳</td></tr>
-<tr><td><b>중앙공원역</b></td><td>中央公園</td><td>중양궁위안</td><td>이름 그대로 도심 공원 앞 역</td></tr>
-<tr><td><b>산둬상권역</b></td><td>三多商圈</td><td>싼둬상취안</td><td>백화점이 몰려 있는 역. 쇼핑은 여기</td></tr>
-<tr><td><b>옌청푸역</b></td><td>鹽埕埔</td><td>옌청푸</td><td>보얼예술특구·노포 골목이 있는 옛 도심</td></tr>
-<tr><td><b>시쯔완역</b></td><td>西子灣</td><td>시쯔완</td><td>일몰 명소. 레드라인이 아니라 오렌지라인 서쪽 끝</td></tr>
-<tr><td><b>쭤잉역</b></td><td>左營</td><td>쭤잉</td><td>고속철도(HSR) 환승역. 롄츠탄이 여기</td></tr>
-<tr><td><b>구산 페리 선착장</b></td><td>鼓山</td><td>구산</td><td>치진 가는 배를 타는 곳</td></tr>
-<tr><td><b>치진</b></td><td>旗津</td><td>치진</td><td>페리로 7분 걸리는 섬</td></tr>
-<tr><td><b>카이쉬안역</b></td><td>凱旋</td><td>카이쉬안</td><td>드림몰 갈 때 갈아타는 역</td></tr>
-<tr><td><b>첸전즈싱역</b></td><td>前鎮之星</td><td>첸전즈싱</td><td>경전철 C3 정거장</td></tr>
-<tr><td><b>드림몰</b></td><td>夢時代</td><td>멍스다이</td><td>옥상 관람차가 있는 대형 쇼핑몰</td></tr>
-<tr><td><b>가오슝역</b></td><td>高雄車站</td><td>가오슝처잔</td><td>기차역. MRT 역 이름도 같습니다</td></tr>
-</table>
-</div>
+<ul class="glos">
+<li><b>메이리다오역</b> <em>美麗島</em> <span>두 노선이 만나는 환승역. 빛의 돔이 여기</span></li>
+<li><b>중앙공원역</b> <em>中央公園</em> <i>중양궁위안</i> <span>도심 공원 앞</span></li>
+<li><b>산둬상권역</b> <em>三多商圈</em> <i>싼둬상취안</i> <span>백화점이 몰려 있는 역</span></li>
+<li><b>옌청푸역</b> <em>鹽埕埔</em> <span>보얼예술특구·노포 골목</span></li>
+<li><b>시쯔완역</b> <em>西子灣</em> <span>일몰 명소. 오렌지라인 서쪽 끝</span></li>
+<li><b>쭤잉역</b> <em>左營</em> <span>고속철 환승. 롄츠탄이 여기</span></li>
+<li><b>구산 선착장</b> <em>鼓山</em> <span>치진 가는 배</span></li>
+<li><b>치진</b> <em>旗津</em> <span>페리 7분 거리의 섬</span></li>
+<li><b>카이쉬안역</b> <em>凱旋</em> <span>드림몰 갈 때 환승</span></li>
+<li><b>첸전즈싱역</b> <em>前鎮之星</em> <span>경전철 C3</span></li>
+<li><b>드림몰</b> <em>夢時代</em> <i>멍스다이</i> <span>옥상 관람차가 있는 쇼핑몰</span></li>
+<li><b>가오슝역</b> <em>高雄車站</em> <i>가오슝처잔</i> <span>기차역</span></li>
+</ul>
 
 <h3>명소</h3>
-<div class="tw">
-<table>
-<tr><th>한국 명칭</th><th>한자(간판)</th><th>현지 발음</th><th>무엇</th></tr>
-<tr><td><b>롄츠탄 용호탑</b></td><td>蓮池潭 龍虎塔</td><td>롄츠탄 룽후타</td><td>연못 위 용호탑. 가오슝 대표 사진</td></tr>
-<tr><td><b>보얼예술특구</b></td><td>駁二藝術特區</td><td>보얼이수터취</td><td>항만 창고를 고친 예술구(Pier-2)</td></tr>
-<tr><td><b>빛의 돔</b></td><td>光之穹頂</td><td>광즈충딩</td><td>메이리다오역 안에 있는 유리 천장</td></tr>
-<tr><td><b>다거우 영국영사관</b></td><td>打狗英國領事館</td><td>다거우 잉궈링스관</td><td>다거우(打狗)는 가오슝의 옛 이름</td></tr>
-<tr><td><b>웨이우잉 예술문화센터</b></td><td>衛武營</td><td>웨이우잉</td><td>물결 모양 대형 건축물. 실내라 날씨 무관</td></tr>
-<tr><td><b>가오슝 대중음악센터</b></td><td>高雄流行音樂中心</td><td>가오슝 류싱인위에중신</td><td>항구변 야경</td></tr>
-<tr><td><b>불광산 불타기념관</b></td><td>佛光山</td><td>포광산</td><td>반나절 이상 걸리는 불교 성지</td></tr>
-<tr><td><b>경전철(트램)</b></td><td>輕軌</td><td>칭구이</td><td>MRT와 별개 노선. 보얼·음악센터 쪽</td></tr>
-</table>
-</div>
+<ul class="glos">
+<li><b>롄츠탄 용호탑</b> <em>蓮池潭 龍虎塔</em> <i>롄츠탄 룽후타</i> <span>연못 위 용호탑</span></li>
+<li><b>보얼예술특구</b> <em>駁二藝術特區</em> <i>보얼이수터취</i> <span>항만 창고를 고친 예술구</span></li>
+<li><b>빛의 돔</b> <em>光之穹頂</em> <i>광즈충딩</i> <span>메이리다오역 안 유리 천장</span></li>
+<li><b>다거우 영국영사관</b> <em>打狗英國領事館</em> <i>다거우 잉궈링스관</i> <span>다거우는 가오슝의 옛 이름</span></li>
+<li><b>웨이우잉 예술문화센터</b> <em>衛武營</em> <span>물결 모양 건축. 실내</span></li>
+<li><b>가오슝 대중음악센터</b> <em>高雄流行音樂中心</em> <i>류싱인위에중신</i> <span>항구변 야경</span></li>
+<li><b>불광산 불타기념관</b> <em>佛光山</em> <i>포광산</i> <span>반나절 걸리는 불교 성지</span></li>
+<li><b>경전철</b> <em>輕軌</em> <i>칭구이</i> <span>MRT와 별개 노선</span></li>
+</ul>
 
 <h3>야시장 · 먹거리</h3>
-<div class="tw">
-<table>
-<tr><th>한국 명칭</th><th>한자(간판)</th><th>현지 발음</th><th>무엇</th></tr>
-<tr><td><b>리우허 야시장</b></td><td>六合夜市</td><td>리우허예스</td><td>매일 열림. 미려도역 11번 출구</td></tr>
-<tr><td><b>루이펑 야시장</b></td><td>瑞豐夜市</td><td>루이펑예스</td><td><b>월·수 휴무</b>. 현지인 비중 높음</td></tr>
-<tr><td><b>우육면</b></td><td>牛肉麵</td><td>뉴러우몐</td><td>대만 대표 국수</td></tr>
-<tr><td><b>오리고기</b></td><td>鴨肉</td><td>야로우</td><td>야로우전(鴨肉珍)의 간판</td></tr>
-<tr><td><b>밀크티</b></td><td>奶茶</td><td>나이차</td><td>화다 밀크티(樺達奶茶)가 대표</td></tr>
-<tr><td><b>파파야 우유</b></td><td>木瓜牛奶</td><td>무과뉴나이</td><td>가오슝의 상징 음료</td></tr>
-<tr><td><b>닭튀김</b></td><td>鹽酥雞</td><td>옌수지</td><td>야시장 어디든 있습니다</td></tr>
-<tr><td><b>마라 훠궈</b></td><td>麻辣鍋</td><td>마라궈</td><td>딩왕(鼎王)이 대표 체인</td></tr>
-<tr><td><b>계란전병</b></td><td>蛋餅</td><td>단빙</td><td>아침식당 기본 메뉴</td></tr>
-<tr><td><b>두유</b></td><td>豆漿</td><td>또우장</td><td>따뜻한 것 熱(러) / 찬 것 冰(빙)</td></tr>
-<tr><td><b>주먹밥</b></td><td>飯糰</td><td>판투안</td><td>리우제(六姐)가 평점 4.5</td></tr>
-<tr><td><b>육즙 만두</b></td><td>湯包</td><td>탕바오</td><td>싱룽쥐(興隆居)가 유명</td></tr>
-<tr><td><b>루웨이(간장 조림)</b></td><td>滷味</td><td>루웨이</td><td>재료를 골라 담는 야식</td></tr>
-<tr><td><b>가는 국수</b></td><td>麵線</td><td>몐셴</td><td>단단 햄버거 세트에 딸려 나옵니다</td></tr>
-</table>
-</div>
+<ul class="glos">
+<li><b>리우허 야시장</b> <em>六合夜市</em> <i>리우허예스</i> <span>매일 열림</span></li>
+<li><b>루이펑 야시장</b> <em>瑞豐夜市</em> <i>루이펑예스</i> <span>월·수 휴무. 현지인 비중 높음</span></li>
+<li><b>우육면</b> <em>牛肉麵</em> <i>뉴러우몐</i> <span>대만 대표 국수</span></li>
+<li><b>오리고기</b> <em>鴨肉</em> <i>야로우</i> <span>야로우전의 간판</span></li>
+<li><b>밀크티</b> <em>奶茶</em> <i>나이차</i> <span>화다 밀크티가 대표</span></li>
+<li><b>파파야 우유</b> <em>木瓜牛奶</em> <i>무과뉴나이</i> <span>가오슝의 상징 음료</span></li>
+<li><b>닭튀김</b> <em>鹽酥雞</em> <i>옌수지</i> <span>야시장 어디든</span></li>
+<li><b>마라 훠궈</b> <em>麻辣鍋</em> <i>마라궈</i> <span>딩왕이 대표 체인</span></li>
+<li><b>계란전병</b> <em>蛋餅</em> <i>단빙</i> <span>아침 기본 메뉴</span></li>
+<li><b>두유</b> <em>豆漿</em> <i>또우장</i> <span>熱 따뜻한 것 / 冰 찬 것</span></li>
+<li><b>주먹밥</b> <em>飯糰</em> <i>판투안</i> <span>리우제가 평점 4.5</span></li>
+<li><b>육즙 만두</b> <em>湯包</em> <i>탕바오</i> <span>싱룽쥐가 유명</span></li>
+<li><b>루웨이</b> <em>滷味</em> <span>재료를 골라 담는 야식</span></li>
+<li><b>가는 국수</b> <em>麵線</em> <i>몐셴</i> <span>단단 햄버거 세트에 딸려 나옴</span></li>
+</ul>
 
 <h3>쇼핑 · 주문</h3>
-<div class="tw">
-<table>
-<tr><th>한국 명칭</th><th>한자(간판)</th><th>현지 발음</th><th>무엇</th></tr>
-<tr><td><b>드럭스토어 코스메드</b></td><td>康是美</td><td>캉스메이</td><td>마스크팩·파스</td></tr>
-<tr><td><b>드럭스토어 포야</b></td><td>寶雅</td><td>바오야</td><td>마스크팩·파스</td></tr>
-<tr><td><b>까르푸</b></td><td>家樂福</td><td>자러푸</td><td>가장 싼 마트</td></tr>
-<tr><td><b>사차장(조미료)</b></td><td>沙茶醬</td><td>사차장</td><td>뉴터우파이(牛頭牌)가 대표 브랜드</td></tr>
-<tr><td><b>펑리수</b></td><td>鳳梨酥</td><td>펑리수</td><td>파인애플 케이크. 대표 선물</td></tr>
-<tr><td><b>이지카드 / 아이패스</b></td><td>悠遊卡 / 一卡通</td><td>여우유카 / 이카퉁</td><td>교통카드</td></tr>
-<tr><td><b>무당 / 반당</b></td><td>無糖 / 半糖</td><td>우탕 / 반탕</td><td>음료 당도</td></tr>
-<tr><td><b>얼음 빼기</b></td><td>去冰</td><td>취빙</td><td>주문할 때</td></tr>
-<tr><td><b>고수 빼주세요</b></td><td>不要香菜</td><td>부야오샹차이</td><td>주문할 때</td></tr>
-<tr><td><b>얼마예요</b></td><td>多少錢</td><td>두어사오첸</td><td>주문할 때</td></tr>
-<tr><td><b>4명이요</b></td><td>四位</td><td>쓰웨이</td><td>식당 들어갈 때</td></tr>
-</table>
-</div>
+<ul class="glos">
+<li><b>코스메드</b> <em>康是美</em> <i>캉스메이</i> <span>드럭스토어</span></li>
+<li><b>포야</b> <em>寶雅</em> <i>바오야</i> <span>드럭스토어</span></li>
+<li><b>까르푸</b> <em>家樂福</em> <i>자러푸</i> <span>가장 싼 마트</span></li>
+<li><b>사차장</b> <em>沙茶醬</em> <span>조미료. 뉴터우파이가 대표</span></li>
+<li><b>펑리수</b> <em>鳳梨酥</em> <span>파인애플 케이크</span></li>
+<li><b>이지카드 / 아이패스</b> <em>悠遊卡 / 一卡通</em> <i>여우유카 / 이카퉁</i> <span>교통카드</span></li>
+<li><b>무당 / 반당</b> <em>無糖 / 半糖</em> <i>우탕 / 반탕</i> <span>음료 당도</span></li>
+<li><b>얼음 빼기</b> <em>去冰</em> <i>취빙</i> <span>주문할 때</span></li>
+<li><b>고수 빼주세요</b> <em>不要香菜</em> <i>부야오샹차이</i> <span>주문할 때</span></li>
+<li><b>얼마예요</b> <em>多少錢</em> <i>두어사오첸</i> <span>주문할 때</span></li>
+<li><b>4명이요</b> <em>四位</em> <i>쓰웨이</i> <span>식당 들어갈 때</span></li>
+</ul>
 
 <div class="box hi">
 <b class="h">간판에서 이 글자만 찾으면 됩니다</b>
-<b>호텔</b> = 大飯店 · 飯店 · 酒店 (셋 다 호텔입니다) ·
-<b>역</b> = 站 · <b>도로</b> = 路 · <b>번지</b> = 號 ·
-<b>야시장</b> = 夜市 · <b>MRT</b> = 捷運<br>
-대만은 <b>번체자</b>를 씁니다 — 중국 본토의 간체자와 글자 모양이 다르니
-번역 앱에서 <b>"중국어(번체)"</b>를 고르세요.
+<b>호텔</b> = 大飯店 · 飯店 · 酒店 &nbsp;·&nbsp; <b>역</b> = 站 &nbsp;·&nbsp;
+<b>도로</b> = 路 &nbsp;·&nbsp; <b>번지</b> = 號 &nbsp;·&nbsp;
+<b>야시장</b> = 夜市 &nbsp;·&nbsp; <b>MRT</b> = 捷運<br>
+대만은 <b>번체자</b>를 씁니다 — 번역 앱에서 <b>"중국어(번체)"</b>를 고르세요.
 </div>
 
 <h2>4인 여행에서만 생기는 함정</h2>
@@ -1893,7 +1913,10 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     el.querySelector('.area').textContent = p.area;
     if (dur) el.querySelector('.dur').textContent = '약 ' + dur;
     el.querySelector('.acc').textContent = p.acc;
-    el.querySelector('.why').textContent = p.why;
+    var whyEl = el.querySelector('.why');
+    whyEl.textContent = p.why;
+    // 폰에서는 두 줄만 보인다(CSS). 눌러서 펼친다.
+    whyEl.addEventListener('click', function () { el.classList.toggle('exp'); });
     el.querySelector('.gmap').href = 'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
 
     var pick = el.querySelector('.daypick');
@@ -1932,7 +1955,27 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
         });
       if (!box.children.length) {
         box.innerHTML = '<p class="empty">해당하는 장소가 없습니다.</p>';
+        return;
       }
+      // 폰에서 65장을 한 번에 쏟아내면 스무 화면이 넘는다 — 끊어서 보여준다.
+      // 위에 필터가 있으니 종류를 좁혀서 보는 게 먼저고, 이건 그다음 안전장치다.
+      if (!matchMedia('(max-width:640px)').matches) return;
+      var STEP = 12;
+      var kids = [].slice.call(box.children);
+      if (kids.length <= STEP) return;
+      var shown = STEP;
+      var more = document.createElement('button');
+      more.type = 'button';
+      more.className = 'morebtn';
+      function apply() {
+        kids.forEach(function (el, i) { el.hidden = i >= shown; });
+        var left = kids.length - shown;
+        if (left <= 0) { more.remove(); return; }
+        more.textContent = '+ ' + left + '곳 더 보기';
+      }
+      more.addEventListener('click', function () { shown += STEP * 2; apply(); });
+      box.appendChild(more);
+      apply();
     });
   }
 
@@ -2217,16 +2260,33 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     if (openByDefault) d.open = true;
     var s = document.createElement('summary');
     s.textContent = h.textContent.trim();
-    if (note) { var small = document.createElement('small'); small.textContent = note; s.appendChild(small); }
+    // 제목에 이미 들어 있는 말을 또 붙이면 "벌금 나오는 것벌금 나오는 것"이 된다
+    var plain = h.textContent.replace(/\s/g, '');
+    if (note && plain.indexOf(note.replace(/\s/g, '')) < 0) {
+      var small = document.createElement('small'); small.textContent = note; s.appendChild(small);
+    }
     d.appendChild(s);
     d.appendChild(body);
     h.parentNode.replaceChild(d, h);
     return true;
   }
   // 플래너·카드가 대체한 참고 자료와 검증 이력은 접어 둔다
-  fold('기본 코스', '펼쳐 보기');
-  fold('갈 만한 곳 전체 목록', '표로 된 원본 목록');
-  fold('DAY 3 오후', '세 가지 선택지');
+  fold('기본 코스', 'DAY 1~4 설명');
+  fold('갈 만한 곳 전체 목록', '가는 법 표');
+  fold('DAY 3 오후', '');
+  // 카드가 이미 같은 내용을 담고 있는 참고용 표들 — 폰에서 펼쳐 두면 탭이 스무 화면을 넘는다.
+  // 데스크톱은 화면이 넓으니 펼친 채로 둔다(접기 UI만 붙는다).
+  var DESK = !matchMedia('(max-width:640px)').matches;
+  fold('확인한 노포', '14곳', DESK);
+  fold('새로 넣은 곳', '11곳', DESK);
+  fold('카페 · 빙수 — 왜', '7곳', DESK);
+  fold('후기 — 일반 / 한국인', '호텔 8곳', DESK);
+  fold('한자 대조표', '45개', DESK);
+  fold('실무 준비', '입국·돈·날씨·앱', DESK);
+  fold('대만에서 모르면', '3가지', DESK);
+  fold('집 ↔ 공항', '지하철·버스 시간', DESK);
+  fold('우리가 쓸 것', '8품목', DESK);
+  fold('선물용', '6품목', DESK);
 
   // 3) 맨 위로 — 탭 하나가 10화면을 넘어가는 곳이 있다
   var btn = document.createElement('button');
