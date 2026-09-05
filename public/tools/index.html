@@ -64,7 +64,7 @@
 <h2>2. 다른 내 사이트에 켜기</h2>
 <div class="card">
   <p style="margin:0 0 10px">그 사이트 HTML 끝에 한 줄만 넣으면 됩니다.</p>
-<pre>&lt;script src="https://aquapado.com/tools/pick.js?v=7" defer&gt;&lt;/script&gt;</pre>
+<pre>&lt;script src="https://aquapado.com/tools/pick.js?v=8" defer&gt;&lt;/script&gt;</pre>
   <p style="margin:8px 0 0;color:var(--dim);font-size:13px"><code>?v=</code> 숫자는 <b>캐시 무효화용</b>입니다. GitHub Pages 가 스크립트를 10분간 캐시해서, 이게 없으면 도구를 고쳐도 최대 10분간 옛 버전이 뜹니다. 제가 도구를 고칠 때 같이 올리겠습니다.</p>
   <p style="margin:10px 0 0;color:var(--dim);font-size:13.5px">
     이렇게 넣으면 <b>방문자에게는 아무것도 안 보입니다.</b> 내 기기에서 한 번
@@ -138,6 +138,18 @@
 </div>
 
 <footer>aquapado.com · 개인 도구</footer>
+</div>
+
+<div class="box">
+<b class="h">📱 폰에서 쓸 때</b>
+<b>폰에서는 "보내기"가 곧바로 세션까지 가지 못합니다.</b>
+도구가 PC의 <code>127.0.0.1:5299</code>로 보내는데, 폰에서 그 주소는 <b>폰 자신</b>이라 닿지 않습니다.
+공유기 IP로 바꿔도 페이지가 HTTPS라 브라우저가 HTTP 요청을 막습니다.<br>
+그래서 폰에서는 <b>보내기를 누르면 클립보드로 복사</b>됩니다(예전엔 JSON 파일이 떨어졌는데,
+그 파일이 폰 안에 남아 아무 쓸모가 없었습니다).
+복사된 내용을 <b>클로드 앱에 그대로 붙여넣으면</b> 선택자·좌표까지 전부 넘어갑니다.<br>
+한 번 실패한 기기는 기억해 두었다가, 다음부터는 <b>누르는 즉시 복사</b>합니다 —
+iOS는 누른 직후가 아니면 클립보드 쓰기를 막기 때문입니다.
 </div>
 </body>
 </html>

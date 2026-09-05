@@ -349,9 +349,16 @@
 
   // ── 보내기 — 이 자리에서 작업 중인 세션으로 바로 보낸다 ──────────
   var ENDPOINT = 'http://127.0.0.1:5299/note';
+  var NOLOCAL = 'pick.nolocal.v1';   // 이 기기에서 로컬 서버에 닿지 못한 적이 있다
   function send() {
     if (!notes.length) { alert('남긴 코멘트가 없습니다.'); return; }
     var btn = document.querySelector('.' + NS + '-send');
+    // 클립보드 쓰기는 '사용자가 누른 그 순간'에만 허용하는 브라우저가 있다(특히 iOS).
+    // 네트워크 응답을 기다린 뒤에 복사하면 거부되므로, 안 닿는 걸 이미 아는 기기에서는
+    // 누르자마자 복사부터 해둔다. 그래도 아래에서 서버를 한 번 더 두드려 본다.
+    var known = false;
+    try { known = localStorage.getItem(NOLOCAL) === '1'; } catch (e) {}
+    if (known) copy();
     btn.textContent = '보내는 중…';
     fetch(ENDPOINT, {
       method: 'POST', mode: 'cors',
@@ -368,37 +375,20 @@
     }).then(function () {
       // 성공 — 여기서 예외가 나도 실패 경로로 새지 않도록 then(성공, 실패) 대신
       // 두 인자 형태를 쓴다(아래).
+      try { localStorage.removeItem(NOLOCAL); } catch (e) {}
       notes.length = 0; save();
       btn.textContent = '보냈습니다 ✓';
       setTimeout(function () { btn.textContent = '보내기'; }, 2000);
     }, function () {
-      // 브라우저가 공개 페이지 → localhost 요청을 막는 환경이 있다.
-      // 그때는 파일로 떨어뜨린다 — 작업 세션이 다운로드 폴더에서 주워간다.
-      saveFile();
-      btn.textContent = '파일로 보냄 ✓';
-      setTimeout(function () { btn.textContent = '보내기'; }, 2200);
+      // 서버에 못 닿는 경우 — 폰이거나, PC 서버가 꺼져 있거나, 브라우저가
+      // 공개 페이지 → localhost 요청을 막는 경우.
+      // 예전엔 JSON 파일을 떨어뜨렸는데 폰에서는 그 파일이 폰 안에 남아 쓸모가 없었다.
+      // 그래서 클립보드로 보낸다 — 클로드에 그대로 붙여넣으면 된다.
+      try { localStorage.setItem(NOLOCAL, '1'); } catch (e) {}
+      copy();
+      btn.textContent = '복사됨 — 붙여넣기';
+      setTimeout(function () { btn.textContent = '보내기'; }, 2600);
     });
-  }
-
-  // 다운로드 폴더로 떨어뜨리기 — 네트워크 정책과 무관하게 항상 통한다
-  function saveFile() {
-    var now = new Date();
-    var p2 = function (v) { return ('0' + v).slice(-2); };
-    var name = 'pick-' + now.getFullYear() + p2(now.getMonth() + 1) + p2(now.getDate()) +
-               '-' + p2(now.getHours()) + p2(now.getMinutes()) + p2(now.getSeconds()) + '.json';
-    var payload = {
-      url: location.href, at: now.toISOString(),
-      view: { w: innerWidth, h: innerHeight, dpr: devicePixelRatio },
-      theme: matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light',
-      notes: notes.slice()
-    };
-    var blob = new Blob([JSON.stringify(payload, null, 1)], { type: 'application/json' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    document.body.appendChild(a); a.click();
-    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
-    notes.length = 0; save();
   }
 
   // ── 목록 ─────────────────────────────────────────────────────────
