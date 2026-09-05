@@ -360,7 +360,14 @@
     /* 25px 짜리 ↑↓×◎ 는 폰에서 손가락으로 못 누른다 */
     .pi .ops button{width:33px;height:33px;font-size:14px}
     .pi .ops{gap:4px}
-    .pi{gap:6px}
+    /* 한 줄에 번호·시간·이름·버튼 넷을 다 넣으면 이름 칸이 109px 밖에 안 남아
+       "김포 1..." 처럼 잘려서 뭔지 알 수가 없었다. 이름을 아랫줄 통째로 내린다. */
+    .pi{gap:6px;flex-wrap:wrap;align-items:center}
+    .pi .no{order:1}
+    .pi input.tm{order:2}
+    .pi .ops{order:3;margin-left:auto}
+    .pi .nm{order:4;flex:1 1 100%;white-space:normal;overflow:visible;
+            font-size:14px;line-height:1.4;padding:2px 0 1px}
     /* 카드 하나가 243px 이라 24장이면 일곱 화면이다. 설명을 두 줄로 줄이고
        누르면 펼치게 한다. 목록을 훑는 동안에는 이름·평점·위치만 보면 된다. */
     .pc{gap:6px;padding:12px 13px}
@@ -386,7 +393,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-06k</span>
+  <span class="ver">v09-06n</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1431,24 +1438,8 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 
 <section class="tab" id="tab-map" hidden>
 <h2 id="map">오프라인 지도 — GPS 켜면 현재 위치가 뜹니다</h2>
-<p>이 지도는 <b>문서 안에 저장</b>돼 있어서 데이터·와이파이가 없어도 열립니다.
-비행기모드에서도 GPS는 동작하므로 <b>파란 점(현재 위치)</b>도 그대로 뜹니다.</p>
-<div class="box hi">
-<b class="h">🔍 확대하면 더 선명해집니다 (2026-09-06 개선)</b>
-전에는 지도가 <b>한 장짜리</b>였습니다. 6배까지 키우면 원본 픽셀에 딱 닿아서,
-그 이상은 <b>커지기만 하고 글씨는 그대로</b>였습니다. 이제 <b>사진을 세 벌 준비해 두고
-확대 정도에 따라 갈아끼웁니다.</b><br>
-<b>기본</b> 전체 지도 → <b>더 키우면</b> 2배 해상도 사진(전 지역) →
-<b>더 키우면</b> 4배 해상도 사진(도심)<br>
-갈아끼우는 시점은 <b>화면에 그려지는 크기가 원본 크기의 절반을 넘을 때</b>입니다 —
-휴대폰이든 PC든 각자 화면 폭에 맞춰 알아서 바뀝니다.
-<b>최대 배율도 6배에서 최대 16배까지</b> 올렸습니다.<br>
-4배 사진이 덮는 구역은 <b>옌청푸·하마싱·시쯔완·중앙공원·메이리다오</b> —
-실제로 걸어 다니는 곳입니다. 그 밖은 2배까지 선명합니다.<br>
-<b>고해상도 사진은 화면에 들어온 조각만 내려받습니다</b> — 처음 열 때 느려지지 않게 한 것입니다.
-그래도 <b>출발 전에 와이파이에서 한 번씩 확대해 두면</b> 그 구역이 통째로 저장돼
-현지에서 데이터 없이 그대로 보입니다.
-</div>
+
+
 
 <div class="mapctl">
   <button class="mbtn" id="btn-locate">📍 내 위치 찾기</button>
@@ -1468,6 +1459,25 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 <span class="only-desk">(데스크톱은 드래그 이동, Ctrl+휠 확대)</span></p>
 <div class="mlegend" id="mlegend"></div>
 <p class="mattr">지도 © <b>OpenStreetMap</b> 기여자 · ODbL. 개인 여행용으로 내려받아 넣은 이미지입니다.</p>
+
+<p>이 지도는 <b>문서 안에 저장</b>돼 있어서 데이터·와이파이가 없어도 열립니다.
+비행기모드에서도 GPS는 동작하므로 <b>파란 점(현재 위치)</b>도 그대로 뜹니다.</p>
+<div class="box hi">
+<b class="h">🔍 확대하면 더 선명해집니다 (2026-09-06 개선)</b>
+전에는 지도가 <b>한 장짜리</b>였습니다. 6배까지 키우면 원본 픽셀에 딱 닿아서,
+그 이상은 <b>커지기만 하고 글씨는 그대로</b>였습니다. 이제 <b>사진을 세 벌 준비해 두고
+확대 정도에 따라 갈아끼웁니다.</b><br>
+<b>기본</b> 전체 지도 → <b>더 키우면</b> 2배 해상도 사진(전 지역) →
+<b>더 키우면</b> 4배 해상도 사진(도심)<br>
+갈아끼우는 시점은 <b>화면에 그려지는 크기가 원본 크기의 절반을 넘을 때</b>입니다 —
+휴대폰이든 PC든 각자 화면 폭에 맞춰 알아서 바뀝니다.
+<b>최대 배율도 6배에서 최대 16배까지</b> 올렸습니다.<br>
+4배 사진이 덮는 구역은 <b>옌청푸·하마싱·시쯔완·중앙공원·메이리다오</b> —
+실제로 걸어 다니는 곳입니다. 그 밖은 2배까지 선명합니다.<br>
+<b>고해상도 사진은 화면에 들어온 조각만 내려받습니다</b> — 처음 열 때 느려지지 않게 한 것입니다.
+그래도 <b>출발 전에 와이파이에서 한 번씩 확대해 두면</b> 그 구역이 통째로 저장돼
+현지에서 데이터 없이 그대로 보입니다.
+</div>
 
 <h3>이 지도로 되는 것 / 안 되는 것</h3>
 <p class="mnote"><b>됩니다</b> — 지금 내 위치, 담은 일정의 순서와 위치, 후보 장소 위치.
@@ -2014,7 +2024,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
             '<button class="mp" type="button" title="지도에서 보기">◎</button>' +
             '<button class="del" type="button" title="빼기">×</button>' +
           '</span>';
-        li.querySelector('.t2').textContent = p.n;
+        li.querySelector('.t2').textContent = shortName(p.n);
         li.querySelector('em').textContent = CATNAME[p.c] + ' · ' + p.area;
         var tm = li.querySelector('.tm');
         tm.value = it.t || '';
@@ -2058,6 +2068,11 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 
   // ── 지도 ────────────────────────────────────────────────────────
   var onlyPlan = false;
+  // 카드에는 '한국 명칭(한자)'로 두되, 좁은 지도 위에서는 앞부분만 쓴다
+  function shortName(n) {
+    return n.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s*—.*$/, '').trim();
+  }
+
   function renderMarkers() {
     var inner = document.getElementById('mapinner');
     if (!inner || !window.__mapPct) return;
@@ -2077,7 +2092,9 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
       if (info) {
         el.querySelector('b').textContent = info.no;
         el.querySelector('b').style.background = info.c;
-        el.querySelector('i').textContent = p.n;
+        // 지도 라벨에는 한자·부연을 빼고 짧은 이름만. 안 그러면
+        // "롄츠탄 용호탑(蓮池潭 龍虎塔)" 같은 게 옆 마커 라벨과 겹쳐 못 읽는다.
+        el.querySelector('i').textContent = shortName(p.n);
       }
       inner.appendChild(el);
     });
