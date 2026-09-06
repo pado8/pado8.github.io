@@ -5,7 +5,7 @@
    온라인이면 항상 최신본이 바로 뜨고(예전 stale-while-revalidate 는 한 번 더 열어야
    새 내용이 보여서 "고쳤는데 왜 그대로냐"가 됐다), 오프라인이거나 느리면 즉시 캐시본으로 떨어진다.
    나머지 자산(지도·아이콘)은 잘 안 바뀌므로 캐시 우선. */
-const CACHE = 'kaohsiung-2026-09-07m';
+const CACHE = 'kaohsiung-2026-09-07o';
 const DOC = './index.html';
 // 2.5초는 폰 데이터에서 너무 짧았다 — 시간이 넘으면 옛 캐시본이 나가고,
 // 그 판에서는 새로고침 신호도 안 떠서 "고쳤는데 그대로"가 된다.
@@ -16,6 +16,7 @@ const ASSETS = [
   './',
   DOC,
   './map.jpg?v=2',
+  './courses.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
@@ -91,7 +92,17 @@ self.addEventListener('fetch', (e) => {
   if (!url.pathname.startsWith(SCOPE)) return;
 
   if (req.mode === 'navigate') {
-    e.respondWith(docResponse());
+    // 여태 스코프 안의 모든 이동을 index.html 로 돌려보냈다 —
+    // courses.html 로 가도 본문서가 떴다. 본문서일 때만 그렇게 한다.
+    if (url.pathname === SCOPE || url.pathname === SCOPE + 'index.html') {
+      e.respondWith(docResponse());
+      return;
+    }
+    // 다른 페이지는 네트워크 우선, 끊기면 캐시본
+    e.respondWith(
+      fetch(req).then(function (res) { return save(req, res); })
+        .catch(function () { return caches.match(req).then(function (h) { return h || caches.match(DOC); }); })
+    );
     return;
   }
 
