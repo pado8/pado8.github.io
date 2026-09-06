@@ -322,6 +322,19 @@
   .pi .nm.go:hover .t2{color:var(--accent);text-decoration:underline}
   .pi .nm em{font-style:normal;color:var(--dim);font-weight:600;font-size:12px}
     .tw table .sm{color:var(--dim);font-size:11.5px;font-weight:600}
+  /* 직접 적어 넣는 칸 */
+  .ownadd{display:flex;gap:5px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line)}
+  .ownadd input{font:inherit;font-size:13px;padding:7px 8px;border-radius:8px;min-width:0;
+      border:1px solid var(--line);background:var(--card2);color:var(--ink)}
+  .ownadd .ot{flex:0 0 52px;width:52px;text-align:center}
+  .ownadd .on{flex:1 1 auto}
+  .ownadd button{font:inherit;font-size:12.5px;font-weight:800;padding:0 11px;border-radius:8px;
+      flex:0 0 auto;cursor:pointer;border:1px solid var(--line);
+      background:var(--card2);color:var(--ink2)}
+  .ownadd button:hover{border-color:var(--accent);color:var(--accent)}
+  .pi.mine .no{background:var(--dim)}
+  .pi.mine .nm{cursor:pointer}
+  .pi.mine .t2{font-style:italic}
   .pi .no:active{cursor:grabbing}
   .pi.drag{opacity:.5;background:var(--card2);border-radius:8px}
   .pi.drag .no{cursor:grabbing}
@@ -424,7 +437,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-07j</span>
+  <span class="ver">v09-07m</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1637,9 +1650,10 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 <a class="dl" href="mymaps/가오슝-맛집.csv" download>맛집 33곳</a>
 <a class="dl" href="mymaps/가오슝-카페.csv" download>카페 7곳</a>
 <a class="dl" href="mymaps/가오슝-쇼핑.csv" download>쇼핑 8곳</a>
-<a class="dl" href="mymaps/가오슝-숙소.csv" download>숙소 26곳</a><br><br>
+<a class="dl" href="mymaps/가오슝-숙소.csv" download>숙소 26곳</a>
+<a class="dl" href="mymaps/가오슝-공항-이동.csv" download>공항·이동 3곳</a><br><br>
 <b>한 번에</b> — 종류가 폴더로 나뉜 KML 한 파일<br>
-<a class="dl" href="mymaps/가오슝-전체.kml" download>전체 106곳 (KML)</a>
+<a class="dl" href="mymaps/가오슝-전체.kml" download>전체 105곳 (KML)</a>
 </div>
 <div class="box bad">
 <b class="h">⚠ 가져오기는 컴퓨터에서만 됩니다</b>
@@ -1662,8 +1676,8 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 
 <div class="box ok">
 <b class="h">✔ KML 하나면 끝납니다 — 레이어까지 알아서 나뉩니다</b>
-<b>가오슝-전체.kml</b> 하나만 올리면 내 지도가 <b>명소·맛집·카페·쇼핑·숙소
-다섯 레이어로 알아서 쪼개 줍니다.</b> 파일 안에 종류가 폴더로 들어 있어서입니다.
+<b>가오슝-전체.kml</b> 하나만 올리면 내 지도가 <b>명소·맛집·카페·쇼핑·숙소·공항
+여섯 레이어로 알아서 쪼개 줍니다.</b> 파일 안에 종류가 폴더로 들어 있어서입니다.
 <b>아이콘과 색도 종류별로 붙어 있습니다</b> — 명소는 카메라(파랑), 맛집은 포크(빨강),
 카페는 커피잔(갈색), 쇼핑은 쇼핑백(보라), 숙소는 침대(초록).<br>
 <b>CSV 다섯 개</b>는 레이어를 손수 나누고 싶거나, 나중에 한 종류만 갈아 끼울 때 쓰세요.<br>
@@ -2108,9 +2122,37 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   function numbers() {
     var m = {}, n = 0;
     DAYS.forEach(function (d) {
-      plan[d.k].forEach(function (it) { n++; m[it.id] = { no: n, day: d.k, c: d.c }; });
+      plan[d.k].forEach(function (it) {
+        if (own(it)) return;              // 직접 넣은 건 지도에 안 찍히므로 번호도 없다
+        n++; m[it.id] = { no: n, day: d.k, c: d.c };
+      });
     });
     return m;
+  }
+
+  // 시각 입력을 너그럽게 읽는다. "12"는 12:00, "1230"은 12:30, "9:5"는 09:05.
+  // 전에는 3~4자리만 받아서 "12"라고 치면 그냥 지워졌다.
+  function hhmm(v) {
+    v = (v || '').replace(/[^\d:]/g, '');
+    if (!v) return '';
+    var h, m;
+    if (v.indexOf(':') > -1) { var a = v.split(':'); h = a[0]; m = a[1] || '0'; }
+    else if (v.length <= 2) { h = v; m = '0'; }
+    else { h = v.slice(0, v.length - 2); m = v.slice(-2); }
+    h = parseInt(h, 10); m = parseInt(m, 10);
+    if (isNaN(h) || isNaN(m) || h > 23 || m > 59) return '';
+    return (h < 10 ? '0' + h : '' + h) + ':' + (m < 10 ? '0' + m : '' + m);
+  }
+
+  // 직접 쓴 항목인지 — id 앞에 my: 가 붙는다
+  function own(it) { return it && typeof it.id === 'string' && it.id.indexOf('my:') === 0; }
+
+  function addOwn(day, text, time) {
+    text = (text || '').trim();
+    if (!text) return;
+    plan[day].push({ id: 'my:' + Date.now() + Math.random().toString(36).slice(2, 6),
+                     t: time || '', txt: text });
+    sortDay(day); save(); renderAll();
   }
 
   function add(id, day) {
@@ -2304,15 +2346,21 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
       total += items.length; mins += dmin;
       c.innerHTML = '<h4><s></s>' + d.t + '</h4><p class="dsub">' + d.d + '</p>' +
                     '<ul class="plist2"></ul>' +
+                    '<form class="ownadd" autocomplete="off">' +
+                      '<input class="ot" type="text" inputmode="numeric" placeholder="시간" maxlength="5">' +
+                      '<input class="on" type="text" placeholder="직접 적기 — 예: 숙소에서 쉬기">' +
+                      '<button type="submit">담기</button>' +
+                    '</form>' +
                     '<div class="dayfoot"><span>' + items.length + '곳</span>' +
                     '<span>' + (dmin ? '체류 약 ' + Math.round(dmin / 60 * 10) / 10 + '시간' : '—') + '</span></div>';
       var ul = c.querySelector('ul');
       if (!items.length) {
-        ul.innerHTML = '<li class="empty">아직 담은 곳이 없습니다.<br>명소·맛집·숙소 탭에서 “+ 일정에 담기”를 누르세요.</li>';
+        ul.innerHTML = '<li class="empty">아직 담은 곳이 없습니다.<br>명소·맛집·숙소 탭에서 “+ 일정에 담기”를 누르거나,<br>아래 칸에 <b>직접 적어</b> 넣으세요.</li>';
       }
       items.forEach(function (it, i) {
         var p = BYID[it.id];
-        if (!p) return;
+        var mine = own(it);
+        if (!p && !mine) return;
         var li = document.createElement('li');
         li.className = 'pi';
         li.dataset.pid = it.id;
@@ -2324,19 +2372,28 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
           '<span class="ops">' +
             '<button class="del" type="button" title="빼기">×</button>' +
           '</span>';
-        li.querySelector('.t2').textContent = shortName(p.n);
-        li.querySelector('em').textContent = CATNAME[p.c] + ' · ' + p.area;
+        li.querySelector('.t2').textContent = mine ? it.txt : shortName(p.n);
+        li.querySelector('em').textContent = mine ? '직접 적은 것 — 눌러서 고치기'
+                                                  : CATNAME[p.c] + ' · ' + p.area;
+        if (mine) li.classList.add('mine');
         var tm = li.querySelector('.tm');
         tm.value = it.t || '';
         tm.addEventListener('change', function () {
-          var v = tm.value.replace(/[^\d:]/g, '');
-          if (/^\d{3,4}$/.test(v)) v = v.slice(0, v.length - 2) + ':' + v.slice(-2);
-          it.t = /^\d{1,2}:\d{2}$/.test(v) ? v : '';
+          it.t = hhmm(tm.value);
           sortDay(d.k); save(); renderAll();
         });
         li.querySelector('.del').addEventListener('click', function () { remove(it.id); });
+        if (mine) {
+          li.querySelector('.nm').addEventListener('click', function () {
+            var v = prompt('내용을 고치세요', it.txt);
+            if (v === null) return;
+            v = v.trim();
+            if (!v) { remove(it.id); return; }   // 비우면 지운다
+            it.txt = v; save(); renderAll();
+          });
+        }
         // 이름을 누르면 지도로 — ◎ 버튼을 없앤 자리를 대신한다
-        if (!p.nomap) {
+        else if (!p.nomap) {
           var nm = li.querySelector('.nm');
           nm.classList.add('go');
           nm.addEventListener('click', function () { focusOn(p); });
@@ -2344,6 +2401,12 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
         ul.appendChild(li);
       });
       dragify(ul, d.k);
+      var f = c.querySelector('form.ownadd');
+      f.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var tm = hhmm(f.querySelector('.ot').value);
+        addOwn(d.k, f.querySelector('.on').value, tm);
+      });
       host.appendChild(c);
     });
     var sum = document.getElementById('plsum');
