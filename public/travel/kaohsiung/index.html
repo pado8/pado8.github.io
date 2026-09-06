@@ -55,6 +55,11 @@
   .net s{width:7px;height:7px;border-radius:50%;background:var(--ok);display:block}
   .net.off s{background:var(--dim)}
   .ver{font-size:10.5px;color:var(--dim);opacity:.7;letter-spacing:.02em}
+  /* 판 번호를 눌러 최신본을 받아올 수 있게 — 손가락으로 누를 만한 크기로 */
+  .ver.tap{opacity:.85;cursor:pointer;padding:5px 9px;border-radius:8px;
+           border:1px solid var(--line);background:var(--card2);
+           -webkit-tap-highlight-color:transparent}
+  .ver.tap:hover,.ver.tap:focus-visible{color:var(--accent);border-color:var(--accent);outline:0}
   .lead{color:var(--dim);margin:14px 0 0;font-size:14.5px;line-height:1.65}
 
   /* ── 상단 탭 ────────────────────────────────────────────────────── */
@@ -408,7 +413,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-06w</span>
+  <span class="ver">v09-06y</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1850,10 +1855,66 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   addEventListener('online', sync); addEventListener('offline', sync); sync();
 
   // ── 서비스워커 ──────────────────────────────────────────────────
+  // 전에는 등록만 하고 끝이라, 새 판을 올려도 폰에서는 옛 화면이 계속 보였다.
+  // 홈 화면에서 띄운 앱은 화면을 다시 켜도 새로 받아오질 않아서 더 그랬다.
+  // 그래서 ① 돌아올 때마다 새 판이 있는지 묻고 ② 새 워커가 잡으면 한 번 새로고침한다.
   if ('serviceWorker' in navigator) {
+    var hadSW = !!navigator.serviceWorker.controller;   // 첫 설치면 새로고침할 필요 없다
+    var reloaded = false;
+    var lastCheck = 0;
+    var reg = null;
+
+    function checkUpdate(force) {
+      if (!reg) return;
+      var now = Date.now();
+      if (!force && now - lastCheck < 60000) return;    // 1분에 한 번이면 충분하다
+      lastCheck = now;
+      try { reg.update(); } catch (e) {}
+    }
+
+    navigator.serviceWorker.addEventListener('controllerchange', function () {
+      if (!hadSW || reloaded) return;
+      // 시간 칸에 뭔가 치고 있는 중이면 건드리지 않는다
+      var a = document.activeElement;
+      if (a && a.tagName === 'INPUT') return;
+      reloaded = true;
+      location.reload();
+    });
+
     addEventListener('load', function () {
-      navigator.serviceWorker.register('sw.js').catch(function (e) {
-        console.warn('SW 등록 실패', e);
+      navigator.serviceWorker.register('sw.js').then(function (r) {
+        reg = r;
+        checkUpdate(true);
+      }).catch(function (e) { console.warn('SW 등록 실패', e); });
+    });
+
+    // 앱으로 돌아왔을 때가 새 판을 확인하기 가장 좋은 순간이다
+    addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') checkUpdate(false);
+    });
+    addEventListener('online', function () { checkUpdate(true); });
+
+    // 머리말의 판 번호를 누르면 그 자리에서 새 판을 받아온다
+    addEventListener('load', function () {
+      var chip = document.querySelector('.ver');
+      if (!chip) return;
+      var ver = chip.textContent;
+      chip.classList.add('tap');
+      chip.setAttribute('role', 'button');
+      chip.setAttribute('tabindex', '0');
+      chip.title = '눌러서 최신 판 받아오기';
+      function pull() {
+        chip.textContent = '받는 중…';
+        checkUpdate(true);
+        // 새 워커가 잡으면 controllerchange 가 알아서 새로고침한다.
+        // 안 잡히면(이미 최신) 그냥 되돌려 놓는다.
+        setTimeout(function () {
+          if (!reloaded) { chip.textContent = ver + ' · 최신'; }
+        }, 1500);
+      }
+      chip.addEventListener('click', pull);
+      chip.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pull(); }
       });
     });
   }

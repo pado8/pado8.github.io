@@ -5,9 +5,12 @@
    온라인이면 항상 최신본이 바로 뜨고(예전 stale-while-revalidate 는 한 번 더 열어야
    새 내용이 보여서 "고쳤는데 왜 그대로냐"가 됐다), 오프라인이거나 느리면 즉시 캐시본으로 떨어진다.
    나머지 자산(지도·아이콘)은 잘 안 바뀌므로 캐시 우선. */
-const CACHE = 'kaohsiung-2026-09-06w';
+const CACHE = 'kaohsiung-2026-09-06y';
 const DOC = './index.html';
-const NET_TIMEOUT = 2500;
+// 2.5초는 폰 데이터에서 너무 짧았다 — 시간이 넘으면 옛 캐시본이 나가고,
+// 그 판에서는 새로고침 신호도 안 떠서 "고쳤는데 그대로"가 된다.
+// 오프라인일 때는 fetch 가 바로 실패하므로 이 값이 기다림으로 이어지지 않는다.
+const NET_TIMEOUT = 4000;
 const SCOPE = new URL('./', self.registration.scope).pathname;
 const ASSETS = [
   './',
