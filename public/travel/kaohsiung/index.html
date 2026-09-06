@@ -54,6 +54,10 @@
               font-weight:800;letter-spacing:.01em}
   .net s{width:7px;height:7px;border-radius:50%;background:var(--ok);display:block}
   .net.off s{background:var(--dim)}
+  .gmwrap{position:relative;width:100%;aspect-ratio:4/3;max-height:70vh;margin:10px 0 4px;
+      border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--card2)}
+  .gmwrap .gmap{position:absolute;inset:0;width:100%;height:100%;border:0}
+  @media(min-width:760px){.gmwrap{aspect-ratio:16/10}}
   .dl{display:inline-block;margin:6px 6px 0 0;padding:8px 12px;border-radius:9px;
       font-size:13px;font-weight:800;text-decoration:none;
       border:1px solid var(--line);background:var(--card2);color:var(--ink)}
@@ -420,7 +424,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-07f</span>
+  <span class="ver">v09-07g</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1603,6 +1607,25 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 길찾기는 구글 지도 앱이 맡습니다. <b>출국 전 와이파이에서 가오슝 오프라인 지도를 받아두세요</b> —
 구글 지도 → 프로필 → 오프라인 지도 → 직접 지도 선택 → 가오슝 전체가 들어오게 범위 조절 → 다운로드.
 받아두면 각 카드의 <b>구글맵</b> 버튼이 데이터 없이도 열립니다.</p>
+
+<h3>우리 구글 내 지도</h3>
+<p class="mnote">친구들과 같이 편집하는 지도입니다. <b>여기서 고치면 아래에도 바로 반영</b>됩니다.
+인터넷이 있어야 보이고, <b>오프라인일 때는 위쪽 지도를 쓰세요.</b></p>
+<div class="gmwrap">
+  <iframe class="gmap" loading="lazy" title="우리 구글 내 지도"
+    src="https://www.google.com/maps/d/embed?mid=1zgsrQ-u64ym9JBCtQmVDPGH6NtcTUGI&amp;ehbc=2E312F"></iframe>
+</div>
+<p class="mnote">
+<a class="dl" href="https://www.google.com/maps/d/viewer?mid=1zgsrQ-u64ym9JBCtQmVDPGH6NtcTUGI" target="_blank" rel="noopener">구글 지도 앱에서 열기</a>
+<a class="dl" href="https://www.google.com/maps/d/edit?mid=1zgsrQ-u64ym9JBCtQmVDPGH6NtcTUGI" target="_blank" rel="noopener">편집하기 (편집 권한 있는 사람만)</a>
+</p>
+<div class="box warn">
+<b class="h">⚠ 편집 링크를 단톡방에 그냥 뿌리지 마세요</b>
+<b>/edit</b> 이 붙은 주소는 <b>편집용</b>입니다. 지도 공유 설정이 “링크가 있는 모든 사용자 — <b>편집자</b>”로
+되어 있으면 <b>링크를 받은 누구나 지우고 고칠 수 있습니다.</b><br>
+구글 내 지도 → <b>공유</b>에서 <b>“링크가 있는 모든 사용자 — 뷰어”</b>로 두고,
+같이 고칠 친구만 <b>이메일로 편집자 초대</b>하세요. 그래야 위 임베드도 친구들에게 보이면서 안전합니다.
+</div>
 
 <h3>구글 “내 지도”로 가져가기</h3>
 <p class="mnote">문서에 담긴 <b>106곳을 좌표째로</b> 내려받아 구글 내 지도에 그대로 올릴 수 있습니다.
