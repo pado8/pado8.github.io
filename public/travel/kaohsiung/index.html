@@ -178,7 +178,69 @@
   .mapinner img.dtl{position:absolute;display:block;opacity:0;z-index:1;
                     transition:opacity .18s linear}
   .mapinner img.dtl.on{opacity:1}
-    /* 한글 구역 라벨. 마커보다 아래(z-index 2)에 두고 흐리게 깔아 길잡이로만 쓴다. */
+  
+  /* ── 코스 탭 ────────────────────────────────────────────── */
+  .cs{position:relative}
+  .cshead{display:flex;gap:12px;align-items:flex-start;margin:14px 0 10px}
+  .csno{flex:0 0 auto;font-size:30px;font-weight:900;letter-spacing:-.04em;
+        color:var(--accent);line-height:1;padding-top:2px}
+  .cstit{min-width:0}
+  .cskicker{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;
+            color:var(--dim);text-transform:uppercase}
+  .cstit b{display:block;font-size:19px;letter-spacing:-.03em;line-height:1.25;margin:2px 0 3px}
+  .csline{display:block;font-size:12.5px;color:var(--ink2);line-height:1.5}
+  .cschips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .cschips button{font:inherit;font-size:12.5px;font-weight:700;padding:7px 11px;
+        border-radius:9px;cursor:pointer;border:1px solid var(--line);
+        background:var(--card2);color:var(--ink2);max-width:100%;
+        overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cschips button b{color:var(--accent);margin-right:5px}
+  .cschips button.on{border-color:var(--accent);color:var(--accent);background:var(--card)}
+  .csmapwrap{position:relative;width:100%;aspect-ratio:4/3;max-height:66vh;
+        border-radius:14px;overflow:hidden;border:1px solid var(--line);
+        background:var(--card2)}
+  @media(min-width:760px){.csmapwrap{aspect-ratio:16/9}}
+  #csMap{position:absolute;inset:0}
+  .csfail{position:absolute;inset:0;display:flex;flex-direction:column;gap:7px;
+        align-items:center;justify-content:center;text-align:center;padding:20px;
+        background:var(--card2);z-index:2}
+  .csfail b{font-size:15px}
+  .csfail span{font-size:13px;color:var(--dim)}
+  .cstools{position:absolute;right:9px;bottom:9px;display:flex;gap:5px;z-index:3}
+  .cstools button{font:inherit;font-size:12px;font-weight:800;padding:7px 10px;
+        border-radius:8px;cursor:pointer;border:1px solid var(--line);
+        background:var(--card);color:var(--ink2);box-shadow:var(--sh)}
+  .cstools button:hover{border-color:var(--accent);color:var(--accent)}
+  .csdays{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:12px 0 4px}
+  .csdays button{font:inherit;font-size:13px;font-weight:800;width:46px;height:38px;
+        border-radius:10px;cursor:pointer;border:1px solid var(--line);
+        background:var(--card2);color:var(--ink2)}
+  .csdays button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .csdays button small{display:block;font-size:9.5px;font-weight:700;opacity:.75}
+  .cspanel{position:relative;margin-top:12px;background:var(--card);
+        border:1px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:var(--sh)}
+  @media(min-width:900px){
+    .csmapwrap{aspect-ratio:16/10}
+    .cspanel{position:absolute;right:12px;top:150px;width:300px;margin:0;z-index:4;
+             max-height:58%;overflow-y:auto}
+  }
+  .csclose{position:absolute;right:9px;top:9px;width:27px;height:27px;border-radius:8px;
+        font:inherit;font-size:15px;cursor:pointer;border:1px solid var(--line);
+        background:var(--card2);color:var(--dim)}
+  .cspk{font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--accent)}
+  .cspn{display:block;font-size:17px;letter-spacing:-.02em;margin:3px 0 2px;padding-right:26px}
+  .cspm{display:block;font-size:12px;color:var(--dim);margin-bottom:9px}
+  .cspb{font-size:13.5px;line-height:1.6;color:var(--ink2)}
+  .cspb h5{margin:11px 0 3px;font-size:12px;color:var(--dim);
+        letter-spacing:.04em;font-weight:800}
+  .cspl{margin-top:11px;font-size:12.5px}
+  /* 지도 위 번호 마커 */
+  .csmk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+        font-size:12px;font-weight:800;color:#fff;cursor:pointer;
+        border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+  .csmk.on{transform:scale(1.25)}
+  .maplibregl-ctrl-attrib{font-size:10px}
+  /* 한글 구역 라벨. 마커보다 아래(z-index 2)에 두고 흐리게 깔아 길잡이로만 쓴다. */
   .ar{position:absolute;transform:translate(-50%,-50%) scale(calc(1 / var(--k,1)));
       z-index:2;pointer-events:none;white-space:nowrap;
       font-size:11.5px;font-weight:800;letter-spacing:-.02em;
@@ -437,11 +499,11 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-07p</span>
+  <span class="ver">v09-07s</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
-<nav class="bn"><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a></nav>
+<nav class="bn"><a href="#tips" data-tab="tips">팁</a><a href="#air" data-tab="air">항공</a><a href="#stay" data-tab="stay">숙소</a><a href="#plan" data-tab="plan">일정</a><a href="#shop" data-tab="shop">쇼핑</a><a href="#food" data-tab="food">맛집</a><a href="#map" data-tab="map">지도</a><a href="#course" data-tab="course">코스</a></nav>
 
 <section class="tab" id="tab-tips" hidden>
 <h2>이 날짜에만 걸리는 함정</h2>
@@ -682,6 +744,9 @@
 <li><b>페이스 차이</b> — 부부마다 체력이 다릅니다. 오후에 <b>2시간쯤 각자 시간</b>을 넣어두면 오히려 전체 만족도가 올라갑니다</li>
 </ul>
 </div>
+
+
+
 <footer>
 <p class="mnote"><b>요금·평점·빈방은 전부 조회 시점 값입니다</b> —
 항공 요금 2026-09-05, 식당·명소 평점 2026-09-05, 숙소 요금과 빈방 2026-09-06 기준입니다.
@@ -1700,6 +1765,51 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 추가 직후 한 번은 온라인 상태에서 열어 저장을 끝내주세요.
 </div>
 </section>
+
+<section class="tab" id="tab-course" hidden>
+<h2 id="course">코스 — 그날 일정을 걸어보기</h2>
+<p class="mnote"><b>일정 탭에 담은 곳</b>을 날짜별로 3D 지도 위에 올립니다.
+번호를 누르면 오른쪽에 그 장소 설명이 뜹니다.
+<b>인터넷이 있어야 보입니다</b> — 오프라인일 때는 지도 탭의 오프라인 지도를 쓰세요.</p>
+
+<div class="cs">
+  <div class="cshead">
+    <div class="csno" id="csNo">01</div>
+    <div class="cstit">
+      <span class="cskicker">가오슝 · 3박4일</span>
+      <b id="csTitle">하루를 고르세요</b>
+      <span class="csline" id="csLine"></span>
+    </div>
+  </div>
+
+  <div class="cschips" id="csChips"></div>
+
+  <div class="csmapwrap">
+    <div id="csMap"></div>
+    <div class="csfail" id="csFail" hidden>
+      <b>3D 지도는 인터넷이 있어야 보입니다</b>
+      <span>오프라인이거나 지도 서버에 닿지 못했습니다.</span>
+      <a href="#map" class="dl">오프라인 지도로 가기</a>
+    </div>
+    <div class="cstools">
+      <button type="button" id="csTilt">기울이기</button>
+      <button type="button" id="csFit">전체 보기</button>
+      <button type="button" id="csPlay">▶ 슬라이드쇼</button>
+    </div>
+  </div>
+
+  <div class="csdays" id="csDays"></div>
+
+  <aside class="cspanel" id="csPanel" hidden>
+    <button type="button" class="csclose" id="csClose" aria-label="닫기">×</button>
+    <span class="cspk" id="csPk"></span>
+    <b class="cspn" id="csPn"></b>
+    <span class="cspm" id="csPm"></span>
+    <div class="cspb" id="csPb"></div>
+    <div class="cspl"><a id="csPg" target="_blank" rel="noopener">구글 지도에서 보기 ↗</a></div>
+  </aside>
+</div>
+</section>
 </div>
 <script>
 /* 오프라인 지도 + 현재 위치 + PWA 등록
@@ -2513,7 +2623,243 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     }, 120);
   }
 
-  function renderAll() { renderCards(); renderPlan(); renderMarkers(); }
+
+  // ── 코스 탭 ─────────────────────────────────────────────────
+  // 일정 탭에 담은 곳을 날짜별로 3D 지도에 올린다.
+  // MapLibre + OpenFreeMap — 키도 가입도 요금도 없다. 다만 온라인이어야 한다.
+  // 문서 첫 로딩을 늦추지 않도록, 탭을 처음 열 때 라이브러리를 받는다.
+  var CS = {
+    day: '1', sel: null, map: null, mks: [], loading: false, ready: false,
+    play: null, tilt: true
+  };
+  var CS_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
+  var CS_LIB = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.14.0/maplibre-gl.js';
+  var CS_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.14.0/maplibre-gl.css';
+
+  // 그날 일정에서 좌표가 있는 곳만 (직접 적은 항목·좌표 없는 항목은 뺀다)
+  function csStops(day) {
+    var out = [];
+    (plan[day] || []).forEach(function (it) {
+      var p = BYID[it.id];
+      if (!p || p.nomap || !p.lat) return;
+      out.push({ p: p, t: it.t || '' });
+    });
+    return out;
+  }
+
+  function csDayTitle(day) {
+    var st = csStops(day);
+    if (!st.length) return '아직 담은 곳이 없습니다';
+    var areas = [];
+    st.forEach(function (x) { if (areas.indexOf(x.p.area) < 0) areas.push(x.p.area); });
+    return areas.slice(0, 2).join(' · ') + (areas.length > 2 ? ' 외' : '') + '를 걷는 날';
+  }
+
+  function csRender() {
+    var d = DAYS.filter(function (x) { return x.k === CS.day; })[0] || DAYS[0];
+    var st = csStops(CS.day);
+    document.getElementById('csNo').textContent = ('0' + CS.day).slice(-2);
+    document.getElementById('csNo').style.color = d.c;
+    document.getElementById('csTitle').textContent = csDayTitle(CS.day);
+    document.getElementById('csLine').textContent =
+      st.length ? st.map(function (x) { return shortName(x.p.n); }).join(' → ') : '';
+
+    var chips = document.getElementById('csChips');
+    chips.innerHTML = '';
+    st.forEach(function (x, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.innerHTML = '<b>' + (i + 1) + '</b>' + shortName(x.p.n);
+      if (CS.sel === x.p.id) b.className = 'on';
+      b.addEventListener('click', function () { csPick(x.p.id, true); });
+      chips.appendChild(b);
+    });
+
+    var days = document.getElementById('csDays');
+    days.innerHTML = '';
+    DAYS.forEach(function (dd) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.innerHTML = ('0' + dd.k).slice(-2) + '<small>' + dd.d + '</small>';
+      if (dd.k === CS.day) b.className = 'on';
+      b.addEventListener('click', function () {
+        CS.day = dd.k; CS.sel = null; csStop();
+        document.getElementById('csPanel').hidden = true;
+        csRender(); csMarkers(); csFit();
+      });
+      days.appendChild(b);
+    });
+  }
+
+  function csPanel(p, no) {
+    var el = document.getElementById('csPanel');
+    document.getElementById('csPk').textContent =
+      'PLACE ' + ('0' + no).slice(-2) + ' / ' + (CATNAME[p.c] || '');
+    document.getElementById('csPn').textContent = p.n.split(' — ')[0];
+    document.getElementById('csPm').textContent =
+      [p.r, p.area, p.dur ? '약 ' + Math.round(p.dur / 60 * 10) / 10 + '시간' : '']
+        .filter(Boolean).join(' · ');
+    var b = '';
+    if (p.acc) b += '<h5>가는 법</h5>' + p.acc;
+    if (p.why) b += '<h5>왜 이곳인가</h5>' + p.why;
+    document.getElementById('csPb').innerHTML = b;
+    document.getElementById('csPg').href =
+      'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
+    el.hidden = false;
+  }
+
+  function csPick(id, fly) {
+    CS.sel = id;
+    var st = csStops(CS.day);
+    var idx = -1;
+    st.forEach(function (x, i) { if (x.p.id === id) idx = i; });
+    if (idx < 0) return;
+    csPanel(st[idx].p, idx + 1);
+    CS.mks.forEach(function (m) {
+      m.el.classList.toggle('on', m.id === id);
+    });
+    csRender();
+    if (fly && CS.map) {
+      CS.map.flyTo({ center: [st[idx].p.lng, st[idx].p.lat], zoom: 16.5,
+                     pitch: CS.tilt ? 60 : 0, duration: 900 });
+    }
+  }
+
+  // 경로 선은 스타일이 올라온 뒤에만 얹을 수 있다
+  function csLine() {
+    if (!CS.map || !CS.map.isStyleLoaded || !CS.map.isStyleLoaded()) return;
+    var d = DAYS.filter(function (x) { return x.k === CS.day; })[0] || DAYS[0];
+    var st = csStops(CS.day);
+    var line = { type: 'Feature', geometry: { type: 'LineString',
+      coordinates: st.map(function (x) { return [x.p.lng, x.p.lat]; }) } };
+    if (CS.map.getSource('csline')) CS.map.getSource('csline').setData(line);
+    else {
+      CS.map.addSource('csline', { type: 'geojson', data: line });
+      CS.map.addLayer({ id: 'csline', type: 'line', source: 'csline',
+        paint: { 'line-color': d.c, 'line-width': 3, 'line-opacity': .55,
+                 'line-dasharray': [2, 1.6] } });
+    }
+    CS.map.setPaintProperty('csline', 'line-color', d.c);
+  }
+
+  function csMarkers() {
+    if (!CS.map || !window.maplibregl) return;
+    CS.mks.forEach(function (m) { m.mk.remove(); });
+    CS.mks = [];
+    var d = DAYS.filter(function (x) { return x.k === CS.day; })[0] || DAYS[0];
+    var st = csStops(CS.day);
+    st.forEach(function (x, i) {
+      var el = document.createElement('div');
+      el.className = 'csmk';
+      el.style.background = d.c;
+      el.textContent = i + 1;
+      el.addEventListener('click', function (e) { e.stopPropagation(); csPick(x.p.id, true); });
+      var mk = new maplibregl.Marker({ element: el })
+        .setLngLat([x.p.lng, x.p.lat]).addTo(CS.map);
+      CS.mks.push({ id: x.p.id, el: el, mk: mk });
+    });
+    try { csLine(); } catch (e) {}
+  }
+
+  function csFit() {
+    if (!CS.map || !window.maplibregl) return;
+    var st = csStops(CS.day);
+    if (!st.length) return;
+    var b = new maplibregl.LngLatBounds();
+    st.forEach(function (x) { b.extend([x.p.lng, x.p.lat]); });
+    CS.map.fitBounds(b, { padding: { top: 60, bottom: 90, left: 40, right: 40 },
+                          maxZoom: 15.5, pitch: CS.tilt ? 55 : 0, duration: 800 });
+  }
+
+  function csStop() {
+    if (CS.play) { clearInterval(CS.play); CS.play = null; }
+    var b = document.getElementById('csPlay');
+    if (b) b.textContent = '▶ 슬라이드쇼';
+  }
+
+  function csTogglePlay() {
+    if (CS.play) { csStop(); return; }
+    var st = csStops(CS.day);
+    if (st.length < 2) return;
+    var i = 0;
+    document.getElementById('csPlay').textContent = '■ 멈추기';
+    csPick(st[0].p.id, true);
+    CS.play = setInterval(function () {
+      i = (i + 1) % st.length;
+      csPick(st[i].p.id, true);
+    }, 4200);
+  }
+
+  function csLoad() {
+    if (CS.ready || CS.loading) { if (CS.ready) { csMarkers(); csFit(); } return; }
+    CS.loading = true;
+    var fail = document.getElementById('csFail');
+    function boom() { CS.loading = false; if (fail) fail.hidden = false; }
+    if (!navigator.onLine) { boom(); return; }
+
+    var css = document.createElement('link');
+    css.rel = 'stylesheet'; css.href = CS_CSS;
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = CS_LIB;
+    js.onerror = boom;
+    js.onload = function () {
+      try {
+        CS.map = new maplibregl.Map({
+          container: 'csMap', style: CS_STYLE,
+          center: [120.3018, 22.6316], zoom: 13.2, pitch: 55, bearing: -18,
+          attributionControl: { compact: true }
+        });
+        CS.map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+        // ⚠ 실패 판정을 error 로 하면 안 된다 — Liberty 스타일이
+        // "Expected value to be of type number" 같은 경고를 error 로 여러 번 던진다.
+        // ⚠ load 하나에만 걸어도 안 된다 — 화면이 가려져 있으면 그리기가 멈춰
+        // load 가 영영 안 온다(창을 최소화했을 때도 마찬가지다).
+        // 그래서 "스타일이 왔는가(styledata)"를 살아있음의 신호로 쓴다.
+        var alive = false;
+        var giveUp = setTimeout(function () { if (!alive) boom(); }, 15000);
+        function up() {
+          alive = true; clearTimeout(giveUp);
+          CS.ready = true; CS.loading = false;
+          if (fail) fail.hidden = true;
+          csMarkers(); csFit();
+        }
+        CS.map.on('styledata', function () { up(); try { csLine(); } catch (e) {} });
+        CS.map.on('load', up);
+        // 마커는 스타일과 무관한 DOM 이라 바로 붙여도 된다
+        csMarkers();
+      } catch (e) { boom(); }
+    };
+    document.head.appendChild(js);
+  }
+
+  (function csInit() {
+    var t = document.getElementById('csTilt');
+    if (!t) return;
+    t.addEventListener('click', function () {
+      CS.tilt = !CS.tilt;
+      if (CS.map) CS.map.easeTo({ pitch: CS.tilt ? 55 : 0, duration: 600 });
+      t.textContent = CS.tilt ? '눕히기' : '기울이기';
+    });
+    document.getElementById('csFit').addEventListener('click', function () { csStop(); csFit(); });
+    document.getElementById('csPlay').addEventListener('click', csTogglePlay);
+    document.getElementById('csClose').addEventListener('click', function () {
+      document.getElementById('csPanel').hidden = true;
+      CS.sel = null; CS.mks.forEach(function (m) { m.el.classList.remove('on'); }); csRender();
+    });
+    csRender();
+    // 탭 전환은 다른 IIFE 에서 일어난다 — 거기서 부를 수 있게 사다리를 놓는다
+    window.__csEnter = function () {
+      csRender(); csLoad();
+      if (CS.map) setTimeout(function () { CS.map.resize(); csFit(); }, 60);
+    };
+    window.__csLeave = csStop;
+  })();
+
+  function renderAll() {
+    renderCards(); renderPlan(); renderMarkers();
+    csRender(); if (CS.ready) csMarkers();
+  }
 
   // ── 버튼 연결 ───────────────────────────────────────────────────
   function bind() {
@@ -2577,7 +2923,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 /* 탭 전환 — 문서가 길어서 한 화면에 하나씩만 보여준다.
    마지막으로 본 탭을 기억하고, #해시로 바로 들어올 수도 있다. */
 (function () {
-  var TABS = ['tips', 'air', 'stay', 'plan', 'shop', 'food', 'map'];
+  var TABS = ['tips', 'air', 'stay', 'plan', 'shop', 'food', 'map', 'course'];
   var links = [].slice.call(document.querySelectorAll('nav.bn a[data-tab]'));
 
   function show(id, push) {
@@ -2596,6 +2942,9 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     }
     // 숨어 있는 동안은 폭이 0이라 지도 위치 계산이 안 된다 — 보이는 순간 다시 잡는다
     if (id === 'map' && window.__mapRelayout) window.__mapRelayout();
+    // 코스 탭은 다른 IIFE 라 window 로 내보낸 사다리를 탄다
+    if (id === 'course') { if (window.__csEnter) window.__csEnter(); }
+    else if (window.__csLeave) window.__csLeave();
   }
 
   links.forEach(function (a) {
