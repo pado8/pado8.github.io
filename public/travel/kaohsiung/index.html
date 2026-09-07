@@ -206,6 +206,11 @@
         background:var(--card2);z-index:2}
   .csfail b{font-size:15px}
   .csfail span{font-size:13px;color:var(--dim)}
+  .csfail code{font-size:11px;color:var(--dim);background:var(--card);padding:6px 9px;
+        border-radius:7px;border:1px solid var(--line);max-width:92%;
+        word-break:break-all;line-height:1.5}
+  .csfail code:empty{display:none}
+  .csfx{display:flex;gap:7px;margin-top:4px}
   .cstools{position:absolute;right:9px;bottom:9px;display:flex;gap:5px;z-index:3}
   .cstools button{font:inherit;font-size:12px;font-weight:800;padding:7px 10px;
         border-radius:8px;cursor:pointer;border:1px solid var(--line);
@@ -499,7 +504,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-07t</span>
+  <span class="ver">v09-08a</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1787,9 +1792,13 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   <div class="csmapwrap">
     <div id="csMap"></div>
     <div class="csfail" id="csFail" hidden>
-      <b>3D 지도는 인터넷이 있어야 보입니다</b>
-      <span>오프라인이거나 지도 서버에 닿지 못했습니다.</span>
-      <a href="#map" class="dl">오프라인 지도로 가기</a>
+      <b id="csFailT">3D 지도를 띄우지 못했습니다</b>
+      <span id="csFailW"></span>
+      <code id="csFailD"></code>
+      <span class="csfx">
+        <button type="button" class="dl" id="csRetry">다시 시도</button>
+        <a href="#map" class="dl">오프라인 지도로 가기</a>
+      </span>
     </div>
     <div class="cstools">
       <button type="button" id="csTilt">기울이기</button>
@@ -2791,44 +2800,104 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
   }
 
   function csLoad() {
-    if (CS.ready || CS.loading) { if (CS.ready) { csMarkers(); csFit(); } return; }
+    if (CS.ready) { csMarkers(); csFit(); return; }
+    if (CS.loading) return;
     CS.loading = true;
-    var fail = document.getElementById('csFail');
-    function boom() { CS.loading = false; if (fail) fail.hidden = false; }
-    if (!navigator.onLine) { boom(); return; }
+    var box = document.getElementById('csFail');
+    var ver = (document.body.innerHTML.match(/v09-\d\d[a-z]/) || ['?'])[0];
 
-    var css = document.createElement('link');
-    css.rel = 'stylesheet'; css.href = CS_CSS;
-    document.head.appendChild(css);
-    var js = document.createElement('script');
-    js.src = CS_LIB;
-    js.onerror = boom;
-    js.onload = function () {
+    // 왜 안 됐는지 화면에 그대로 적는다 — "인터넷이 없나 봅니다" 한 줄로는 못 고친다
+    function boom(title, why, detail) {
+      CS.loading = false;
+      if (!box) return;
+      document.getElementById('csFailT').textContent = title;
+      document.getElementById('csFailW').textContent = why;
+      document.getElementById('csFailD').textContent =
+        (detail ? detail + ' · ' : '') + ver + ' · ' +
+        (navigator.onLine ? '온라인' : '오프라인');
+      box.hidden = false;
+    }
+
+    if (!navigator.onLine) {
+      boom('오프라인입니다', '3D 지도는 인터넷이 있어야 그려집니다.', '');
+      return;
+    }
+    // WebGL 이 없으면 MapLibre 는 아예 못 뜬다 — 미리 걸러 정확히 알려준다
+    try {
+      var probe = document.createElement('canvas');
+      if (!(probe.getContext('webgl2') || probe.getContext('webgl') ||
+            probe.getContext('experimental-webgl'))) {
+        boom('이 브라우저가 3D 지도를 못 그립니다',
+             'WebGL 이 꺼져 있거나 지원되지 않습니다. 다른 브라우저로 열어보세요.',
+             'webgl=none');
+        return;
+      }
+    } catch (e) {
+      boom('이 브라우저가 3D 지도를 못 그립니다', 'WebGL 확인 중 오류가 났습니다.',
+           'webgl:' + (e && e.message || '?'));
+      return;
+    }
+
+    function start() {
+      var alive = false, drew = false;
+      var giveUp = setTimeout(function () {
+        if (drew) return;
+        boom(alive ? '지도 그림이 오지 않습니다' : '지도 서버에 닿지 못했습니다',
+             alive ? '스타일은 받았는데 타일이 그려지지 않았습니다.'
+                   : '25초 동안 tiles.openfreemap.org 응답이 없었습니다.',
+             alive ? 'stage=render' : 'stage=style');
+      }, 25000);
+      function up() {
+        alive = true;
+        CS.ready = true; CS.loading = false;
+        if (box) box.hidden = true;
+        csMarkers(); csFit();
+      }
       try {
         CS.map = new maplibregl.Map({
           container: 'csMap', style: CS_STYLE,
           center: [120.3018, 22.6316], zoom: 13.2, pitch: 55, bearing: -18,
           attributionControl: { compact: true }
         });
+      } catch (e) {
+        clearTimeout(giveUp);
+        boom('지도를 만들지 못했습니다', '브라우저가 MapLibre 를 띄우지 못했습니다.',
+             'new Map: ' + (e && e.message || '?'));
+        return;
+      }
+      try {
         CS.map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
-        // ⚠ 실패 판정을 error 로 하면 안 된다 — Liberty 스타일이
-        // "Expected value to be of type number" 같은 경고를 error 로 여러 번 던진다.
-        // ⚠ load 하나에만 걸어도 안 된다 — 화면이 가려져 있으면 그리기가 멈춰
-        // load 가 영영 안 온다(창을 최소화했을 때도 마찬가지다).
-        // 그래서 "스타일이 왔는가(styledata)"를 살아있음의 신호로 쓴다.
-        var alive = false;
-        var giveUp = setTimeout(function () { if (!alive) boom(); }, 15000);
-        function up() {
-          alive = true; clearTimeout(giveUp);
-          CS.ready = true; CS.loading = false;
-          if (fail) fail.hidden = true;
-          csMarkers(); csFit();
-        }
-        CS.map.on('styledata', function () { up(); try { csLine(); } catch (e) {} });
-        CS.map.on('load', up);
-        // 마커는 스타일과 무관한 DOM 이라 바로 붙여도 된다
-        csMarkers();
-      } catch (e) { boom(); }
+      } catch (e) {}
+      // ⚠ error 로 실패를 판정하면 안 된다 — liberty 스타일이 경고를 error 로 던진다.
+      // ⚠ load 하나에만 걸어도 안 된다 — 화면이 가려지면 그리기가 멈춰 안 온다.
+      CS.map.on('styledata', function () { up(); try { csLine(); } catch (e) {} });
+      CS.map.on('load', up);
+      CS.map.on('idle', function () { drew = true; clearTimeout(giveUp); });
+      // 마지막 오류만 따로 적어둔다 — 안내를 띄울 때 같이 보여준다
+      CS.map.on('error', function (e) {
+        var m = e && e.error && e.error.message;
+        if (m && !/Expected value to be of type/.test(m)) CS.lastErr = m.slice(0, 90);
+      });
+      csMarkers();   // 마커는 스타일과 무관한 DOM 이라 바로 붙인다
+    }
+
+    if (window.maplibregl) { start(); return; }
+    var css = document.createElement('link');
+    css.rel = 'stylesheet'; css.href = CS_CSS;
+    document.head.appendChild(css);
+    var js = document.createElement('script');
+    js.src = CS_LIB;
+    js.onerror = function () {
+      boom('지도 라이브러리를 받지 못했습니다',
+           '광고 차단기나 회사망이 cdnjs.cloudflare.com 을 막고 있을 수 있습니다.',
+           'script blocked');
+    };
+    js.onload = function () {
+      if (!window.maplibregl) {
+        boom('지도 라이브러리가 이상합니다', '파일은 받았는데 maplibregl 이 없습니다.', 'no global');
+        return;
+      }
+      start();
     };
     document.head.appendChild(js);
   }
@@ -2843,6 +2912,12 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     });
     document.getElementById('csFit').addEventListener('click', function () { csStop(); csFit(); });
     document.getElementById('csPlay').addEventListener('click', csTogglePlay);
+    document.getElementById('csRetry').addEventListener('click', function () {
+      document.getElementById('csFail').hidden = true;
+      CS.loading = false; CS.ready = false;
+      if (CS.map) { try { CS.map.remove(); } catch (e) {} CS.map = null; CS.mks = []; }
+      csLoad();
+    });
     document.getElementById('csClose').addEventListener('click', function () {
       document.getElementById('csPanel').hidden = true;
       CS.sel = null; CS.mks.forEach(function (m) { m.el.classList.remove('on'); }); csRender();
