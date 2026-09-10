@@ -509,7 +509,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-08b</span>
+  <span class="ver">v09-08c</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
@@ -2844,16 +2844,28 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
     }
 
     function start() {
-      var alive = false, drew = false;
-      var giveUp = setTimeout(function () {
-        if (drew) return;
-        boom(alive ? '지도 그림이 오지 않습니다' : '지도 서버에 닿지 못했습니다',
-             alive ? '스타일은 받았는데 타일이 그려지지 않았습니다.'
-                   : '25초 동안 tiles.openfreemap.org 응답이 없었습니다.',
-             alive ? 'stage=render' : 'stage=style');
-      }, 25000);
+      var alive = false;
+      // ⚠ 실패로 치는 건 "스타일조차 못 받았을 때"뿐이다. 스타일이 왔으면 지도는
+      // 그려질 수 있는 상태라 절대 덮지 않는다 — 전에는 25초 안에 idle 이 안 오면
+      // (느린 폰·앱 전환·백그라운드 탭) 멀쩡히 뜬 지도 위를 실패 박스로 도로 덮었다.
+      // 화면이 가려진 동안은 그리기가 멈추므로 기다린 시간도 세지 않는다.
+      var waited = 0, last = Date.now();
+      var giveUp = setInterval(function () {
+        var now = Date.now();
+        if (document.visibilityState === 'visible') waited += now - last;
+        last = now;
+        if (alive) { clearInterval(giveUp); return; }
+        if (waited >= 25000) {
+          clearInterval(giveUp);
+          boom('지도 서버에 닿지 못했습니다',
+               '화면을 켜 둔 25초 동안 tiles.openfreemap.org 에서 응답이 없었습니다.',
+               'stage=style' + (CS.lastErr ? ' · ' + CS.lastErr : ''));
+        }
+      }, 1000);
       function up() {
+        if (alive) return;              // styledata 는 여러 번 온다 — 맞추기는 한 번만
         alive = true;
+        clearInterval(giveUp);
         CS.ready = true; CS.loading = false;
         if (box) box.hidden = true;
         csMarkers(); csFit();
@@ -2865,7 +2877,7 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
           attributionControl: { compact: true }
         });
       } catch (e) {
-        clearTimeout(giveUp);
+        clearInterval(giveUp);
         boom('지도를 만들지 못했습니다', '브라우저가 MapLibre 를 띄우지 못했습니다.',
              'new Map: ' + (e && e.message || '?'));
         return;
@@ -2877,7 +2889,8 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
       // ⚠ load 하나에만 걸어도 안 된다 — 화면이 가려지면 그리기가 멈춰 안 온다.
       CS.map.on('styledata', function () { up(); try { csLine(); } catch (e) {} });
       CS.map.on('load', up);
-      CS.map.on('idle', function () { drew = true; clearTimeout(giveUp); });
+      // 실제로 한 번 다 그려졌으면 혹시 떠 있던 안내도 치운다
+      CS.map.on('idle', function () { if (box && alive) box.hidden = true; });
       // 마지막 오류만 따로 적어둔다 — 안내를 띄울 때 같이 보여준다
       CS.map.on('error', function (e) {
         var m = e && e.error && e.error.message;
