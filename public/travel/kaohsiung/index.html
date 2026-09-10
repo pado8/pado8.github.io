@@ -204,6 +204,11 @@
   .csfail{position:absolute;inset:0;display:flex;flex-direction:column;gap:7px;
         align-items:center;justify-content:center;text-align:center;padding:20px;
         background:var(--card2);z-index:2}
+  /* ⚠ display 를 직접 주면 hidden 속성이 안 먹는다(작성자 선언이 UA 규칙을 이긴다).
+     이 문서에서 .pc 로 한 번 당한 함정인데 여기서 또 밟았다 —
+     실패 안내가 계속 떠서 멀쩡한 지도를 덮고 있었다. */
+  .csfail[hidden]{display:none}
+  .cspanel[hidden]{display:none}
   .csfail b{font-size:15px}
   .csfail span{font-size:13px;color:var(--dim)}
   .csfail code{font-size:11px;color:var(--dim);background:var(--card);padding:6px 9px;
@@ -504,7 +509,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-08a</span>
+  <span class="ver">v09-08b</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
