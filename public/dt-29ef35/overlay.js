@@ -217,30 +217,15 @@
   };
   // 트리를 클릭하면 본문을 통째로 가리고 개발 문서처럼 보이는 문장으로 바꾼다.
   // 예전엔 클릭이 그 문단으로 점프하는 동작이었는데, 접혔다 펼쳐졌다 해서 헷갈렸다.
-  let mask = false;
-  let clickMask = localStorage.getItem("dtclick") !== "off";   // 클릭으로 가릴지
+  let curDocId = "";   // 서재에서 연 문서의 id — 책갈피를 서버에 쓸 때 쓴다
+
+  // 긴 글은 보이는 구간만 그린다. 통째로 DOM 에 올리면 문단을 한 칸 옮길 때마다
+  // 그걸 다시 그리느라 밀린다.
+  const VIEW = 600;
+  const VIEW_EDGE = 80;
+  let viewFrom = 0;
   let half = localStorage.getItem("dthalf") === "on";          // 반페이지 모드
   let halfPos = localStorage.getItem("dthalfpos") === "top" ? "top" : "bottom"; // 읽는 영역 위치
-  const MASK_TEXT = [
-  "요청이 들어오면 미들웨어가 등록된 순서대로 실행된다.",
-  "캐시 키는 경로와 쿼리스트링을 합쳐 만든다.",
-  "빌드 산출물은 내용 해시가 붙은 파일명으로 배포한다.",
-  "의존성이 순환하면 번들러가 경고를 남기고 넘어간다.",
-  "테스트는 단위·통합·종단 세 갈래로 나누어 돌린다.",
-  "마이그레이션은 되돌릴 수 있는 형태로 작성한다.",
-  "인덱스가 없으면 정렬 단계에서 비용이 급격히 커진다.",
-  "토큰은 만료 시각을 함께 저장해 두어야 한다.",
-  "로그 레벨은 코드가 아니라 환경 변수로 조절한다.",
-  "재시도 간격은 지수 백오프로 늘려 나간다.",
-  "큐가 밀리면 소비자 수부터 확인하는 편이 빠르다.",
-  "정적 자산은 CDN 으로 넘기고 원본 접근은 잠근다.",
-  "스키마 변경은 배포보다 한 단계 먼저 적용한다.",
-  "타임아웃은 상위 호출보다 짧게 잡아야 의미가 있다.",
-  "에러를 삼키지 말고 처리할 수 있는 경계까지 올린다.",
-  "설정 기본값은 코드에 두고 비밀은 환경에 둔다.",
-  "동시성 문제는 재현 조건을 좁히는 것부터 시작한다.",
-  "릴리즈 노트는 구현이 아니라 사용자 관점으로 적는다."
-];
 
   let view = "read";   // "read" | "lib" | "set" — 상단 탭이 가리키는 화면
   let libItems = [];
@@ -569,16 +554,30 @@
   }
 
   function renderRead() {
-    const src = mask ? MASK_TEXT : paras;
+    const src = paras;
     const out = [];
     out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
     out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "ko"))));
     shell(SHELL_TOP, out);
 
-    const end = mask ? src.length : Math.min(src.length, idx + win);
-    for (let i = 0; i < src.length; i++) {
-      const on = !boss && i >= (mask ? 0 : idx) && i < end;
-      const cls = !mask && on && i === idx ? "sel" : "";
+    if (src.length <= VIEW) viewFrom = 0;
+    else if (idx < viewFrom + VIEW_EDGE || idx >= viewFrom + VIEW - VIEW_EDGE) {
+      viewFrom = Math.max(0, Math.min(src.length - VIEW, idx - Math.floor(VIEW / 2)));
+    }
+    const vFrom = src.length <= VIEW ? 0 : viewFrom;
+    const vTo = Math.min(src.length, vFrom + VIEW);
+
+    // 잘라낸 앞뒤는 접힌 노드 한 줄로 대신한다. 누르면 그쪽 구간으로 넘어간다.
+    if (vFrom > 0) {
+      out.push(line(5, `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
+        `<span class="dots">… ${vFrom}개 위</span>` + close("p"),
+        "", `data-jump="${Math.max(0, vFrom - Math.floor(VIEW / 2))}"`));
+    }
+
+    const end = Math.min(src.length, idx + win);
+    for (let i = vFrom; i < vTo; i++) {
+      const on = !boss && i >= idx && i < end;
+      const cls = on && i === idx ? "sel" : "";
       if (!on) {
         out.push(line(5, `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
           `<span class="dots">…</span>` + close("p"), cls, `data-i="${i}"`));
@@ -596,6 +595,12 @@
         out.push(line(6, `<span class="txt">${esc(part)}</span>`, "", `data-i="${i}"`));
       }
       out.push(line(5, close("p")));
+    }
+
+    if (vTo < src.length) {
+      out.push(line(5, `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
+        `<span class="dots">… ${src.length - vTo}개 아래</span>` + close("p"),
+        "", `data-jump="${Math.min(src.length - 1, vTo + Math.floor(VIEW / 2))}"`));
     }
 
     shell(SHELL_BOTTOM, out);
@@ -629,7 +634,38 @@
     render();
   }
 
+
+  /* ---------- 책갈피 ---------- */
+
+  // 시크릿 창은 닫으면 localStorage 가 통째로 사라진다. 읽던 자리를 이어가려면
+  // 위치가 서버에 있어야 한다. 다만 문단을 옮길 때마다 올리면 Neon 이 계속 깨어
+  // 있으므로 평소에는 브라우저에만 적고, 아래 세 순간에만 서버로 보낸다.
+  //   1) 문단을 클릭해 책갈피를 찍을 때  2) 탭을 떠날 때  3) 다른 글을 열 때
+  // 서재에서 연 글에만 해당한다 — 사이트에서 바로 읽는 중이면 서버에 그 글이 없다.
+  function pushPos(why) {
+    if (!curDocId || !paras.length) return;
+    const url = LIB + "pos&id=" + encodeURIComponent(curDocId);
+    const body = JSON.stringify({ idx, win: Number.isFinite(win) ? win : paras.length });
+    try {
+      if (navigator.sendBeacon &&
+          navigator.sendBeacon(url, new Blob([body], { type: "text/plain" }))) {
+        if (why) setMsg(why + " 저장");
+        return;
+      }
+    } catch { /* 아래 fetch 로 넘어간다 */ }
+    fetch(url, { method: "POST", headers: { "content-type": "application/json" },
+                 body, keepalive: true })
+      .then(() => { if (why) setMsg(why + " 저장"); })
+      .catch(() => { if (why) setMsg("책갈피 저장 실패"); });
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") pushPos("");
+  });
+  window.addEventListener("pagehide", () => pushPos(""));
+
   async function openDoc(id) {
+    pushPos("");                 // 보던 글의 자리를 먼저 남기고 넘어간다
     libPos = libItems.findIndex((it) => it.id === id);
     markRead(id);
     try {
@@ -638,7 +674,16 @@
       if (!d.ok) { saveMsg = "불러오기 실패"; render(); return; }
       paras = d.doc.paras || [];
       srcUrl = d.doc.url || location.href;
+      curDocId = id;
       idx = 0; win = Math.max(1, paras.length); boss = false;
+
+      // 목록에 실려 온 책갈피로 읽던 자리에서 시작한다.
+      const item = libItems.find((it) => it.id === id) || {};
+      if (item.pos_idx !== null && item.pos_idx !== undefined) {
+        idx = Math.min(Number(item.pos_idx) || 0, Math.max(0, paras.length - 1));
+        if (Number(item.pos_win) > 0) win = Number(item.pos_win);
+      }
+      clamp();
       view = "read"; render(); updateNav();
     } catch { saveMsg = "불러오기 실패"; render(); }
   }
@@ -691,7 +736,6 @@
     ["fs",   "글자 크기",     () => fs + "px"],
     ["wrap", "줄바꿈 폭",     () => wrapAt + "자"],
     ["theme", "테마",         () => (theme === "light" ? "라이트" : "다크")],
-    ["click", "클릭으로 가리기", () => (clickMask ? "켬" : "끔")],
     ["half",  "반페이지 모드",   () => (half ? "켬" : "끔")],
     ["halfpos", "읽는 영역 위치", () => (halfPos === "top" ? "위" : "아래")],
     ["libmode", "서재 보기 모드", () => (libMode ? "켬" : "끔")],
@@ -708,11 +752,6 @@
       localStorage.setItem("dthalfpos", halfPos);
     }
     if (what === "libmode") { libMode = !libMode; localStorage.setItem("dtlibmode", libMode ? "on" : "off"); }
-    if (what === "click") {
-      clickMask = !clickMask;
-      localStorage.setItem("dtclick", clickMask ? "on" : "off");
-      if (!clickMask) mask = false;
-    }
     render(); updateNav();
   }
 
@@ -895,6 +934,7 @@
       // 1등 후보가 본문이 아니었을 때(메뉴·탭이 잡혔을 때) 다음 후보로 넘긴다.
       case "p": pickMode(); e.preventDefault(); return;
       case "s": saveDoc(); e.preventDefault(); return;
+      case "b": pushPos("책갈피"); e.preventDefault(); return;
       case "h": half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); break;
       case "H":
         halfPos = halfPos === "top" ? "bottom" : "top";
@@ -1040,10 +1080,16 @@
     if (b) { bump(b.dataset.set, +b.dataset.d); return; }
     const doc = e.target.closest("[data-lib]");
     if (doc) { openDoc(doc.dataset.lib); return; }
-    if (view !== "read" || !clickMask) return;
-    mask = !mask;          // 본문 가리기 토글 — 클릭이 하는 유일한 일이다
-    boss = false;          // 보스키와 겹치면 가림 화면까지 접혀 빈 화면이 된다
-    render();
+    if (view !== "read") return;
+    // 잘라낸 구간 표시를 누르면 그쪽으로 넘어간다 (책갈피는 찍지 않는다)
+    const jump = e.target.closest("[data-jump]");
+    if (jump) { idx = parseInt(jump.dataset.jump, 10); clamp(); save(); render(); return; }
+    // 클릭한 문단이 책갈피가 된다
+    const row = e.target.closest("[data-i]");
+    if (!row) return;
+    idx = parseInt(row.dataset.i, 10);
+    boss = false; clamp(); save(); render();
+    pushPos("책갈피");
   });
 
   (() => {

@@ -916,7 +916,9 @@ function toggleFind(show) {
 /* ---------- 시작 ---------- */
 renderRules();
 const last = LS.get("lastUrl", "");
-if (last) load(last); else { render(); toggleFind(true); }
+// 서재로 읽는 쪽이 기본이라 시작하자마자 URL 입력창을 띄우지 않는다.
+// 마지막으로 보던 글이 있으면 그걸 열고, 없으면 서재 목록을 연다. 입력창은 o 로.
+if (last) load(last); else { render(); openLib(); }
 </script>
 </body>
 </html>
