@@ -330,6 +330,20 @@ function chunk(t, width) {
   return out;
 }
 
+// 긴 글은 화면에 보이는 구간만 그린다. 4천 문단을 통째로 DOM 에 올리면 트리
+// HTML 이 1.8MB 가 되고, 문단을 한 칸 옮길 때마다 그걸 다시 그리느라 0.2초씩
+// 밀렸다. 한 구간이 대략 1.8만 자라 한 번에 읽을 분량으로는 충분하다.
+const VIEW = 600;        // 한 번에 DOM 에 올리는 문단 수
+const VIEW_EDGE = 80;    // 구간 가장자리에 이만큼 다가오면 구간을 옮긴다
+let viewFrom = 0;
+
+function ensureView() {
+  if (paras.length <= VIEW) { viewFrom = 0; return; }
+  if (idx < viewFrom + VIEW_EDGE || idx >= viewFrom + VIEW - VIEW_EDGE) {
+    viewFrom = Math.max(0, Math.min(paras.length - VIEW, idx - Math.floor(VIEW / 2)));
+  }
+}
+
 function render() {
   document.documentElement.style.setProperty("--fs", fs + "px");
   document.documentElement.dataset.theme = theme;
@@ -352,8 +366,19 @@ function render() {
     out.push(line(4, `<span class="dots">${boss ? "" : "(o 를 눌러 URL 입력)"}</span>`));
   }
 
+  ensureView();
+  const vFrom = src.length <= VIEW ? 0 : viewFrom;
+  const vTo = Math.min(src.length, vFrom + VIEW);
+
+  // 앞뒤로 잘라낸 부분은 접힌 노드 한 줄로 대신한다. 눌러서 그쪽으로 넘어간다.
+  if (vFrom > 0) {
+    out.push(line(4, `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
+      `<span class="dots">… ${vFrom}개 위</span>` + close("p"),
+      "", `data-jump="${Math.max(0, vFrom - Math.floor(VIEW / 2))}"`));
+  }
+
   const end = Math.min(src.length, idx + win);
-  for (let i = 0; i < src.length; i++) {
+  for (let i = vFrom; i < vTo; i++) {
     const expanded = !boss && i >= idx && i < end;
     if (!expanded) {
       out.push(line(4,
@@ -377,6 +402,12 @@ function render() {
       out.push(line(5, `<span class="txt">${esc(part)}</span>`, "", `data-i="${i}"`));
     }
     out.push(line(4, close("p")));
+  }
+
+  if (vTo < src.length) {
+    out.push(line(4, `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
+      `<span class="dots">… ${src.length - vTo}개 아래</span>` + close("p"),
+      "", `data-jump="${Math.min(src.length - 1, vTo + Math.floor(VIEW / 2))}"`));
   }
 
   out.push(line(3, close("div")));
@@ -853,6 +884,9 @@ $("tree").addEventListener("click", (e) => {
   // 클릭한 문단이 책갈피가 된다. 4천 문단짜리 책에서 j 로 자리를 찾는 건
   // 현실적이지 않아서, 눈으로 찾은 줄을 바로 찍게 한다.
   if (mode !== "read") return;
+  // 잘라낸 구간 표시를 누르면 그쪽으로 넘어간다 (책갈피는 찍지 않는다)
+  const jump = e.target.closest("[data-jump]");
+  if (jump) { idx = parseInt(jump.dataset.jump, 10); clamp(); render(); return; }
   const row = e.target.closest("[data-i]");
   if (!row) return;
   idx = parseInt(row.dataset.i, 10);
