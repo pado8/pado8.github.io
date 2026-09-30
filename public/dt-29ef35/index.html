@@ -286,30 +286,9 @@ let boss = false;    // 전부 접힘
 let curUrl = "";
 // 트리를 클릭하면 본문을 통째로 가리고 개발 문서처럼 보이는 문장으로 바꾼다.
 // 예전엔 클릭이 그 문단으로 점프하는 동작이었는데, 접혔다 펼쳐졌다 해서 헷갈렸다.
-let mask = false;
-let clickMask = localStorage.getItem("dtclick") !== "off";   // 클릭으로 가릴지
+let curDocId = "";   // 서재에서 연 문서의 id — 책갈피를 서버에 쓸 때 쓴다
 let half = localStorage.getItem("dthalf") === "on";          // 반페이지 모드
 let halfPos = localStorage.getItem("dthalfpos") === "top" ? "top" : "bottom"; // 읽는 영역 위치
-const MASK_TEXT = [
-  "요청이 들어오면 미들웨어가 등록된 순서대로 실행된다.",
-  "캐시 키는 경로와 쿼리스트링을 합쳐 만든다.",
-  "빌드 산출물은 내용 해시가 붙은 파일명으로 배포한다.",
-  "의존성이 순환하면 번들러가 경고를 남기고 넘어간다.",
-  "테스트는 단위·통합·종단 세 갈래로 나누어 돌린다.",
-  "마이그레이션은 되돌릴 수 있는 형태로 작성한다.",
-  "인덱스가 없으면 정렬 단계에서 비용이 급격히 커진다.",
-  "토큰은 만료 시각을 함께 저장해 두어야 한다.",
-  "로그 레벨은 코드가 아니라 환경 변수로 조절한다.",
-  "재시도 간격은 지수 백오프로 늘려 나간다.",
-  "큐가 밀리면 소비자 수부터 확인하는 편이 빠르다.",
-  "정적 자산은 CDN 으로 넘기고 원본 접근은 잠근다.",
-  "스키마 변경은 배포보다 한 단계 먼저 적용한다.",
-  "타임아웃은 상위 호출보다 짧게 잡아야 의미가 있다.",
-  "에러를 삼키지 말고 처리할 수 있는 경계까지 올린다.",
-  "설정 기본값은 코드에 두고 비밀은 환경에 둔다.",
-  "동시성 문제는 재현 조건을 좁히는 것부터 시작한다.",
-  "릴리즈 노트는 구현이 아니라 사용자 관점으로 적는다."
-];
 
 let mode = "read";   // "read" | "lib" — 서재 목록을 보는 중인지
 let lib = [];        // 서재 항목들
@@ -360,7 +339,7 @@ function render() {
   document.querySelectorAll("[data-view]").forEach((t) => t.classList.toggle("on", t.dataset.view === mode));
   if (mode === "lib") return renderLib();
   if (mode === "set") return renderSet();
-  const src = mask ? MASK_TEXT : paras;
+  const src = paras;
   const out = [];
   out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
   out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "ko"))));
@@ -373,9 +352,9 @@ function render() {
     out.push(line(4, `<span class="dots">${boss ? "" : "(o 를 눌러 URL 입력)"}</span>`));
   }
 
-  const end = mask ? src.length : Math.min(src.length, idx + win);
+  const end = Math.min(src.length, idx + win);
   for (let i = 0; i < src.length; i++) {
-    const expanded = !boss && i >= (mask ? 0 : idx) && i < end;
+    const expanded = !boss && i >= idx && i < end;
     if (!expanded) {
       out.push(line(4,
         `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
@@ -388,12 +367,12 @@ function render() {
       out.push(line(4,
         `<span class="arrow">▼</span>` + open("p", attr("class", "para")) +
         `<span class="txt">${esc(parts[0])}</span>` + close("p"),
-        !mask && i === idx ? "sel" : "", `data-i="${i}"`));
+        i === idx ? "sel" : "", `data-i="${i}"`));
       continue;
     }
     // 여러 줄로 끊길 땐 여는·닫는 태그를 따로 세워 진짜 트리처럼 보이게 한다.
     out.push(line(4, `<span class="arrow">▼</span>` + open("p", attr("class", "para")),
-      !mask && i === idx ? "sel" : "", `data-i="${i}"`));
+      i === idx ? "sel" : "", `data-i="${i}"`));
     for (const part of parts) {
       out.push(line(5, `<span class="txt">${esc(part)}</span>`, "", `data-i="${i}"`));
     }
@@ -414,12 +393,12 @@ function render() {
   const sel = $("tree").querySelector(".row.sel") || $("tree").querySelector(`[data-i="${idx}"]`);
   if (sel) sel.scrollIntoView({ block: "center" });
 
-  if (curUrl) LS.set("pos2:" + curUrl, { idx, win });
+  if (curUrl) LS.set("pos2:" + curUrl, { idx, win, at: Date.now() });
   updateNav();
 }
 
 function renderRules() {
-  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음화</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">Shift+H<span class="brak">:</span> <span class="pval">읽는 영역 위 / 아래</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음화</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">Shift+H<span class="brak">:</span> <span class="pval">읽는 영역 위 / 아래</span></div><div class="prop">b<span class="brak">:</span> <span class="pval">책갈피</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -617,6 +596,36 @@ $("topbar").addEventListener("click", (e) => {
   }
 });
 
+
+/* ---------- 책갈피 ---------- */
+
+// 시크릿 창은 닫으면 localStorage 가 통째로 사라진다. 읽던 자리를 이어가려면
+// 위치가 서버에 있어야 한다. 다만 문단을 옮길 때마다 올리면 Neon 이 계속 깨어
+// 있으므로 평소에는 브라우저에만 적고, 아래 세 순간에만 서버로 보낸다.
+//   1) 문단을 클릭해 책갈피를 찍을 때  2) 탭을 떠날 때  3) 다른 문서를 열 때
+function pushPos(why) {
+  if (!curDocId || !paras.length) return;
+  const url = LIBAPI + "pos&id=" + encodeURIComponent(curDocId);
+  const body = JSON.stringify({ idx, win: Number.isFinite(win) ? win : paras.length });
+  try {
+    // 탭을 떠나는 중에는 fetch 가 취소될 수 있어 sendBeacon 을 먼저 쓴다.
+    if (navigator.sendBeacon &&
+        navigator.sendBeacon(url, new Blob([body], { type: "text/plain" }))) {
+      if (why) setMsg(why + " 저장");
+      return;
+    }
+  } catch { /* 아래 fetch 로 넘어간다 */ }
+  fetch(url, { method: "POST", headers: { "content-type": "application/json" },
+               body, keepalive: true })
+    .then(() => { if (why) setMsg(why + " 저장"); })
+    .catch(() => { if (why) setMsg("책갈피 저장 실패"); });
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") pushPos("");
+});
+window.addEventListener("pagehide", () => pushPos(""));
+
 /* ---------- 서재 ---------- */
 
 // 북마클릿이 집에서 저장해둔 것을 여기서 꺼내 읽는다. 목록도 DOM 트리 모양으로
@@ -663,6 +672,7 @@ async function openLib() {
 }
 
 async function openDoc(id) {
+  pushPos("");                 // 보던 문서의 자리를 먼저 남기고 넘어간다
   libPos = lib.findIndex((it) => it.id === id);
   markRead(id);
   try {
@@ -670,11 +680,26 @@ async function openDoc(id) {
     const d = await r.json();
     if (!d.ok) { paras = ["불러오기 실패: " + (d.error || "")]; mode = "read"; render(); return; }
     curUrl = d.doc.url;
+    curDocId = id;
     paras = d.doc.paras || [];
     mode = "read"; idx = 0;
     if (!Number.isFinite(win)) win = Math.max(1, paras.length);
-    const saved = LS.get("pos2:" + curUrl, null);
-    if (saved) { idx = Math.min(saved.idx, paras.length - 1); win = saved.win || win; }
+
+    // 브라우저에 적어둔 위치와 서버 책갈피 중 더 나중 것을 쓴다. 시크릿 창에서는
+    // 앞의 것이 비어 있으므로 서버 쪽이 그대로 채택된다.
+    const local = LS.get("pos2:" + curUrl, null);
+    const item = lib.find((it) => it.id === id) || {};
+    const remote = (item.pos_idx === null || item.pos_idx === undefined) ? null : {
+      idx: Number(item.pos_idx),
+      win: Number(item.pos_win) || 0,
+      at: Date.parse(item.read_at || "") || 0,
+    };
+    const localAt = (local && local.at) || 0;
+    const pick = !remote ? local : (!local ? remote : (remote.at > localAt ? remote : local));
+    if (pick) {
+      idx = Math.min(pick.idx || 0, Math.max(0, paras.length - 1));
+      win = pick.win || win;
+    }
     clamp(); render();
   } catch (e) {
     paras = ["불러오기 실패: " + e]; mode = "read"; render();
@@ -689,7 +714,6 @@ const SETS = [
   ["fs",   "글자 크기",    () => fs + "px"],
   ["wrap", "줄바꿈 폭",    () => wrapAt + "자"],
   ["theme", "테마",        () => (theme === "light" ? "라이트" : "다크")],
-  ["click", "클릭으로 가리기", () => (clickMask ? "켬" : "끔")],
   ["half",  "반페이지 모드",   () => (half ? "켬" : "끔")],
   ["halfpos", "읽는 영역 위치", () => (halfPos === "top" ? "위" : "아래")],
   ["libmode", "서재 보기 모드", () => (libMode ? "켬" : "끔")],
@@ -706,11 +730,6 @@ function bump(what, d) {
     localStorage.setItem("dthalfpos", halfPos);
   }
   if (what === "libmode") { libMode = !libMode; localStorage.setItem("dtlibmode", libMode ? "on" : "off"); }
-  if (what === "click") {
-    clickMask = !clickMask;
-    localStorage.setItem("dtclick", clickMask ? "on" : "off");
-    if (!clickMask) mask = false;
-  }
   render();
 }
 
@@ -732,7 +751,8 @@ function renderSet() {
     `<div class="sethint">o URL 입력 &nbsp;·&nbsp; l 서재 목록<br>` +
     `숫자 1~9 · 0(10) · a(전부) — 펼칠 문단 수<br>` +
     `&minus; + 글자 크기 &nbsp;·&nbsp; , . 줄바꿈 폭<br>` +
-    `h 반페이지 모드 &nbsp;·&nbsp; 본문 클릭 — 전체 가리기<br>` +
+    `h 반페이지 모드 &nbsp;·&nbsp; 본문 클릭 — 그 자리를 책갈피<br>` +
+    `b 지금 자리 책갈피 (시크릿 창에서도 이어짐)<br>` +
     `t 다크/라이트 &nbsp;·&nbsp; j k 문단 이동 &nbsp;·&nbsp; n 다음화 &nbsp;·&nbsp; r 다시 불러오기 &nbsp;·&nbsp; 백틱 전부 접기</div>`;
   $("crumbs").innerHTML = `Preferences <span class="gt">&gt;</span> <b>Reader</b>`;
 }
@@ -800,6 +820,7 @@ function onKey(e) {
     case "]": win++; clamp(); render(); break;
     case "[": win--; clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
+    case "b": pushPos("책갈피"); e.preventDefault(); break;
     case "h": half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); render(); break;
     case "H":
       halfPos = halfPos === "top" ? "bottom" : "top";
@@ -829,10 +850,14 @@ $("tree").addEventListener("click", (e) => {
   if (b) { bump(b.dataset.set, +b.dataset.d); return; }
   const doc = e.target.closest("[data-lib]");
   if (doc) { openDoc(doc.dataset.lib); return; }
-  if (mode !== "read" || !clickMask) return;
-  mask = !mask;          // 본문 가리기 토글 — 클릭이 하는 유일한 일이다
-  boss = false;          // 보스키와 겹치면 가림 화면까지 접혀 빈 화면이 된다
-  render();
+  // 클릭한 문단이 책갈피가 된다. 4천 문단짜리 책에서 j 로 자리를 찾는 건
+  // 현실적이지 않아서, 눈으로 찾은 줄을 바로 찍게 한다.
+  if (mode !== "read") return;
+  const row = e.target.closest("[data-i]");
+  if (!row) return;
+  idx = parseInt(row.dataset.i, 10);
+  boss = false; clamp(); render();
+  pushPos("책갈피");
 });
 
 function toggleFind(show) {
