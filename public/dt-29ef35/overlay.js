@@ -592,7 +592,8 @@
 
     const end = Math.min(src.length, idx + win);
     for (let i = vFrom; i < vTo; i++) {
-      const on = !boss && i >= idx && i < end;
+      // 전체 보기는 책갈피 위아래 가릴 것 없이 전부 펼친다.
+      const on = !boss && (whole || (i >= idx && i < end));
       const cls = on && i === idx ? "sel" : "";
       if (!on) {
         out.push(line(5, `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +

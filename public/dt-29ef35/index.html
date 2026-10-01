@@ -411,7 +411,9 @@ function render() {
 
   const end = Math.min(src.length, idx + win);
   for (let i = vFrom; i < vTo; i++) {
-    const expanded = !boss && i >= idx && i < end;
+    // 전체 보기는 책갈피 위아래 가릴 것 없이 전부 펼친다. 예전엔 펼침 조건이
+    // "책갈피부터 아래로"라서, 책갈피가 1640번이면 그 앞 1640개가 접혀 있었다.
+    const expanded = !boss && (whole || (i >= idx && i < end));
     if (!expanded) {
       out.push(line(4,
         `<span class="arrow">▶</span>` + open("p", attr("class", "para")) +
