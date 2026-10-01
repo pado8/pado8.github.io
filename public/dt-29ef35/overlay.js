@@ -698,7 +698,12 @@
       idx = 0; win = Math.max(1, paras.length); boss = false;
 
       // 목록에 실려 온 책갈피로 읽던 자리에서 시작한다.
-      const item = libItems.find((it) => it.id === id) || {};
+      let item = libItems.find((it) => it.id === id) || {};
+      // 목록은 CDN 캐시라 다른 기기에서 막 찍은 책갈피가 늦게 보인다. 위치만 새로 묻는다.
+      try {
+        const pr = await (await fetch(LIB + "pos&id=" + encodeURIComponent(id))).json();
+        if (pr.ok) item = { pos_idx: pr.idx, pos_win: pr.win };
+      } catch { /* 목록 값으로 간다 */ }
       if (item.pos_idx !== null && item.pos_idx !== undefined) {
         idx = Math.min(Number(item.pos_idx) || 0, Math.max(0, paras.length - 1));
         if (Number(item.pos_win) > 0) win = Number(item.pos_win);

@@ -756,7 +756,12 @@ async function openDoc(id) {
     // 브라우저에 적어둔 위치와 서버 책갈피 중 더 나중 것을 쓴다. 시크릿 창에서는
     // 앞의 것이 비어 있으므로 서버 쪽이 그대로 채택된다.
     const local = LS.get("pos2:" + curUrl, null);
-    const item = lib.find((it) => it.id === id) || {};
+    let item = lib.find((it) => it.id === id) || {};
+    // 목록은 CDN 캐시(길게는 몇 분)라 폰에서 막 찍은 책갈피가 늦게 보인다. 위치만 새로 묻는다.
+    try {
+      const pr = await (await fetch(LIBAPI + "pos&id=" + encodeURIComponent(id))).json();
+      if (pr.ok) item = { pos_idx: pr.idx, pos_win: pr.win, read_at: pr.at };
+    } catch { /* 목록 값으로 간다 */ }
     const remote = (item.pos_idx === null || item.pos_idx === undefined) ? null : {
       idx: Number(item.pos_idx),
       win: Number(item.pos_win) || 0,
