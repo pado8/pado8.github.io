@@ -573,12 +573,15 @@
     out.push(line(0, `<span class="arrow">▼</span>` + open("html", attr("lang", "ko"))));
     shell(SHELL_TOP, out);
 
-    if (src.length <= VIEW) viewFrom = 0;
+    // 전체 보기에서는 구간을 자르지 않는다. 다 펼쳐 두고 스크롤로 읽는 모드라
+    // 중간을 접으면 취지가 깨진다. 가리기 모드에서만 구간을 제한한다.
+    const whole = readMode === "all";
+    if (whole || src.length <= VIEW) viewFrom = 0;
     else if (idx < viewFrom + VIEW_EDGE || idx >= viewFrom + VIEW - VIEW_EDGE) {
       viewFrom = Math.max(0, Math.min(src.length - VIEW, idx - Math.floor(VIEW / 2)));
     }
-    const vFrom = src.length <= VIEW ? 0 : viewFrom;
-    const vTo = Math.min(src.length, vFrom + VIEW);
+    const vFrom = (whole || src.length <= VIEW) ? 0 : viewFrom;
+    const vTo = whole ? src.length : Math.min(src.length, vFrom + VIEW);
 
     // 잘라낸 앞뒤는 접힌 노드 한 줄로 대신한다. 누르면 그쪽 구간으로 넘어간다.
     if (vFrom > 0) {

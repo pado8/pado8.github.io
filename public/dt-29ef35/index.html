@@ -394,9 +394,13 @@ function render() {
     out.push(line(4, `<span class="dots">${boss ? "" : "(o 를 눌러 URL 입력)"}</span>`));
   }
 
-  ensureView();
-  const vFrom = src.length <= VIEW ? 0 : viewFrom;
-  const vTo = Math.min(src.length, vFrom + VIEW);
+  // 전체 보기에서는 구간을 자르지 않는다. 다 펼쳐 두고 스크롤로 읽는 모드인데
+  // 중간을 접어 버리면 그 취지가 통째로 깨진다. 긴 글은 그만큼 느려지지만
+  // 그걸 감수하는 모드다. 가리기 모드에서만 구간을 제한한다.
+  const whole = readMode === "all";
+  if (!whole) ensureView(); else viewFrom = 0;
+  const vFrom = (whole || src.length <= VIEW) ? 0 : viewFrom;
+  const vTo = whole ? src.length : Math.min(src.length, vFrom + VIEW);
 
   // 앞뒤로 잘라낸 부분은 접힌 노드 한 줄로 대신한다. 눌러서 그쪽으로 넘어간다.
   if (vFrom > 0) {
