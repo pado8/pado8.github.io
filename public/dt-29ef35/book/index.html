@@ -157,6 +157,8 @@
       <div class="seg" data-g="font"><button data-v="sans">고딕</button><button data-v="serif">명조</button></div></div>
     <div class="row"><span class="l">나갈 때 자리 저장</span>
       <div class="seg" data-g="auto"><button data-v="1">켬</button><button data-v="0">끔</button></div></div>
+    <div class="row"><span class="l">PC 화면(위장 리더)으로</span>
+      <div class="seg"><button id="toPc">열기</button></div></div>
     <div class="note">문단을 누르면 그 자리가 책갈피가 된다. "나갈 때 자리 저장"을 켜 두면 책을 닫거나 서재로 돌아갈 때 화면 맨 위 문단이 자동으로 책갈피가 된다. 책갈피는 PC 리더와 공유된다.</div>
   </div>
 </div>
@@ -239,6 +241,13 @@ $("sheet").addEventListener("click", (e) => {
   }
 });
 $("opts").addEventListener("click", () => { $("sheet").hidden = false; });
+// 폰에서 PC 화면을 고르면 리더가 다시 책 모드로 되돌려 보내지 않게 표시를 남긴다.
+// 다시 켜려면 리더 설정의 "폰에서 책 모드로".
+$("toPc").addEventListener("click", () => {
+  autoSave();
+  try { localStorage.setItem("dt:phonebook", "off"); } catch { /* 무시 */ }
+  location.href = location.pathname.replace(/book\/?(index\.html)?$/, "");
+});
 
 /* ---------- 알림 ---------- */
 
