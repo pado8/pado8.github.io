@@ -219,6 +219,16 @@
   // 예전엔 클릭이 그 문단으로 점프하는 동작이었는데, 접혔다 펼쳐졌다 해서 헷갈렸다.
   let curDocId = "";   // 서재에서 연 문서의 id — 책갈피를 서버에 쓸 때 쓴다
 
+  // 읽는 방식 두 가지.
+  //   all  — 전부 펼쳐 두고 스크롤로 읽는다. 클릭은 책갈피만 찍는다.
+  //   peek — 클릭한 줄부터 정해진 줄 수만 펼치고 나머지는 접어 둔다.
+  let readMode = localStorage.getItem("dtreadmode") === "peek" ? "peek" : "all";
+  let peekN = num("dtpeek", 20, 1, 300);
+
+  // 클릭으로 자리를 잡을 때는 화면을 건드리지 않는다. 그 줄은 눈에 보이는 자리에
+  // 그대로 있어야 하는데, 중앙으로 끌어오면 화면이 튀어 아래서 시작하는 것처럼 보였다.
+  let keepScroll = false;
+
   // 긴 글은 보이는 구간만 그린다. 통째로 DOM 에 올리면 문단을 한 칸 옮길 때마다
   // 그걸 다시 그리느라 밀린다.
   const VIEW = 600;
@@ -554,6 +564,9 @@
   }
 
   function renderRead() {
+    win = readMode === "all"
+      ? Math.max(1, paras.length)
+      : Math.min(peekN, Math.max(1, paras.length));
     const src = paras;
     const out = [];
     out.push(line(0, `<span class="doctype">&lt;!DOCTYPE html&gt;</span>`));
@@ -616,8 +629,11 @@
       `<span class="gt">&gt;</span> div.layout <span class="gt">&gt;</span> main.content ` +
       `<span class="gt">&gt;</span> <b>p.para</b>` + wMark + nMark + sMark;
 
-    const sel = $("tree").querySelector(".sel");
-    if (sel) sel.scrollIntoView({ block: "center" });
+    if (!keepScroll) {
+      const sel = $("tree").querySelector(".sel");
+      if (sel) sel.scrollIntoView({ block: "center" });
+    }
+    keepScroll = false;
   }
 
   $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span><span class="brak">;</span></div><div class="prop">p<span class="brak">:</span> <span class="pval">본문 직접 지정</span><span class="brak">;</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">Shift+H<span class="brak">:</span> <span class="pval">읽는 영역 위 / 아래</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음 후보</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><div class="prop">Esc<span class="brak">:</span> <span class="pval">리더 닫기</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><span class="brak">}</span></div><div class="rule"><span class="src">app.css:412</span><span class="sels">.content p.para</span> <span class="brak">{</span><div class="prop">margin<span class="brak">:</span> <span class="pval">0 0 1.15em</span><span class="brak">;</span></div><div class="prop">line-height<span class="brak">:</span> <span class="pval">1.85</span><span class="brak">;</span></div><div class="prop">letter-spacing<span class="brak">:</span> <span class="pval">-.003em</span><span class="brak">;</span></div><div class="prop">word-break<span class="brak">:</span> <span class="pval">keep-all</span><span class="brak">;</span></div><div class="prop">text-wrap<span class="brak">:</span> <span class="pval">pretty</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="src">app.css:396</span><span class="sels">.layout--doc .content</span> <span class="brak">{</span><div class="prop">grid-area<span class="brak">:</span> <span class="pval">main</span><span class="brak">;</span></div><div class="prop">max-width<span class="brak">:</span> <span class="pval">44rem</span><span class="brak">;</span></div><div class="prop">padding<span class="brak">:</span> <span class="pval">2rem 1.25rem 6rem</span><span class="brak">;</span></div><div class="prop">margin-inline<span class="brak">:</span> <span class="pval">auto</span><span class="brak">;</span></div><div class="prop">container-type<span class="brak">:</span> <span class="pval">inline-size</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="src">app.css:341</span><span class="sels">.layout--doc</span> <span class="brak">{</span><div class="prop">display<span class="brak">:</span> <span class="pval">grid</span><span class="brak">;</span></div><div class="prop">grid-template-columns<span class="brak">:</span> <span class="pval">240px minmax(0,1fr) 200px</span><span class="brak">;</span></div><div class="prop">grid-template-areas<span class="brak">:</span> <span class="pval">"side main toc"</span><span class="brak">;</span></div><div class="prop">gap<span class="brak">:</span> <span class="pval">2rem</span><span class="brak">;</span></div><div class="prop">align-items<span class="brak">:</span> <span class="pval">start</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="src">tokens.css:88</span><span class="sels">:root</span> <span class="brak">{</span><div class="prop">--fg<span class="brak">:</span> <span class="pval">#e8eaed</span><span class="brak">;</span></div><div class="prop">--fg-muted<span class="brak">:</span> <span class="pval">#9aa0a6</span><span class="brak">;</span></div><div class="prop">--bg<span class="brak">:</span> <span class="pval">#202124</span><span class="brak">;</span></div><div class="prop">--bg-elev<span class="brak">:</span> <span class="pval">#292a2d</span><span class="brak">;</span></div><div class="prop">--accent<span class="brak">:</span> <span class="pval">#8ab4f8</span><span class="brak">;</span></div><div class="prop">--radius<span class="brak">:</span> <span class="pval">6px</span><span class="brak">;</span></div><div class="prop">--font-read<span class="brak">:</span> <span class="pval">'Noto Serif KR', serif</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="src">app.css:210</span><span class="sels">a, a:visited</span> <span class="brak">{</span><div class="prop">color<span class="brak">:</span> <span class="pval">var(--accent)</span><span class="brak">;</span></div><div class="prop">text-decoration<span class="brak">:</span> <span class="pval">none</span><span class="brak">;</span></div><div class="prop">text-underline-offset<span class="brak">:</span> <span class="pval">2px</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="src">app.css:64</span><span class="sels">body.theme-dark</span> <span class="brak">{</span><div class="prop">color<span class="brak">:</span> <span class="pval">var(--fg)</span><span class="brak">;</span></div><div class="prop">background<span class="brak">:</span> <span class="pval">var(--bg)</span><span class="brak">;</span></div><div class="prop">font-family<span class="brak">:</span> <span class="pval">var(--font-read)</span><span class="brak">;</span></div><div class="prop">-webkit-font-smoothing<span class="brak">:</span> <span class="pval">antialiased</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="src">reset.css:12</span><span class="sels">*, *::before, *::after</span> <span class="brak">{</span><div class="prop">box-sizing<span class="brak">:</span> <span class="pval">border-box</span><span class="brak">;</span></div><div class="prop">margin<span class="brak">:</span> <span class="pval">0</span><span class="brak">;</span></div><div class="prop">padding<span class="brak">:</span> <span class="pval">0</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="src">app.css:428</span><span class="sels">@media (max-width: 900px)</span> <span class="brak">{</span><div class="prop" style="padding-left:8px"><span class="sels">.layout--doc</span> <span class="brak">{</span></div><div class="prop" style="padding-left:26px">grid-template-columns<span class="brak">:</span> <span class="pval">minmax(0,1fr)</span><span class="brak">;</span></div><div class="prop" style="padding-left:8px"><span class="brak">}</span></div><span class="brak">}</span></div><div class="rule"><span class="src">user agent stylesheet</span><span class="sels">p</span> <span class="brak">{</span><div class="prop">display<span class="brak">:</span> <span class="pval">block</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="sels" style="color:var(--muted)">Inherited from <span style="color:var(--tag)">main</span><span style="color:var(--attr)">.content</span></span></div><div class="rule"><span class="src">app.css:377</span><span class="sels">main.content</span> <span class="brak">{</span><div class="prop">color<span class="brak">:</span> <span class="pval">var(--fg)</span><span class="brak">;</span></div><div class="prop">font-size<span class="brak">:</span> <span class="pval">17px</span><span class="brak">;</span></div><div class="prop">hyphens<span class="brak">:</span> <span class="pval">auto</span><span class="brak">;</span></div><span class="brak">}</span></div><div class="rule"><span class="sels" style="color:var(--muted)">Inherited from <span style="color:var(--tag)">body</span></span></div><div class="rule"><span class="src">app.css:64</span><span class="sels">body</span> <span class="brak">{</span><div class="prop">font-size<span class="brak">:</span> <span class="pval">16px</span><span class="brak">;</span></div><div class="prop">line-height<span class="brak">:</span> <span class="pval">1.6</span><span class="brak">;</span></div><div class="prop">text-rendering<span class="brak">:</span> <span class="pval">optimizeLegibility</span><span class="brak">;</span></div><span class="brak">}</span></div>`;
@@ -732,7 +748,8 @@
   /* ---------- 설정(기어 탭) ---------- */
 
   const SETS = [
-    ["win",  "펼칠 문단 수",  () => Math.min(win, paras.length) + " / " + paras.length],
+    ["readmode", "읽기 모드",     () => (readMode === "peek" ? "가리기" : "전체 보기")],
+    ["peek",     "가릴 때 펼칠 줄", () => peekN + "줄"],
     ["fs",   "글자 크기",     () => fs + "px"],
     ["wrap", "줄바꿈 폭",     () => wrapAt + "자"],
     ["theme", "테마",         () => (theme === "light" ? "라이트" : "다크")],
@@ -742,7 +759,14 @@
   ];
 
   function bump(what, d) {
-    if (what === "win")  { win = Math.max(1, Math.min(paras.length, win + d)); boss = false; save(); }
+    if (what === "readmode") {
+      readMode = readMode === "peek" ? "all" : "peek";
+      localStorage.setItem("dtreadmode", readMode); boss = false; save();
+    }
+    if (what === "peek") {
+      peekN = Math.max(1, Math.min(300, peekN + d));
+      readMode = "peek"; localStorage.setItem("dtreadmode", "peek"); localStorage.setItem("dtpeek", peekN); boss = false; save();
+    }
     if (what === "fs")   { fs = Math.max(10, Math.min(26, fs + d)); localStorage.setItem("dtfont", fs); }
     if (what === "wrap") { wrapAt = Math.max(20, Math.min(200, wrapAt + d * 4)); localStorage.setItem("dtwrap", wrapAt); }
     if (what === "theme") { theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); }
@@ -918,14 +942,16 @@
       case "k": case "ArrowUp": idx--; break;
       case "PageDown": idx += win; break;
       case "PageUp": idx -= win; break;
-      case "]": win++; break;
-      case "[": win--; break;
+      case "]": peekN = Math.min(300, peekN + 1); readMode = "peek"; localStorage.setItem("dtreadmode", "peek"); localStorage.setItem("dtpeek", peekN); break;
+      case "[": peekN = Math.max(1, peekN - 1); readMode = "peek"; localStorage.setItem("dtreadmode", "peek"); localStorage.setItem("dtpeek", peekN); break;
       // 숫자로 "진짜 글이 보이는 문단 수"를 바로 정한다. 0 은 10, a 는 전부.
       case "1": case "2": case "3": case "4": case "5":
       case "6": case "7": case "8": case "9":
-        win = +k; boss = false; break;
-      case "0": win = 10; boss = false; break;
-      case "a": win = paras.length; boss = false; break;
+        peekN = +k; boss = false; readMode = "peek";
+        localStorage.setItem("dtreadmode", "peek"); localStorage.setItem("dtpeek", peekN); break;
+      case "0": peekN = 10; boss = false; readMode = "peek"; localStorage.setItem("dtreadmode", "peek"); localStorage.setItem("dtpeek", peekN); break;
+      case "a":   // 전체 보기로 — 스크롤로 읽고 클릭은 책갈피만 찍는다
+        readMode = "all"; localStorage.setItem("dtreadmode", "all"); boss = false; break;
       // 글자 크기 - / + , 줄바꿈 폭 , / .
       case "-": case "_": fs = Math.max(10, fs - 1); localStorage.setItem("dtfont", fs); break;
       case "+": case "=": fs = Math.min(26, fs + 1); localStorage.setItem("dtfont", fs); break;
@@ -1088,7 +1114,7 @@
     const row = e.target.closest("[data-i]");
     if (!row) return;
     idx = parseInt(row.dataset.i, 10);
-    boss = false; clamp(); save(); render();
+    boss = false; keepScroll = true; clamp(); save(); render();
     pushPos("책갈피");
   });
 
