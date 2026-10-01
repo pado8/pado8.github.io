@@ -313,7 +313,21 @@ let theme = localStorage.getItem("dttheme") === "light" ? "light" : "dark";
 let fs = numLS("dtfont", 13, 10, 26);
 let wrapAt = numLS("dtwrap", 46, 20, 200);
 
-const LIBAPI = "https://api.aquapado.com/reader/library?k=831fdbe3964d54871e8e2d4a084d279e20ffa4ba&do=";
+// API 키는 git 에 넣지 않는다. 배포할 때 GitHub Actions 가 비밀값으로 치환하고,
+// 치환되지 않은 상태(로컬에서 파일을 그냥 열었을 때)에서는 주소 해시(#k=…)로 한 번
+// 받아 브라우저에 저장해 쓴다. 소스에 40자리 키가 박혀 있으면 공개 저장소에
+// 자격증명을 올리는 꼴이라 커밋 자체가 막힌다.
+const READER_KEY = (() => {
+  const baked = "__READER_KEY__";
+  if (baked.slice(0, 2) !== "__") return baked;   // 배포본: 치환된 실제 키
+  try {
+    const h = new URLSearchParams(location.hash.slice(1)).get("k");
+    if (h) { localStorage.setItem("dtkey", h); return h; }
+    return localStorage.getItem("dtkey") || "";
+  } catch { return ""; }
+})();
+
+const LIBAPI = "https://api.aquapado.com/reader/library?k=" + READER_KEY + "&do=";
 
 const LS = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
@@ -474,7 +488,7 @@ function renderRules() {
 //   원격: Vercel 함수(미국 리전). "한국 IP만 허용" 규칙을 건 사이트에서는 403.
 //   로컬: 이 PC 의 server.mjs. 집 회선 IP 라 브라우저로 직접 여는 것과 같은 조건.
 // 그래서 원격이 막히면 로컬로 넘긴다. 로컬 프록시가 안 떠 있으면 그냥 실패한다.
-const REMOTE = "https://api.aquapado.com/reader/fetch?k=831fdbe3964d54871e8e2d4a084d279e20ffa4ba&url=";
+const REMOTE = "https://api.aquapado.com/reader/fetch?k=" + READER_KEY + "&url=";
 const LOCAL  = "http://127.0.0.1:4488/fetch?url=";
 const CHAIN  = [["원격", REMOTE], ["로컬", LOCAL]];
 

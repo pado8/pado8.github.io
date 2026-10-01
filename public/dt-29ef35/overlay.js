@@ -173,7 +173,7 @@
 
   // 서재(서버 저장). 북마클릿은 소설 사이트 오리진에서 돌아서 리더 페이지의
   // 브라우저 저장소에 닿을 수 없다. 게다가 기기가 바뀌면 어차피 서버가 필요하다.
-  const LIB = "https://api.aquapado.com/reader/library?k=831fdbe3964d54871e8e2d4a084d279e20ffa4ba&do=";
+  const LIB = "https://api.aquapado.com/reader/library?k=__READER_KEY__&do=";
   let saveMsg = "";
 
   function cssPath(el) {

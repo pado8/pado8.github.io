@@ -31,6 +31,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # 리더 페이지의 API 키는 저장소에 두지 않는다. 소스에는 자리표시자만 있고
+      # 여기서 비밀값으로 되돌린다. Vite 가 public/ 을 dist 로 복사하므로 빌드 전에 해야 한다.
+      # 치환에 실패하면 키 없이 배포돼 조용히 망가지므로 빌드를 세운다.
+      - name: Inject reader key
+        env:
+          READER_KEY: ${{ secrets.READER_KEY }}
+        run: |
+          if [ -z "$READER_KEY" ]; then
+            echo "::error::READER_KEY 비밀값이 비어 있다 (Settings > Secrets > Actions)"
+            exit 1
+          fi
+          files=$(grep -rl "__READER_KEY__" public || true)
+          if [ -z "$files" ]; then
+            echo "::error::자리표시자가 있는 파일을 찾지 못했다"
+            exit 1
+          fi
+          for f in $files; do
+            sed -i "s/__READER_KEY__/$READER_KEY/g" "$f"
+            echo "치환: $f"
+          done
+          if grep -rq "__READER_KEY__" public; then
+            echo "::error::치환되지 않은 자리표시자가 남았다"
+            exit 1
+          fi
+
       - name: Build with Vite
         run: npm run build
 
