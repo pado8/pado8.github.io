@@ -125,6 +125,7 @@ for k, t, d, col in DAYS:
                    % (n, esc(p['n']), desc_of(p, head), k, p['lng'], p['lat']))
         rows.append([p['n'], str(p['lat']), str(p['lng']),
                      '%s,%s' % (p['lat'], p['lng']),
+                     CATNAME.get(p.get('c'), ''),
                      t, d, str(n), tm, p.get('area', ''),
                      (p.get('why', '') or '').replace('\n', ' ')])
     if len(stops) > 1:
@@ -141,21 +142,29 @@ with io.open(p_plan, 'w', encoding='utf-8', newline='\n') as f:
 print('가오슝-일정.kml  %d곳' % len(rows))
 
 # ══ 3) 일정 CSV ════════════════════════════════════════════════
+# ⚠ 구글 내 지도는 KML 의 IconStyle 을 통째로 무시하고 제 기본 핀으로 덮는다.
+#    종류별 아이콘을 쓰려면 CSV 로 올린 뒤 '분류' 열을 기준으로
+#    '데이터 열 기준 스타일 지정'을 해야 한다 — 그래서 분류 열을 앞쪽에 둔다.
 import csv
-p_csv = os.path.join(OUT, '가오슝-일정.csv')
-with io.open(p_csv, 'w', encoding='utf-8-sig', newline='') as f:
-    w = csv.writer(f)
-    # ⚠ 구글 내 지도는 한국어 '위도/경도' 열 이름을 못 읽고 역할을 거꾸로 배정한 적이 있다
-    # ("위도 (경도)" 처럼 괄호로 제 배정을 보여주는데 그게 뒤바뀐다).
-    # 영문 표준 이름을 앞에 두고, 한 열에 합친 Coordinates 도 같이 넣는다 —
-    # 그 한 열만 고르면 뒤바뀔 여지가 없다.
-    w.writerow(['Name', 'Latitude', 'Longitude', 'Coordinates',
-                '날짜', '요일', '순번', '시각', '지역', '메모'])
-    w.writerows(rows)
+HDR = ['Name', 'Latitude', 'Longitude', 'Coordinates',
+       '분류', '날짜', '요일', '순번', '시각', '지역', '메모']
+
+def write_csv(path, body):
+    with io.open(path, 'w', encoding='utf-8-sig', newline='') as f:
+        w = csv.writer(f)
+        w.writerow(HDR)
+        w.writerows(body)
+
+write_csv(os.path.join(OUT, '가오슝-일정.csv'), rows)
 print('가오슝-일정.csv  %d행' % len(rows))
 
+# 레이어를 DAY 로 나누고 싶을 때 쓰라고 날짜별로도 쪼개 둔다
 for k, t, d, col in DAYS:
-    print('  %s %s : %d곳' % (t, d, len([r for r in rows if r[4] == t])))
+    sub = [r for r in rows if r[5] == t]
+    if not sub:
+        continue
+    write_csv(os.path.join(OUT, '가오슝-일정-DAY%s.csv' % k), sub)
+    print('  %s %s : %d곳  → 가오슝-일정-DAY%s.csv' % (t, d, len(sub), k))
 
 # ══ 4) 종류별 CSV (기존 형식 유지) ══════════════════════════════
 FN = {'see': '명소', 'food': '맛집', 'cafe': '카페',

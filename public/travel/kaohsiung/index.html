@@ -556,7 +556,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v10-04b</span>
+  <span class="ver">v10-05a</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
@@ -1791,10 +1791,14 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 친구들과 지도를 같이 편집할 때 쓰세요.</p>
 <div class="box hi">
 <b class="h">파일 내려받기</b>
-<b>① 우리 일정</b> — <b>DAY 1~4가 레이어로 나뉘고 순서대로 선이 그어집니다.</b>
-핀 이름에 번호가, 설명에 시각이 붙어 있어 그날 동선이 한눈에 보입니다<br>
-<a class="dl go" href="mymaps/가오슝-일정.kml" download>일정 23곳 (KML)</a>
-<a class="dl" href="mymaps/가오슝-일정.csv" download>일정 (CSV)</a><br><br>
+<b>① 우리 일정</b> — <b>종류별 아이콘을 쓰려면 CSV</b>를 받으세요(아래 ⚠ 참고)<br>
+<a class="dl go" href="mymaps/가오슝-일정.csv" download>일정 23곳 (CSV)</a>
+<a class="dl" href="mymaps/가오슝-일정.kml" download>일정 (KML · 레이어 자동 분리+동선)</a><br>
+<span class="sm">DAY 를 레이어로 가르려면 날짜별로 따로 올리세요 —
+<a class="dl" href="mymaps/가오슝-일정-DAY1.csv" download>DAY 1</a>
+<a class="dl" href="mymaps/가오슝-일정-DAY2.csv" download>DAY 2</a>
+<a class="dl" href="mymaps/가오슝-일정-DAY3.csv" download>DAY 3</a>
+<a class="dl" href="mymaps/가오슝-일정-DAY4.csv" download>DAY 4</a></span><br><br>
 <b>② 후보 전체</b> — 종류가 폴더로 나뉜 KML 한 파일<br>
 <a class="dl" href="mymaps/가오슝-전체.kml" download>전체 119곳 (KML)</a><br><br>
 <b>③ 종류별 CSV</b> — 한 파일이 한 레이어가 됩니다(레이어마다 핀 색을 따로 줄 수 있습니다)<br>
@@ -1824,6 +1828,19 @@ DAY 2 점심·저녁을 여기서 해결하면 이동 없이 로컬 음식을 �
 <b>6.</b> 종류마다 2~5를 되풀이하면 <b>레이어 다섯 개</b>가 색깔별로 쌓입니다
 </div>
 
+<div class="box bad">
+<b class="h">⚠ 종류별 아이콘은 CSV 로만 됩니다 — KML 은 아이콘이 무시됩니다</b>
+<b>내 지도는 KML 에 적어 보낸 아이콘을 통째로 버리고 제 기본 핀으로 덮습니다.</b>
+파일을 아무리 잘 만들어도 소용이 없습니다. 숙소는 침대, 공항은 비행기처럼 쓰려면
+<b>CSV 로 올린 뒤 내 지도 안에서 직접 지정</b>해야 합니다. CSV 에 <b>분류</b> 열을 넣어 뒀습니다.
+<b>1.</b> 레이어 아래 <b>균일 스타일</b>을 누릅니다<br>
+<b>2.</b> 그룹 기준을 <b>분류</b>로 바꿉니다 → 명소·맛집·카페·쇼핑·숙소·공항으로 갈립니다<br>
+<b>3.</b> 갈라진 줄마다 <b>페인트통</b>을 누르면 색과 아이콘을 고르는 창이 열립니다<br>
+<b>4.</b> 라벨을 <b>Name</b> 으로 지정하면 지도에 이름이 글자로 뜹니다<br>
+<span class="sm">그룹 기준은 하나만 고를 수 있습니다. <b>분류로 아이콘을 나누면 DAY 는 색으로 못 나눕니다</b> —
+DAY 까지 가르고 싶으면 위의 날짜별 CSV 네 개를 레이어 네 개로 올리고, 레이어마다 2~4 를 반복하세요.</span>
+</div>
+
 <div class="box ok">
 <b class="h">✔ 일정 KML — DAY 네 개가 레이어로 갈라지고 선까지 그어집니다</b>
 <b>가오슝-일정.kml</b> 하나를 올리면 <b>DAY 1 · DAY 2 · DAY 3 · DAY 4</b> 네 레이어가 생기고,
@@ -1836,9 +1853,8 @@ DAY 2(컨딩)는 가오슝에서 120km 남쪽이라, 올리고 나면 지도가 
 <b class="h">✔ KML 하나면 끝납니다 — 레이어까지 알아서 나뉩니다</b>
 <b>가오슝-전체.kml</b> 하나만 올리면 내 지도가 <b>명소·맛집·카페·쇼핑·숙소·공항
 여섯 레이어로 알아서 쪼개 줍니다.</b> 파일 안에 종류가 폴더로 들어 있어서입니다.
-<b>핀을 누르면 평점·가는 법·설명과 구글 지도 링크</b>가 나오고, <b>아이콘과 색도 종류별로 붙어 있습니다</b> — 명소는 카메라(파랑), 맛집은 포크(빨강),
-카페는 커피잔(갈색), 쇼핑은 쇼핑백(보라), 숙소는 침대(초록).<br>
-<b>CSV 다섯 개</b>는 레이어를 손수 나누고 싶거나, 나중에 한 종류만 갈아 끼울 때 쓰세요.<br>
+<b>핀을 누르면 평점·가는 법·설명과 구글 지도 링크</b>가 나옵니다.<br>
+<b>CSV</b>는 레이어를 손수 나누고 싶거나, 나중에 한 종류만 갈아 끼울 때 쓰세요.<br>
 <span class="sm">한도: 레이어당 2,000개 · 지도당 10레이어 / 10,000개 · KML 5MB · CSV 40MB.
 우리 건 KML 33KB, CSV 최대 9KB라 한참 여유 있습니다.</span>
 </div>
