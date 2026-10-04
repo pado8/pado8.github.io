@@ -200,7 +200,47 @@
     th,td{padding:9px 10px}
   }
   /* ── 모바일 가독성 ─────────────────────────────────────────────── */
-  .backtop{position:fixed;right:14px;bottom:18px;z-index:70;width:44px;height:44px;border-radius:14px;
+  /* ── 환전 계산기 ──────────────────────────────────────────────────
+     가격표를 보다가 바로 원화로 바꿔 보는 용도라 어느 탭에서나 닿아야 한다
+     → 떠 있는 버튼 + 아래에서 올라오는 시트. 환율은 하루 한 번꼴로 받아
+     localStorage 에 남기고, 오프라인이면 마지막 값으로 계속 계산한다. */
+  .fxfab{position:fixed;right:14px;bottom:18px;z-index:70;height:44px;
+         border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink2);
+         font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;box-shadow:var(--sh-lg);
+         display:inline-flex;align-items:center;gap:5px;padding:0 12px;
+         -webkit-tap-highlight-color:transparent}
+  .fxfab:hover,.fxfab:focus-visible{border-color:var(--accent);color:var(--accent);outline:0}
+  .fxfab b{color:var(--accent)}
+  .fxfab.off b{color:var(--dim)}
+  /* ⚠ display 를 직접 주는 요소에는 [hidden] 을 반드시 같이 눌러줄 것 */
+  .fxbg{position:fixed;inset:0;z-index:80;background:rgba(10,14,28,.45)}
+  .fxbg[hidden]{display:none}
+  .fxsheet{position:fixed;left:0;right:0;bottom:0;z-index:81;margin:0 auto;max-width:560px;
+           background:var(--card);border:1px solid var(--line);border-bottom:0;
+           border-radius:18px 18px 0 0;box-shadow:var(--sh-lg);
+           padding:12px 18px calc(16px + env(safe-area-inset-bottom,0px))}
+  .fxsheet[hidden]{display:none}
+  .fxhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .fxhead b{font-size:15px;letter-spacing:-.02em}
+  .fxx{font:inherit;font-size:17px;line-height:1;padding:7px 11px;border-radius:9px;
+       border:1px solid var(--line);background:var(--card2);color:var(--ink2);cursor:pointer}
+  .fxrow{display:flex;align-items:center;gap:9px;margin:7px 0}
+  .fxrow input{flex:1 1 auto;width:100%;min-width:0;font:inherit;font-size:19px;font-weight:800;
+               text-align:right;letter-spacing:-.01em;padding:11px 12px;border-radius:12px;
+               border:1px solid var(--line);background:var(--card2);color:var(--ink)}
+  .fxrow input:focus{outline:0;border-color:var(--accent);background:var(--card)}
+  .fxrow span{flex:0 0 auto;width:46px;font-size:13px;font-weight:800;color:var(--dim)}
+  .fxeq{text-align:center;color:var(--dim);font-size:12px;line-height:1;margin:1px 0}
+  .fxq{display:flex;gap:6px;flex-wrap:wrap;margin:11px 0 0}
+  .fxq button{flex:1 1 auto;font:inherit;font-size:13px;font-weight:800;padding:8px 6px;
+              border-radius:10px;border:1px solid var(--line);background:var(--card2);
+              color:var(--ink2);cursor:pointer}
+  .fxq button:hover{border-color:var(--accent);color:var(--accent)}
+  .fxmeta{display:flex;align-items:center;justify-content:space-between;gap:10px;
+          margin:11px 0 0;font-size:11.5px;color:var(--dim)}
+  .fxmeta button{font:inherit;font-size:11.5px;font-weight:700;padding:5px 9px;border-radius:8px;
+                 border:1px solid var(--line);background:var(--card2);color:var(--ink2);cursor:pointer}
+  .backtop{position:fixed;right:14px;bottom:130px;z-index:70;width:44px;height:44px;border-radius:14px;
            border:1px solid var(--line);background:var(--card);color:var(--ink2);
            font:inherit;font-size:17px;font-weight:800;cursor:pointer;box-shadow:var(--sh-lg);
            display:none;place-items:center;padding:0}
@@ -258,7 +298,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v09-05c</span>
+  <span class="ver">v10-04a</span>
 </div>
 <p class="lead">인천·김포 직항 전수 조사, 예산, 4일 일정, 오프라인 지도까지.
 데이터가 없어도 열립니다.</p>
@@ -1140,6 +1180,146 @@ Kiwi와 lastminute 두 플랫폼을 교차확인했습니다. 인천·김포 출
       ticking = false;
     });
   }, { passive: true });
+})();
+
+/* ── 환전 계산기 ────────────────────────────────────────────────────
+   현지 가격을 원화로(또는 반대로) 바로 바꿔 보는 떠 있는 계산기.
+   환율은 open.er-api.com(하루 1회 갱신) 우선, 막히면 jsdelivr 백업,
+   둘 다 안 되면 마지막으로 받아둔 값, 그것도 없으면 기준값으로 계산한다.
+   외부 도메인이라 서비스워커가 가로채지 않는다(origin 이 다르면 통과). */
+(function () {
+  var CUR = 'JPY', DEC = 0, QUICK = [500, 1000, 5000, 10000];
+  var BASE = 8.56, BASE_AT = '2026-10-04 기준값';   // 한 번도 못 받았을 때
+  var KEY = 'ng.fx.v1', MAXAGE = 12 * 3600e3;       // 12시간 지나면 다시 받는다
+  var rate = BASE, at = 0, busy = false;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved && saved.cur === CUR && saved.rate > 0) { rate = saved.rate; at = saved.at || 0; }
+  } catch (e) {}
+
+  var fab = document.createElement('button');
+  fab.className = 'fxfab'; fab.type = 'button';
+  fab.setAttribute('aria-haspopup', 'dialog');
+  document.body.appendChild(fab);
+
+  var bg = document.createElement('div');
+  bg.className = 'fxbg'; bg.hidden = true;
+  document.body.appendChild(bg);
+
+  var sheet = document.createElement('section');
+  sheet.className = 'fxsheet'; sheet.hidden = true;
+  sheet.setAttribute('role', 'dialog');
+  sheet.setAttribute('aria-modal', 'true');
+  sheet.setAttribute('aria-label', '환전 계산기');
+  sheet.innerHTML =
+    '<div class="fxhead"><b>환전 계산기</b>' +
+      '<button class="fxx" type="button" aria-label="닫기">✕</button></div>' +
+    '<div class="fxrow"><input id="fxF" inputmode="decimal" placeholder="0" ' +
+      'aria-label="' + CUR + ' 금액"><span>' + CUR + '</span></div>' +
+    '<div class="fxeq">⇅</div>' +
+    '<div class="fxrow"><input id="fxW" inputmode="decimal" placeholder="0" ' +
+      'aria-label="원화 금액"><span>원</span></div>' +
+    '<div class="fxq"></div>' +
+    '<div class="fxmeta"><span id="fxAt"></span>' +
+      '<button id="fxGo" type="button">환율 다시 받기</button></div>';
+  document.body.appendChild(sheet);
+
+  var F = sheet.querySelector('#fxF'), W = sheet.querySelector('#fxW');
+  var atEl = sheet.querySelector('#fxAt'), goEl = sheet.querySelector('#fxGo');
+
+  function num(s) {
+    var v = parseFloat(String(s).replace(/[^0-9.]/g, ''));
+    return isFinite(v) ? v : null;
+  }
+  function fmt(v, d) { return v.toLocaleString('ko-KR', { maximumFractionDigits: d }); }
+  function fromF() { var v = num(F.value); W.value = v === null ? '' : fmt(v * rate, 0); }
+  function fromW() { var v = num(W.value); F.value = v === null ? '' : fmt(v / rate, DEC); }
+  F.addEventListener('input', fromF);
+  W.addEventListener('input', fromW);
+
+  QUICK.forEach(function (v) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = fmt(v, 0);
+    // 누른 뒤 포커스를 주면 폰에서 키보드가 다시 올라와 결과를 가린다 — 값만 넣는다
+    b.addEventListener('click', function () { F.value = String(v); fromF(); });
+    sheet.querySelector('.fxq').appendChild(b);
+  });
+
+  function stamp() {
+    if (!at) return BASE_AT;
+    var d = new Date(at);
+    return (d.getMonth() + 1) + '/' + d.getDate() + ' ' +
+           ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ' 기준';
+  }
+  function paint() {
+    // 엔화는 1엔이 너무 작아 체감이 안 된다 — 버튼에는 100엔 기준으로 보여준다
+    fab.innerHTML = '💱 <b>' + fmt(rate * 100, 0) + '</b>원';
+    fab.setAttribute('aria-label', '환전 계산기 — 100 ' + CUR + ' 약 ' + fmt(rate * 100, 0) + '원');
+    fab.classList.toggle('off', !at);
+    atEl.textContent = '100 ' + CUR + ' = ' + fmt(rate * 100, 1) + '원 · ' + stamp();
+    if (document.activeElement === W) fromW(); else fromF();
+  }
+
+  function pull(force) {
+    if (busy) return;
+    if (!force && at && Date.now() - at < MAXAGE) return;
+    if (!force && navigator.onLine === false) return;
+    busy = true; goEl.disabled = true; goEl.textContent = '받는 중…';
+    function done(r) {
+      busy = false; goEl.disabled = false; goEl.textContent = '환율 다시 받기';
+      if (r > 0) {
+        rate = r; at = Date.now();
+        try { localStorage.setItem(KEY, JSON.stringify({ cur: CUR, rate: rate, at: at })); } catch (e) {}
+      }
+      paint();
+    }
+    fetch('https://open.er-api.com/v6/latest/KRW', { cache: 'no-store' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        var v = j && j.result === 'success' && j.rates && j.rates[CUR];
+        if (v > 0) { done(1 / v); return; }
+        throw new Error('bad');
+      })
+      .catch(function () {
+        fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/krw.json',
+              { cache: 'no-store' })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            var v = j && j.krw && j.krw[CUR.toLowerCase()];
+            done(v > 0 ? 1 / v : 0);
+          })
+          .catch(function () { done(0); });
+      });
+  }
+
+  // 페이지 코멘트 도구 버튼(.apick-launch)은 z-index 가 21억이라 무엇을 올려도 덮는다
+  // — 시트가 떠 있는 동안만 비켜 둔다.
+  function pick(show) {
+    var p = document.querySelector('.apick-launch');
+    if (p) p.style.visibility = show ? '' : 'hidden';
+  }
+  function open() {
+    bg.hidden = false; sheet.hidden = false;
+    pick(false);
+    pull(false);
+    setTimeout(function () {
+      try { F.focus({ preventScroll: true }); } catch (e) { F.focus(); }
+    }, 30);
+  }
+  function close() { bg.hidden = true; sheet.hidden = true; pick(true); }
+
+  fab.addEventListener('click', open);
+  bg.addEventListener('click', close);
+  sheet.querySelector('.fxx').addEventListener('click', close);
+  goEl.addEventListener('click', function () { pull(true); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) close(); });
+  addEventListener('online', function () { pull(false); });
+
+  paint();
+  // 열어두기만 해도 그날치는 채워지도록 처음 한 번은 조용히 받아 둔다
+  if (navigator.onLine !== false) setTimeout(function () { pull(false); }, 1200);
 })();
 
 </script>
