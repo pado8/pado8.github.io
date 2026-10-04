@@ -55,7 +55,7 @@
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6199803,120.2815287</description><styleUrl>#s_see</styleUrl><Point><coordinates>120.2815287,22.6199803,0</coordinates></Point></Placemark>
 <Placemark><name>빛의 돔(光之穹頂) — 메이리다오역</name><description>평점 ★ 4.4 · 4,621 · 지역 메이리다오 · 머무는 시간 약 0.3시간
 가는 법 — MRT 미려도역 구내
-세계 최대 유리 공공미술 빛의 돔(光之穹頂). 역 안이라 5분이면 봄
+세계 최대 유리 공공미술 빛의 돔(光之穹頂). 역 안이라 5분이면 봅니다. ⚠조명쇼(鳳翼天翔)는 2026-01-07부터 중단 중이고 재개 공고가 없습니다 — 작품 자체는 늘 켜져 있습니다
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6313652,120.3019167</description><styleUrl>#s_see</styleUrl><Point><coordinates>120.3019167,22.6313652,0</coordinates></Point></Placemark>
 <Placemark><name>가오슝시립역사박물관</name><description>평점 ★ 4.4 · 4,579 · 지역 옌청푸 · 머무는 시간 약 1.0시간
 가는 법 — MRT 옌청푸역 도보 5분
@@ -307,6 +307,30 @@
 가는 법 — MRT 미려도역 11번 출구 · 매일 16:30~24:00
 접근성 최고. 관광객 비중이 높지만 첫날 저녁으로는 최적
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6320758,120.2991547</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2991547,22.6320758,0</coordinates></Point></Placemark>
+<Placemark><name>샤오웨광 쯔창점(城裡的小月光)</name><description>평점 ★ 4.8 · 2,242 · 지역 첸진 · 머무는 시간 약 1.0시간
+가는 법 — 호텔에서 183m · 도보 2분 · 쯔창1로(自強一路) 55호
+⏰ 17:00~익일 01:30. 도착일 저녁에 가장 가깝고 평점도 가장 높습니다. 대만식 탕·덮밥에 NT$200~400
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6306779,120.2931344</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2931344,22.6306779,0</coordinates></Point></Placemark>
+<Placemark><name>정쑹 면집(正松麵舖)</name><description>평점 ★ 4.7 · 269 · 지역 첸진 · 머무는 시간 약 0.8시간
+가는 법 — 호텔에서 288m · 도보 4분 · 쯔창1로 83항 63호
+⏰ 11:00~. 점심·저녁 면 요리. 후기 269건으로 적은 편이지만 평점이 높고 도보권입니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6311708,120.2911751</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2911751,22.6311708,0</coordinates></Point></Placemark>
+<Placemark><name>우지 러우위안(吳記肉圓)</name><description>평점 ★ 4.5 · 484 · 지역 첸진 · 머무는 시간 약 0.5시간
+가는 법 — 호텔에서 301m · 도보 4분 · 룽안가(榮安街) 126호
+러우위안(肉圓)은 쫄깃한 전분 피에 고기 소를 넣은 대만 간식입니다. NT$200 이하
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.630401,120.291577</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.291577,22.630401,0</coordinates></Point></Placemark>
+<Placemark><name>광터우파이 유판(光頭牌油飯)</name><description>평점 ★ 4.7 · 123 · 지역 첸진 · 머무는 시간 약 0.5시간
+가는 법 — 호텔에서 340m · 도보 5분 · 쯔창1로 187호
+⏰ 10:00~. 유판(油飯)은 찹쌀에 고기·버섯을 볶아 지은 밥입니다. 후기는 적지만 평점이 높습니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6345669,120.2916076</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2916076,22.6345669,0</coordinates></Point></Placemark>
+<Placemark><name>융옌 샤오관(永筵小館)</name><description>평점 ★ 4.4 · 480 · 지역 첸진 · 머무는 시간 약 1.0시간
+가는 법 — 호텔에서 349m · 도보 5분 · 청궁1로(成功一路) 528호
+제대로 앉아 먹는 중식당. NT$600~800으로 이 동네에서는 비싼 편이라 넷이 한 끼 제대로 먹을 때
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6330296,120.2904586</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2904586,22.6330296,0</coordinates></Point></Placemark>
+<Placemark><name>유잉 옌수이지(宥縈鹹水雞)</name><description>평점 ★ 4.9 · 69 · 지역 첸진 · 머무는 시간 약 0.5시간
+가는 법 — 호텔에서 383m · 도보 5분 · 난타이헝로(南臺橫路) 121호
+옌수이지(鹹水雞)는 삶은 닭을 채소와 함께 차갑게 무쳐 파는 것입니다. 후기 69건이라 표본이 작습니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6342789,120.2967476</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2967476,22.6342789,0</coordinates></Point></Placemark>
 </Folder>
 <Folder><name>카페</name>
 <Placemark><name>우링녠다이 커피(五零年代咖啡)</name><description>평점 ★ 4.9 · 719 · 지역 옌청푸 · 머무는 시간 약 0.8시간
