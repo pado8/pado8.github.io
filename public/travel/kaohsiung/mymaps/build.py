@@ -123,8 +123,10 @@ for k, t, d, col in DAYS:
         out.append('<Placemark><name>%d. %s</name><description>%s</description>'
                    '<styleUrl>#d%s</styleUrl><Point><coordinates>%s,%s,0</coordinates></Point></Placemark>'
                    % (n, esc(p['n']), desc_of(p, head), k, p['lng'], p['lat']))
-        rows.append([t, d, str(n), tm, p['n'], str(p['lat']), str(p['lng']),
-                     p.get('area', ''), (p.get('why', '') or '').replace('\n', ' ')])
+        rows.append([p['n'], str(p['lat']), str(p['lng']),
+                     '%s,%s' % (p['lat'], p['lng']),
+                     t, d, str(n), tm, p.get('area', ''),
+                     (p.get('why', '') or '').replace('\n', ' ')])
     if len(stops) > 1:
         coords = ' '.join('%s,%s,0' % (p['lng'], p['lat']) for p, _ in stops)
         out.append('<Placemark><name>%s 동선</name><styleUrl>#d%s</styleUrl>'
@@ -143,12 +145,17 @@ import csv
 p_csv = os.path.join(OUT, '가오슝-일정.csv')
 with io.open(p_csv, 'w', encoding='utf-8-sig', newline='') as f:
     w = csv.writer(f)
-    w.writerow(['날짜', '요일', '순번', '시각', '이름', '위도', '경도', '지역', '메모'])
+    # ⚠ 구글 내 지도는 한국어 '위도/경도' 열 이름을 못 읽고 역할을 거꾸로 배정한 적이 있다
+    # ("위도 (경도)" 처럼 괄호로 제 배정을 보여주는데 그게 뒤바뀐다).
+    # 영문 표준 이름을 앞에 두고, 한 열에 합친 Coordinates 도 같이 넣는다 —
+    # 그 한 열만 고르면 뒤바뀔 여지가 없다.
+    w.writerow(['Name', 'Latitude', 'Longitude', 'Coordinates',
+                '날짜', '요일', '순번', '시각', '지역', '메모'])
     w.writerows(rows)
 print('가오슝-일정.csv  %d행' % len(rows))
 
 for k, t, d, col in DAYS:
-    print('  %s %s : %d곳' % (t, d, len([r for r in rows if r[0] == t])))
+    print('  %s %s : %d곳' % (t, d, len([r for r in rows if r[4] == t])))
 
 # ══ 4) 종류별 CSV (기존 형식 유지) ══════════════════════════════
 FN = {'see': '명소', 'food': '맛집', 'cafe': '카페',
@@ -160,9 +167,11 @@ for c in ['see', 'food', 'cafe', 'shop', 'stay', 'air']:
     path = os.path.join(OUT, '가오슝-%s.csv' % FN[c])
     with io.open(path, 'w', encoding='utf-8-sig', newline='') as f:
         w = csv.writer(f)
-        w.writerow(['이름', '분류', '위도', '경도', '평점', '지역', '가는 법', '설명', '구글지도'])
+        w.writerow(['Name', 'Latitude', 'Longitude', 'Coordinates',
+                    '분류', '평점', '지역', '가는 법', '설명', '구글지도'])
         for p in items:
-            w.writerow([p['n'], CATNAME[c], p['lat'], p['lng'], p.get('r', ''),
+            w.writerow([p['n'], p['lat'], p['lng'], '%s,%s' % (p['lat'], p['lng']),
+                        CATNAME[c], p.get('r', ''),
                         p.get('area', ''), p.get('acc', ''),
                         (p.get('why', '') or '').replace('\n', ' '), gmap(p)])
 print('\n종류별 CSV:', {CATNAME[c]: n for c, n in counts.items()})
