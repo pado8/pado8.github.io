@@ -50,37 +50,67 @@
 <Placemark><name>DAY 1 동선</name><styleUrl>#d1</styleUrl><LineString><tessellate>1</tessellate><coordinates>120.351867,22.575023,0 120.2937476,22.6322256,0 120.3019167,22.6313652,0 120.2877845,22.6210904,0 120.2858037,22.6236461,0 120.2916188,22.6203245,0 120.2815287,22.6199803,0 120.2777946,22.6186461,0</coordinates></LineString></Placemark>
 </Folder>
 <Folder><name>DAY 2 · 10/30 금</name>
-<Placemark><name>1. 스즈카 서킷 파크(鈴鹿賽道樂園)</name><description>DAY 2 11:00 · 1번째
-지역 첸전 · 머무는 시간 약 3.0시간
-가는 법 — MRT 차오야역에서 택시 10분 · 가오슝 시내입니다(일본·타이중 아님)
-일본 스즈카 서킷과 제휴한 대만 유일의 드라이빙 테마파크. 카트·미니 서킷 위주라 반나절 잡습니다
-구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.5834212,120.3286197</description><styleUrl>#d2</styleUrl><Point><coordinates>120.3286197,22.5834212,0</coordinates></Point></Placemark>
-<Placemark><name>2. 단단 햄버거 시쯔완점(丹丹漢堡)</name><description>DAY 2 13:40 · 2번째
-평점 ★ 4.3 · 7,261 · 지역 하마싱 · 머무는 시간 약 0.5시간
-가는 법 — MRT 하마싱역(Hamasen) 1번 출구
-남부 대만에만 있는 체인. 햄버거에 몐셴(麵線)이 딸려 나오는 조합이 가오슝다운 경험입니다
-구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6223566,120.2733317</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2733317,22.6223566,0</coordinates></Point></Placemark>
-<Placemark><name>3. 하이즈빙 빙수(渡船頭海之冰)</name><description>DAY 2 14:35 · 3번째
-평점 ★ 4.3 · 지역 시쯔완 · 머무는 시간 약 0.5시간
-가는 법 — MRT 하마싱역(Hamasen) · 구산 페리 선착장 근처
-🇰🇷 한국 여행기 단골. 대야만 한 그릇에 나오는 빙수라 넷이 하나 시켜 나눠 먹는 집입니다
-구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6199,120.27106</description><styleUrl>#d2</styleUrl><Point><coordinates>120.27106,22.6199,0</coordinates></Point></Placemark>
-<Placemark><name>4. 다거우 영국영사관(打狗英國領事館)</name><description>DAY 2 15:20 · 4번째
+<Placemark><name>1. 소우산 연인 전망대(壽山情人觀景台)</name><description>DAY 2 09:35 · 1번째
+평점 ★ 4.5 · 8,616 · 지역 구산 · 머무는 시간 약 1.0시간
+가는 법 — MRT 옌청푸역에서 택시 10분
+가오슝 야경 1순위. 항구와 85빌딩이 한 화면에 들어옵니다. 해 지기 30분 전에 올라가세요
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6254253,120.2741481</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2741481,22.6254253,0</coordinates></Point></Placemark>
+<Placemark><name>2. 다거우 영국영사관(打狗英國領事館)</name><description>DAY 2 10:40 · 2번째
 평점 ★★ · 지역 시쯔완 · 머무는 시간 약 1.5시간
 가는 법 — 시쯔완 언덕
 옛 영국 영사관에서 항구를 내려다봄. 일몰과 묶어서 보는 코스
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.618284,120.267214</description><styleUrl>#d2</styleUrl><Point><coordinates>120.267214,22.618284,0</coordinates></Point></Placemark>
-<Placemark><name>5. 구산 페리 선착장</name><description>DAY 2 16:10 · 5번째
+<Placemark><name>3. 단단 햄버거 시쯔완점(丹丹漢堡)</name><description>DAY 2 11:50 · 3번째
+평점 ★ 4.3 · 7,261 · 지역 하마싱 · 머무는 시간 약 0.5시간
+가는 법 — MRT 하마싱역(Hamasen) 1번 출구
+남부 대만에만 있는 체인. 햄버거에 몐셴(麵線)이 딸려 나오는 조합이 가오슝다운 경험입니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6223566,120.2733317</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2733317,22.6223566,0</coordinates></Point></Placemark>
+<Placemark><name>4. 구산 페리 선착장</name><description>DAY 2 12:50 · 4번째
 평점 ★★ · 지역 구산 · 머무는 시간 약 0.3시간
 가는 법 — MRT 시쯔완역 도보 8분
 치진 가는 페리. 자전거를 들고 탈 수 있음
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.619895,120.270012</description><styleUrl>#d2</styleUrl><Point><coordinates>120.270012,22.619895,0</coordinates></Point></Placemark>
-<Placemark><name>6. 치진 해수욕장</name><description>DAY 2 16:30 · 6번째
-평점 ★ 4.3 · 7,401 · 지역 치진 · 머무는 시간 약 3.0시간
-가는 법 — 구산 페리 7분
-자전거로 해안도로 한 바퀴가 정석. 무지개 교회·해산물 거리·등대
-구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6101746,120.2669211</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2669211,22.6101746,0</coordinates></Point></Placemark>
-<Placemark><name>DAY 2 동선</name><styleUrl>#d2</styleUrl><LineString><tessellate>1</tessellate><coordinates>120.3286197,22.5834212,0 120.2733317,22.6223566,0 120.27106,22.6199,0 120.267214,22.618284,0 120.270012,22.619895,0 120.2669211,22.6101746,0</coordinates></LineString></Placemark>
+<Placemark><name>5. 치진 천후궁(旗津天后宮)</name><description>DAY 2 13:15 · 5번째
+평점 ★ 4.6 · 881 · 지역 치진 · 머무는 시간 약 0.3시간
+가는 법 — ⏰ ~21:00 · 치진 옛거리 바로 앞
+&lt;b&gt;대만에서 가장 오래된 마조묘&lt;/b&gt;입니다. 300년이 넘었고 옛거리 들머리라 그냥 지나칩니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6133653,120.2683653</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2683653,22.6133653,0</coordinates></Point></Placemark>
+<Placemark><name>6. 치진 옛거리(旗津老街)</name><description>DAY 2 13:40 · 6번째
+평점 ★ 4.2 · 27,661 · 지역 치진 · 머무는 시간 약 1.0시간
+가는 법 — 페리에서 내리면 바로
+해산물집과 간식 노점이 이어지는 거리. 치진 일정의 중심입니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6133492,120.2686345</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2686345,22.6133492,0</coordinates></Point></Placemark>
+<Placemark><name>7. 치진 별빛 터널(星空隧道)</name><description>DAY 2 14:20 · 7번째
+평점 ★ 4.3 · 4,986 · 지역 치진 · 머무는 시간 약 0.3시간
+가는 법 — 치진 옛거리 서쪽 끝
+야광 벽화가 있는 짧은 해안 터널. 자전거로 지나가기 좋습니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6126605,120.2645727</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2645727,22.6126605,0</coordinates></Point></Placemark>
+<Placemark><name>8. 치진 등대(旗後燈塔)</name><description>DAY 2 14:45 · 8번째
+평점 ★ 4.6 · 5,302 · 지역 치진 · 머무는 시간 약 1.0시간
+가는 법 — 치진 페리 → 도보 15분 오르막
+흰 등대에서 항구가 한눈에 들어옵니다. 치허우 포대와 한 언덕이라 같이 올라가세요
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6155918,120.2650699</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2650699,22.6155918,0</coordinates></Point></Placemark>
+<Placemark><name>9. 치허우 포대(旗後砲台)</name><description>DAY 2 15:30 · 9번째
+평점 ★ 4.5 · 3,162 · 지역 치진 · 머무는 시간 약 0.7시간
+가는 법 — 등대와 같은 언덕
+청나라 때 포대 터. 등대 가는 길에 붙어 있어 묶어서 봅니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.613027,120.2641059</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2641059,22.613027,0</coordinates></Point></Placemark>
+<Placemark><name>10. 치진 무지개 교회(彩虹教堂)</name><description>DAY 2 16:15 · 10번째
+평점 ★ 4.1 · 8,158 · 지역 치진 · 머무는 시간 약 0.5시간
+가는 법 — 치진 해변 남쪽 · 자전거 10분
+바다를 배경으로 한 포토존. 평점은 4.1로 높지 않지만 사진은 확실히 남습니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6023263,120.2734327</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2734327,22.6023263,0</coordinates></Point></Placemark>
+<Placemark><name>11. 치진 풍차공원</name><description>DAY 2 17:00 · 11번째
+평점 ★ 4.2 · 10,350 · 지역 치진 · 머무는 시간 약 0.8시간
+가는 법 — 치진 옛거리에서 자전거 15분
+바다 옆 풍력발전기와 잔디밭. 치진 자전거 코스의 종점
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.5883126,120.2843378</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2843378,22.5883126,0</coordinates></Point></Placemark>
+<Placemark><name>12. 치허우하이찬(旗后海產) — 치진 해산물</name><description>DAY 2 18:30 · 12번째
+평점 ★ 4.3 · 2,227 · 지역 치진 · 머무는 시간 약 1.3시간
+가는 법 — 치진 옛거리
+치진에서 후기가 가장 많은 해산물집. 주문 전에 총액을 반드시 물어보세요
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6120193,120.2677697</description><styleUrl>#d2</styleUrl><Point><coordinates>120.2677697,22.6120193,0</coordinates></Point></Placemark>
+<Placemark><name>DAY 2 동선</name><styleUrl>#d2</styleUrl><LineString><tessellate>1</tessellate><coordinates>120.2741481,22.6254253,0 120.267214,22.618284,0 120.2733317,22.6223566,0 120.270012,22.619895,0 120.2683653,22.6133653,0 120.2686345,22.6133492,0 120.2645727,22.6126605,0 120.2650699,22.6155918,0 120.2641059,22.613027,0 120.2734327,22.6023263,0 120.2843378,22.5883126,0 120.2677697,22.6120193,0</coordinates></LineString></Placemark>
 </Folder>
 <Folder><name>DAY 3 · 10/31 토</name>
 <Placemark><name>1. 국립 해양생물박물관(國立海洋生物博物館)</name><description>DAY 3 10:00 · 1번째
@@ -106,10 +136,16 @@
 <Placemark><name>DAY 3 동선</name><styleUrl>#d3</styleUrl><LineString><tessellate>1</tessellate><coordinates>120.6989058,22.0460159,0 120.8476745,21.9130508,0 120.8516807,21.9029742,0 120.8466288,21.9288474,0</coordinates></LineString></Placemark>
 </Folder>
 <Folder><name>DAY 4 · 11/1 일</name>
-<Placemark><name>1. ✈ 가오슝 17:00 → 인천 20:45</name><description>DAY 4 17:00 · 1번째
+<Placemark><name>1. 스즈카 서킷 파크(鈴鹿賽道樂園)</name><description>DAY 4 12:45 · 1번째
+지역 첸전 · 머무는 시간 약 3.0시간
+가는 법 — MRT 차오야역에서 택시 10분 · 가오슝 시내입니다(일본·타이중 아님)
+일본 스즈카 서킷과 제휴한 대만 유일의 드라이빙 테마파크. 카트·미니 서킷 위주라 반나절 잡습니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.5834212,120.3286197</description><styleUrl>#d4</styleUrl><Point><coordinates>120.3286197,22.5834212,0</coordinates></Point></Placemark>
+<Placemark><name>2. ✈ 가오슝 17:00 → 인천 20:45</name><description>DAY 4 17:00 · 2번째
 지역 공항
 가는 법 — 티웨이 TW672 · 2시간 45분
 공항에 15:00까지 도착하면 넉넉합니다. 시내에서 MRT 15분이라 14:30에는 출발하세요
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.575023,120.351867</description><styleUrl>#d4</styleUrl><Point><coordinates>120.351867,22.575023,0</coordinates></Point></Placemark>
+<Placemark><name>DAY 4 동선</name><styleUrl>#d4</styleUrl><LineString><tessellate>1</tessellate><coordinates>120.3286197,22.5834212,0 120.351867,22.575023,0</coordinates></LineString></Placemark>
 </Folder>
 </Document></kml>
