@@ -305,6 +305,7 @@ const numLS = (k, d, lo, hi) => {
 };
 
 let phonebook = localStorage.getItem("dt:phonebook") !== "off";   // 폰에서 책 모드로
+let docHist = [];   // 직전 책갈피 기록 [{ idx, at }] — 최신이 앞, 최대 5개
 let curDocId = "";   // 서재에서 연 문서의 id — 책갈피를 서버에 쓸 때 쓴다
 
 // 읽는 방식 두 가지.
@@ -479,7 +480,7 @@ function render() {
 }
 
 function renderRules() {
-  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음화</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">Shift+H<span class="brak">:</span> <span class="pval">읽는 영역 위 / 아래</span></div><div class="prop">b<span class="brak">:</span> <span class="pval">책갈피</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
+  $("rules").innerHTML = `<div class="rule"><span class="src">reader.css:1</span><span class="sels">.reader[data-keys]</span> <span class="brak">{</span><div class="prop">o<span class="brak">:</span> <span class="pval">URL 입력</span><span class="brak">;</span></div><div class="prop">l<span class="brak">:</span> <span class="pval">서재 목록</span><span class="brak">;</span></div><div class="prop">j / k<span class="brak">:</span> <span class="pval">문단 이동</span><span class="brak">;</span></div><div class="prop">n<span class="brak">:</span> <span class="pval">다음화</span><span class="brak">;</span></div><div class="prop">1 ~ 9<span class="brak">:</span> <span class="pval">펼칠 문단 수</span><span class="brak">;</span></div><div class="prop">0 / a<span class="brak">:</span> <span class="pval">10개 / 전부</span><span class="brak">;</span></div><div class="prop">&minus; / +<span class="brak">:</span> <span class="pval">글자 크기</span><span class="brak">;</span></div><div class="prop">&#44; / &#46;<span class="brak">:</span> <span class="pval">줄바꿈 폭</span><span class="brak">;</span></div><div class="prop">s<span class="brak">:</span> <span class="pval">서재에 저장</span></div><div class="prop">t<span class="brak">:</span> <span class="pval">다크 / 라이트</span></div><div class="prop">h<span class="brak">:</span> <span class="pval">반페이지 모드</span></div><div class="prop">Shift+H<span class="brak">:</span> <span class="pval">읽는 영역 위 / 아래</span></div><div class="prop">b<span class="brak">:</span> <span class="pval">책갈피</span></div><div class="prop">Shift+B<span class="brak">:</span> <span class="pval">책갈피 기록</span></div><div class="prop">r<span class="brak">:</span> <span class="pval">다시 불러오기</span><span class="brak">;</span></div><div class="prop">&#96;<span class="brak">:</span> <span class="pval">전부 접기</span><span class="brak">;</span></div><span class="brak">}</span></div>
     <div class="rule"><span class="sels">element.style</span> <span class="brak">{</span><br><span class="brak" style="padding-left:16px">}</span></div>
     <div class="rule"><span class="src">app.css:41</span><span class="sels">.content</span> <span class="brak">{</span>
       <div class="prop">max-width<span class="brak">:</span> <span class="pval">720px</span><span class="brak">;</span></div>
@@ -688,17 +689,22 @@ function pushPos(why) {
   if (!curDocId || !paras.length) return;
   const url = LIBAPI + "pos&id=" + encodeURIComponent(curDocId);
   const body = JSON.stringify({ idx, win: Number.isFinite(win) ? win : paras.length });
-  try {
-    // 탭을 떠나는 중에는 fetch 가 취소될 수 있어 sendBeacon 을 먼저 쓴다.
-    if (navigator.sendBeacon &&
-        navigator.sendBeacon(url, new Blob([body], { type: "text/plain" }))) {
-      if (why) setMsg(why + " 저장");
-      return;
-    }
-  } catch { /* 아래 fetch 로 넘어간다 */ }
+  // 탭을 떠나는 중(why 없음)에는 fetch 가 취소될 수 있어 sendBeacon 을 쓴다.
+  // 직접 찍을 때는 fetch 로 보내 응답에 실려 오는 책갈피 기록을 바로 받는다.
+  if (!why) {
+    try {
+      if (navigator.sendBeacon &&
+          navigator.sendBeacon(url, new Blob([body], { type: "text/plain" }))) return;
+    } catch { /* 아래 fetch 로 넘어간다 */ }
+  }
   fetch(url, { method: "POST", headers: { "content-type": "application/json" },
                body, keepalive: true })
-    .then(() => { if (why) setMsg(why + " 저장"); })
+    .then((r) => r.json())
+    .then((d) => {
+      if (d && d.ok && Array.isArray(d.hist)) docHist = d.hist;
+      if (why) setMsg(why + " 저장");
+      if (mode === "set") render();
+    })
     .catch(() => { if (why) setMsg("책갈피 저장 실패"); });
 }
 
@@ -761,6 +767,7 @@ async function openLib() {
 }
 
 async function openDoc(id) {
+  docHist = [];
   pushPos("");                 // 보던 문서의 자리를 먼저 남기고 넘어간다
   libPos = lib.findIndex((it) => it.id === id);
   markRead(id);
@@ -781,7 +788,7 @@ async function openDoc(id) {
     // 목록은 CDN 캐시(길게는 몇 분)라 폰에서 막 찍은 책갈피가 늦게 보인다. 위치만 새로 묻는다.
     try {
       const pr = await (await fetch(LIBAPI + "pos&id=" + encodeURIComponent(id))).json();
-      if (pr.ok) item = { pos_idx: pr.idx, pos_win: pr.win, read_at: pr.at };
+      if (pr.ok) { item = { pos_idx: pr.idx, pos_win: pr.win, read_at: pr.at }; docHist = pr.hist || []; }
     } catch { /* 목록 값으로 간다 */ }
     const remote = (item.pos_idx === null || item.pos_idx === undefined) ? null : {
       idx: Number(item.pos_idx),
@@ -842,6 +849,31 @@ function bump(what, d) {
   render();
 }
 
+// 책갈피 기록 — 잘못 눌러 옮겨진 책갈피를 예전 자리로 되돌린다.
+function agoText(at) {
+  const t = Date.parse(at || "");
+  if (!t) return "";
+  const m = Math.round((Date.now() - t) / 60000);
+  if (m < 1) return "방금";
+  if (m < 60) return m + "분 전";
+  const h = Math.round(m / 60);
+  return h < 24 ? h + "시간 전" : Math.round(h / 24) + "일 전";
+}
+function histHtml() {
+  if (!curDocId || !paras.length) return "";
+  const rows = docHist.filter((h) => h && +h.idx !== idx && +h.idx < paras.length);
+  let html = `<div class="setgrp">Bookmarks</div>` +
+    `<div class="setrow"><span class="setlab">지금 ${Math.round(((idx + 1) / paras.length) * 100)}% · ${idx + 1}번째 문단</span></div>`;
+  if (!rows.length) return html + `<div class="sethint">아직 기록이 없다 — 책갈피를 옮기면 직전 자리가 여기 남는다(최근 5개)</div>`;
+  for (const h of rows) {
+    const i = +h.idx;
+    html += `<div class="setrow"><span class="setlab">${Math.round(((i + 1) / paras.length) * 100)}% · ${i + 1}번째 · ${esc(agoText(h.at))}` +
+      `<br><span style="color:var(--dim)">${esc(String(paras[i]).slice(0, 34))}</span></span>` +
+      `<span class="setbtn" data-hist="${i}" style="width:auto;padding:0 10px">되돌리기</span></div>`;
+  }
+  return html;
+}
+
 function renderSet() {
   const rows = SETS.map(([k, label, val]) => `
     <div class="setrow">
@@ -852,6 +884,7 @@ function renderSet() {
     </div>`).join("");
   $("tree").innerHTML =
     `<div class="setgrp">Reader</div>${rows}` +
+    histHtml() +
     `<div class="setgrp">Library</div>` +
     `<div class="setrow"><span class="setlab">책 모드(폰용 전자책 화면)로 열기</span>` +
     `<span class="setbtn" data-act="book" style="width:auto;padding:0 10px">열기</span></div>` +
@@ -932,6 +965,7 @@ function onKey(e) {
     case "[": peekN = Math.max(1, peekN - 1); readMode = "peek"; localStorage.setItem("dtreadmode", "peek"); localStorage.setItem("dtpeek", peekN); clamp(); render(); break;
     case "r": if (curUrl) load(curUrl); break;
     case "b": pushPos("책갈피"); e.preventDefault(); break;
+    case "B": mode = "set"; render(); e.preventDefault(); break;   // 책갈피 기록
     case "h": half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); render(); break;
     case "H":
       halfPos = halfPos === "top" ? "bottom" : "top";
@@ -960,6 +994,13 @@ document.addEventListener("keydown", onKey, true);
 $("tree").addEventListener("click", (e) => {
   if (e.target.closest('[data-act="save"]')) { saveDoc(); render(); return; }
   if (e.target.closest('[data-act="book"]')) { openBookMode(); return; }
+  const hb = e.target.closest("[data-hist]");
+  if (hb) {
+    idx = +hb.dataset.hist; boss = false; clamp();
+    mode = "read"; render();
+    pushPos("책갈피 되돌림");
+    return;
+  }
   const b = e.target.closest("[data-set]");
   if (b) { bump(b.dataset.set, +b.dataset.d); return; }
   const doc = e.target.closest("[data-lib]");
