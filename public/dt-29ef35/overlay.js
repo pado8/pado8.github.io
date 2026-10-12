@@ -218,6 +218,7 @@
   // 트리를 클릭하면 본문을 통째로 가리고 개발 문서처럼 보이는 문장으로 바꾼다.
   // 예전엔 클릭이 그 문단으로 점프하는 동작이었는데, 접혔다 펼쳐졌다 해서 헷갈렸다.
   let curDocId = "";   // 서재에서 연 문서의 id — 책갈피를 서버에 쓸 때 쓴다
+  let docHist = [];    // 서재 글의 직전 책갈피 기록 [{ idx, at }] — 최신이 앞, 최대 5개
 
   // 읽는 방식 두 가지.
   //   all  — 전부 펼쳐 두고 스크롤로 읽는다. 클릭은 책갈피만 찍는다.
@@ -666,16 +667,22 @@
     if (!curDocId || !paras.length) return;
     const url = LIB + "pos&id=" + encodeURIComponent(curDocId);
     const body = JSON.stringify({ idx, win: Number.isFinite(win) ? win : paras.length });
-    try {
-      if (navigator.sendBeacon &&
-          navigator.sendBeacon(url, new Blob([body], { type: "text/plain" }))) {
-        if (why) setMsg(why + " 저장");
-        return;
-      }
-    } catch { /* 아래 fetch 로 넘어간다 */ }
+    // 탭을 떠나는 중(why 없음)에는 fetch 가 취소될 수 있어 sendBeacon 을 쓴다.
+    // 직접 찍을 때는 fetch 로 보내 응답에 실려 오는 책갈피 기록을 바로 받는다.
+    if (!why) {
+      try {
+        if (navigator.sendBeacon &&
+            navigator.sendBeacon(url, new Blob([body], { type: "text/plain" }))) return;
+      } catch { /* 아래 fetch 로 넘어간다 */ }
+    }
     fetch(url, { method: "POST", headers: { "content-type": "application/json" },
                  body, keepalive: true })
-      .then(() => { if (why) setMsg(why + " 저장"); })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d && d.ok && Array.isArray(d.hist)) docHist = d.hist;
+        if (why) setMsg(why + " 저장");
+        if (view === "set") render();
+      })
       .catch(() => { if (why) setMsg("책갈피 저장 실패"); });
   }
 
@@ -685,6 +692,7 @@
   window.addEventListener("pagehide", () => pushPos(""));
 
   async function openDoc(id) {
+    docHist = [];
     pushPos("");                 // 보던 글의 자리를 먼저 남기고 넘어간다
     libPos = libItems.findIndex((it) => it.id === id);
     markRead(id);
@@ -702,7 +710,7 @@
       // 목록은 CDN 캐시라 다른 기기에서 막 찍은 책갈피가 늦게 보인다. 위치만 새로 묻는다.
       try {
         const pr = await (await fetch(LIB + "pos&id=" + encodeURIComponent(id))).json();
-        if (pr.ok) item = { pos_idx: pr.idx, pos_win: pr.win };
+        if (pr.ok) { item = { pos_idx: pr.idx, pos_win: pr.win }; docHist = pr.hist || []; }
       } catch { /* 목록 값으로 간다 */ }
       if (item.pos_idx !== null && item.pos_idx !== undefined) {
         idx = Math.min(Number(item.pos_idx) || 0, Math.max(0, paras.length - 1));
@@ -788,6 +796,34 @@
     render(); updateNav();
   }
 
+  // 책갈피 기록 — 잘못 눌러 옮겨진 책갈피를 예전 자리로 되돌린다.
+  function agoText(at) {
+    const t = Date.parse(at || "");
+    if (!t) return "";
+    const m = Math.round((Date.now() - t) / 60000);
+    if (m < 1) return "방금";
+    if (m < 60) return m + "분 전";
+    const h = Math.round(m / 60);
+    return h < 24 ? h + "시간 전" : Math.round(h / 24) + "일 전";
+  }
+  function histHtml() {
+    if (!paras.length) return "";
+    const src = curDocId ? docHist : localHist();
+    const rows = src.filter((h) => h && +h.idx !== idx && +h.idx < paras.length);
+    let html = `<div class="setgrp">Bookmarks</div>` +
+      `<div class="setrow"><span class="setlab">지금 ${Math.round(((idx + 1) / paras.length) * 100)}% · ${idx + 1}번째 문단</span></div>`;
+    if (!rows.length) {
+      return html + `<div class="sethint">아직 기록이 없다 — 책갈피를 옮기면 직전 자리가 여기 남는다(최근 5개)</div>`;
+    }
+    for (const h of rows) {
+      const i = +h.idx;
+      html += `<div class="setrow"><span class="setlab">${Math.round(((i + 1) / paras.length) * 100)}% · ${i + 1}번째 · ${esc(agoText(h.at))}` +
+        `<br><span style="color:var(--dim)">${esc(String(paras[i]).slice(0, 34))}</span></span>` +
+        `<span class="setbtn" data-hist="${i}" style="width:auto;padding:0 10px">되돌리기</span></div>`;
+    }
+    return html;
+  }
+
   function renderSet() {
     const rows = SETS.map(([k, label, val]) => `
       <div class="setrow">
@@ -799,6 +835,7 @@
 
     $("tree").innerHTML =
       `<div class="setgrp">Reader</div>${rows}` +
+      histHtml() +
       `<div class="setgrp">Library</div>` +
       `<div class="setrow"><span class="setlab">지금 문서 저장</span>` +
       `<span class="setbtn" data-act="save" style="width:auto;padding:0 10px">저장</span></div>` +
@@ -912,6 +949,24 @@
 
   // 위치는 URL 별로 기억한다. 같은 화를 다시 열면 읽던 자리에서 시작.
   const KEY = "dtr2:" + location.href;
+
+  // 사이트에서 바로 읽는 글은 서버에 없으니 책갈피 기록을 이 브라우저에 남긴다.
+  // 서재에서 연 글은 서버 기록(docHist)을 쓴다 — 폰·PC 와 같은 기록이다.
+  const HKEY = "dth:" + location.href;
+  function localHist() {
+    try { return JSON.parse(localStorage.getItem(HKEY) || "[]"); } catch { return []; }
+  }
+  function localPush(prevIdx, newIdx) {
+    if (curDocId || prevIdx === newIdx || prevIdx === null || prevIdx === undefined) return;
+    const out = [], seen = new Set();
+    for (const h of [{ idx: prevIdx, at: new Date().toISOString() }, ...localHist()]) {
+      const i = +h.idx;
+      if (i === newIdx || seen.has(i)) continue;
+      seen.add(i); out.push(h);
+      if (out.length >= 5) break;
+    }
+    try { localStorage.setItem(HKEY, JSON.stringify(out)); } catch { /* 무시 */ }
+  }
   try {
     const saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved) { idx = Math.min(saved.idx || 0, paras.length - 1); win = saved.win || win; }
@@ -970,6 +1025,7 @@
       case "p": pickMode(); e.preventDefault(); return;
       case "s": saveDoc(); e.preventDefault(); return;
       case "b": pushPos("책갈피"); e.preventDefault(); return;
+      case "B": view = "set"; break;   // 책갈피 기록
       case "h": half = !half; localStorage.setItem("dthalf", half ? "on" : "off"); break;
       case "H":
         halfPos = halfPos === "top" ? "bottom" : "top";
@@ -1111,6 +1167,16 @@
 
   $("tree").addEventListener("click", (e) => {
     if (e.target.closest('[data-act="save"]')) { saveDoc(); render(); return; }
+    const hb = e.target.closest("[data-hist]");
+    if (hb) {
+      const to = +hb.dataset.hist;
+      localPush(idx, to);
+      idx = to; boss = false; clamp(); save();
+      view = "read"; render();
+      pushPos("책갈피 되돌림");
+      if (!curDocId) setMsg("책갈피 되돌림");
+      return;
+    }
     const b = e.target.closest("[data-set]");
     if (b) { bump(b.dataset.set, +b.dataset.d); return; }
     const doc = e.target.closest("[data-lib]");
@@ -1122,7 +1188,9 @@
     // 클릭한 문단이 책갈피가 된다
     const row = e.target.closest("[data-i]");
     if (!row) return;
+    const prev = idx;
     idx = parseInt(row.dataset.i, 10);
+    localPush(prev, idx);          // 서재 글이면 서버가 기록하므로 여기선 건너뛴다
     boss = false; keepScroll = true; clamp(); save(); render();
     pushPos("책갈피");
   });
