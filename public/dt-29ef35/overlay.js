@@ -550,6 +550,24 @@
     $("fake").innerHTML = out.join("");
   }
 
+  // 설정·서재에 갔다가 읽기 화면으로 돌아오면 원래 읽던 자리로 되돌린다.
+  // 예전엔 책갈피 자리로 스크롤해서, 스크롤로 읽던 중이면 엉뚱한 데로(책갈피가
+  // 0 이면 맨 처음으로) 튀었다. "맨 위 문단"을 기억해 글자 크기를 바꿔도 같은 데로 간다.
+  let lastView = "read";
+  let readTop = null, readTopSrc = null, restoreTop = false;
+  function topRowIdx() {
+    const wrap = S.querySelector(".treeWrap");
+    const rows = $("tree").querySelectorAll("[data-i]");
+    if (!rows.length) return null;
+    const top = wrap.getBoundingClientRect().top + 2;
+    let lo = 0, hi = rows.length - 1, ans = -1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (rows[mid].getBoundingClientRect().bottom > top) { ans = mid; hi = mid - 1; } else lo = mid + 1;
+    }
+    return ans < 0 ? null : +rows[ans].dataset.i;
+  }
+
   function render() {
     S.host.style.setProperty("--fs", fs + "px");
     S.querySelector(".wrap").classList.toggle("light", theme === "light");
@@ -559,6 +577,9 @@
     for (const t of S.querySelectorAll("[data-view]")) {
       t.classList.toggle("on", t.dataset.view === view);
     }
+    if (lastView === "read" && view !== "read") { readTop = topRowIdx(); readTopSrc = paras; }
+    restoreTop = lastView !== "read" && view === "read" && readTop !== null && readTopSrc === paras;
+    lastView = view;
     if (view === "lib") return renderLib();
     if (view === "set") return renderSet();
     renderRead();
@@ -634,7 +655,12 @@
       `<span class="gt">&gt;</span> div.layout <span class="gt">&gt;</span> main.content ` +
       `<span class="gt">&gt;</span> <b>p.para</b>` + wMark + nMark + sMark;
 
-    if (!keepScroll) {
+    if (restoreTop) {
+      const el = $("tree").querySelector(`[data-i="${readTop}"]`);
+      const w = S.querySelector(".treeWrap");
+      if (el) w.scrollTop += el.getBoundingClientRect().top - w.getBoundingClientRect().top;
+      readTop = null; restoreTop = false;
+    } else if (!keepScroll) {
       const sel = $("tree").querySelector(".sel");
       if (sel) sel.scrollIntoView({ block: "center" });
     }

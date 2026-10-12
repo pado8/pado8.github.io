@@ -383,6 +383,25 @@ function ensureView() {
   }
 }
 
+// 설정·서재에 갔다가 읽기 화면으로 돌아오면 원래 읽던 자리로 되돌린다.
+// 예전엔 돌아올 때 책갈피 자리로 스크롤해서, 전체 보기로 스크롤하며 읽던 중이면
+// (책갈피와 무관하게) 엉뚱한 데로, 책갈피가 0 이면 맨 처음으로 튀었다.
+// 스크롤 값 대신 "맨 위 문단"을 기억한다 — 설정에서 글자 크기를 바꿔도 같은 문단으로 간다.
+let lastMode = "read";
+let readTop = null, readTopUrl = "";
+function topRowIdx() {
+  const wrap = $("treeWrap");
+  const rows = $("tree").querySelectorAll("[data-i]");
+  if (!rows.length) return null;
+  const top = wrap.getBoundingClientRect().top + 2;
+  let lo = 0, hi = rows.length - 1, ans = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (rows[mid].getBoundingClientRect().bottom > top) { ans = mid; hi = mid - 1; } else lo = mid + 1;
+  }
+  return ans < 0 ? null : +rows[ans].dataset.i;
+}
+
 function render() {
   document.documentElement.style.setProperty("--fs", fs + "px");
   document.documentElement.dataset.theme = theme;
@@ -390,6 +409,9 @@ function render() {
   $("leftcol").classList.toggle("readtop", halfPos === "top");
   if (half && !$("fake").innerHTML) renderFake();
   document.querySelectorAll("[data-view]").forEach((t) => t.classList.toggle("on", t.dataset.view === mode));
+  if (lastMode === "read" && mode !== "read") { readTop = topRowIdx(); readTopUrl = curUrl; }
+  const backToRead = lastMode !== "read" && mode === "read" && readTop !== null && readTopUrl === curUrl;
+  lastMode = mode;
   if (mode === "lib") return renderLib();
   if (mode === "set") return renderSet();
   win = readMode === "all"
@@ -469,7 +491,12 @@ function render() {
     `html <span class="gt">&gt;</span> body <span class="gt">&gt;</span> div#app ` +
     `<span class="gt">&gt;</span> div.content <span class="gt">&gt;</span> <b>p.para</b>`;
 
-  if (!keepScroll) {
+  if (backToRead) {
+    const el = $("tree").querySelector(`[data-i="${readTop}"]`);
+    const w = $("treeWrap");
+    if (el) w.scrollTop += el.getBoundingClientRect().top - w.getBoundingClientRect().top;
+    readTop = null;
+  } else if (!keepScroll) {
     const sel = $("tree").querySelector(".row.sel") || $("tree").querySelector(`[data-i="${idx}"]`);
     if (sel) sel.scrollIntoView({ block: "center" });
   }
@@ -522,6 +549,7 @@ async function via(base, url) {
 }
 
 async function load(url) {
+  readTop = null;
   curUrl = url;
   // 탭 제목은 절대 읽는 URL을 담지 않는다 — 화면을 접어도(보스키) 탭 스트립·
   // 작업표시줄·Alt+Tab 미리보기에는 제목이 남기 때문. 개발자 탭으로 자연스러운
@@ -768,6 +796,7 @@ async function openLib() {
 
 async function openDoc(id) {
   docHist = [];
+  readTop = null;
   pushPos("");                 // 보던 문서의 자리를 먼저 남기고 넘어간다
   libPos = lib.findIndex((it) => it.id === id);
   markRead(id);
