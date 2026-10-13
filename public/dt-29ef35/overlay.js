@@ -22,7 +22,10 @@
 (() => {
   const ID = "__dt_reader__";
   const old = document.getElementById(ID);
-  if (old) { old.remove(); document.documentElement.style.overflow = ""; return; } // 토글
+  if (old) { // 토글 — 위장 틀·탭 제목까지 걷어야 하므로 그 인스턴스의 닫기를 부른다
+    if (old.__dtClose) old.__dtClose(); else { old.remove(); document.documentElement.style.overflow = ""; }
+    return;
+  }
 
   /* ---------- 1. 렌더가 끝난 화면에서 본문 긁기 ---------- */
 
@@ -287,7 +290,7 @@
   let frameMode = sealedSite;
   let frameBox = sealedSite ? (sealedEl.closest("article, main, section") || sealedEl.parentElement || sealedEl) : null;
   let fzoom = Math.max(0.6, Math.min(2, parseFloat(localStorage.getItem("dtfzoom") || "1") || 1));
-  const FKEY = "dtf:" + location.href;
+  let frameUrl = location.href;   // 지금 틀이 붙어 있는 칸이 속한 화의 주소
 
   function frameCss() {
     if (document.getElementById("__dtf_css")) return;
@@ -347,7 +350,8 @@
   let fsaveTimer = 0;
   function saveFrameScroll() {
     if (!frameMode || !frameBox) return;
-    try { localStorage.setItem(FKEY, String(Math.round(frameBox.scrollTop))); } catch { /* 무시 */ }
+    if (!frameBox.isConnected || frameUrl !== location.href) return; // 떠난 화의 값을 새 화에 쓰지 않게
+    try { localStorage.setItem("dtf:" + frameUrl, String(Math.round(frameBox.scrollTop))); } catch { /* 무시 */ }
   }
   // 스크롤 이벤트는 화면이 실제로 그려질 때만 난다. 그래서 키로 넘길 때·탭을 떠날 때·
   // Esc 로 닫을 때도 직접 저장한다 — 이벤트가 안 나는 상황에서도 자리가 남게.
@@ -363,8 +367,19 @@
   }
   function restoreFrameScroll() {
     let y = 0;
-    try { y = parseInt(localStorage.getItem(FKEY) || "0", 10) || 0; } catch { /* 무시 */ }
+    try { y = parseInt(localStorage.getItem("dtf:" + frameUrl) || "0", 10) || 0; } catch { /* 무시 */ }
     if (frameBox && y > 0) frameBox.scrollTop = y;
+  }
+
+  // 새 화의 본문 칸을 찾아 틀을 다시 붙인다. 본문이 아직 안 그려졌으면 false.
+  function rebindFrame() {
+    const el = sealedBody();
+    if (!el) return false;
+    const box = el.closest("article, main, section") || el.parentElement || el;
+    if (frameBox && frameBox !== box) frameBox.classList.remove("__dtf-body");
+    frameBox = box; frameUrl = location.href;
+    syncFrame(); watchFrameScroll(); restoreFrameScroll();
+    return true;
   }
 
   /* ---------- 2. 리더 UI ---------- */
@@ -416,8 +431,9 @@
 
   // 원래 제목은 되돌릴 수 있게 들고 있는다. 리더가 떠 있는 동안에는 탭 제목도
   // 위장한다 — 화면만 바꾸고 제목을 두면 탭 스트립에서 그대로 샌다.
-  const prevTitle = document.title;
-  document.title = "DevTools - localhost:3000";
+  const FAKE_TITLE = "DevTools - localhost:3000";
+  let prevTitle = document.title;
+  document.title = FAKE_TITLE;
 
   const host = document.createElement("div");
   host.id = ID;
@@ -1127,8 +1143,37 @@
   function gotoChapter(url) {
     if (!url) return;
     setMsg("이동…");
+    // 화면 안에서 화를 넘기는 사이트(sbxh9 = Next.js)는 자기 링크를 누르면 페이지를
+    // 새로 띄우지 않는다 — 리더가 그대로 살아 있어서 DT 를 다시 누를 필요가 없다.
+    if (frameMode) {
+      const a = [...document.querySelectorAll("a[href]")].find((x) => x.href === url && x.target !== "_blank");
+      if (a) { saveFrameScroll(); a.click(); return; }
+    }
     location.href = url;
   }
+
+  // 화면 안 이동 감시. 사이트가 본문 칸을 새것으로 갈아 끼우면 틀을 다시 붙이고,
+  // 사이트가 탭 제목을 새 화 제목으로 바꾸면 다시 위장한다. 다음/이전 링크도 새로 찾는다.
+  let lastUrl = location.href, linkTicks = 0;
+  const navTimer = setInterval(() => {
+    if (!host.isConnected) { clearInterval(navTimer); return; }
+    if (document.title !== FAKE_TITLE) { prevTitle = document.title; document.title = FAKE_TITLE; }
+    if (location.href !== lastUrl) {
+      lastUrl = location.href; linkTicks = 10; // 새 화가 다 그려질 때까지 3초간 다시 찾는다
+      nextUrl = prevUrl = null; updateNav();
+      if (frameMode) setMsg("다음 화 불러오는 중…");
+    }
+    if (linkTicks > 0) {
+      linkTicks--;
+      try {
+        const lk = findLinks(document.documentElement.outerHTML, location.href);
+        nextUrl = lk.nextUrl || null; prevUrl = lk.prevUrl || null; updateNav();
+      } catch { /* 무시 */ }
+    }
+    if (frameMode && (!frameBox || !frameBox.isConnected || frameUrl !== location.href)) {
+      if (rebindFrame()) setMsg("위장 틀 — 사이트 본문을 그대로 보여주는 중");
+    }
+  }, 300);
 
   // 현재(첫) 페이지의 다음/이전 링크를 미리 찾아둔다.
   try {
@@ -1187,6 +1232,17 @@
     return e.key;  // Arrow*, Page*, Escape 등은 그대로
   }
 
+  function closeReader() {
+    saveFrameScroll();
+    frameOff();
+    clearInterval(navTimer);
+    host.remove();
+    document.documentElement.style.overflow = "";
+    document.title = prevTitle;
+    document.removeEventListener("keydown", onKey, true);
+  }
+  host.__dtClose = closeReader;
+
   function onKey(e) {
     if (e.__dtSeen) return;   // window·document 두 곳에 달아서 중복 실행을 막는다
     e.__dtSeen = true;
@@ -1198,6 +1254,9 @@
       const h = frameBox.clientHeight;
       const step = { j: 60, ArrowDown: 60, k: -60, ArrowUp: -60, PageDown: h * 0.9, PageUp: -h * 0.9, " ": h * 0.9 }[k];
       if (step !== undefined) {
+        if (step > 0 && nextUrl && frameBox.scrollTop + h >= frameBox.scrollHeight - 2) {
+          gotoChapter(nextUrl); e.preventDefault(); e.stopPropagation(); return;
+        }
         frameBox.scrollBy(0, step);
         saveFrameScroll();
         e.preventDefault(); e.stopPropagation(); return;
@@ -1246,12 +1305,7 @@
       case "n": if (frameMode) { frameMode = false; frameOff(); }
         useCandidate(e.shiftKey ? ci - 1 : ci + 1); idx = 0; win = Math.max(1, paras.length); boss = false; break;
       case "Escape":
-        saveFrameScroll();
-        frameOff();
-        host.remove();
-        document.documentElement.style.overflow = "";
-        document.title = prevTitle;
-        document.removeEventListener("keydown", onKey, true);
+        closeReader();
         return;
       default: return;
     }
