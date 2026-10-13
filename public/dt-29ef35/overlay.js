@@ -189,6 +189,36 @@
     "n 은 다음 후보로 넘긴다.",
   ];
 
+  // 본문을 "닫힌 섀도 루트"에 넣어 바깥 스크립트가 못 읽게 막아 둔 사이트(sbxh9 등).
+  // 화면엔 그려지지만 글자를 꺼낼 길이 없어서, 엉뚱한 메뉴·코드를 보여주는 대신
+  // 사실대로 알린다. 직접 찍기(p)로 그 칸을 눌러도 같다.
+  const SEALED = [
+    "이 사이트는 본문을 읽을 수 없게 막아 두었다.",
+    "본문이 닫힌 영역(closed shadow root) 안에 있어서, 화면엔 보여도 리더가 글자를 꺼낼 수 없다.",
+    "직접 찍기(p)로도 안 된다 — 그 칸을 눌러도 안쪽 글자에는 닿지 않는다. 사이트에서 그대로 읽어야 한다.",
+  ];
+
+  // 자식도 글자도 가상요소도 배경도 없는데 높이만 큰 칸 = 닫힌 섀도에 본문을 숨긴 칸.
+  // (실측: sbxh9 의 article.novel-viewer 안 div — 자식 0개, 글자 0자, 높이 12,141px)
+  function isSealed(e) {
+    if (!e || e.nodeType !== 1 || e.children.length || e.shadowRoot) return false;
+    if (/^(IMG|VIDEO|CANVAS|IFRAME|SVG|OBJECT|EMBED|PICTURE)$/i.test(e.tagName)) return false;
+    if ((e.textContent || "").trim()) return false;
+    // 높이만 본다. 폭은 창이 가려지거나 접혀 있으면 0 으로 잡혀 판정을 틀리게 만든다.
+    // 자식·글자·가상요소·배경이 모두 없는데 1,500px 넘게 차지하는 칸은 그것만으로 충분히 이상하다.
+    if (e.getBoundingClientRect().height < 1500) return false;
+    const cs = getComputedStyle(e);
+    if (cs.display === "none" || cs.backgroundImage !== "none") return false;
+    const pc = (pe) => { const c = getComputedStyle(e, pe).content; return c && c !== "none" && c !== "normal"; };
+    return !pc("::before") && !pc("::after");
+  }
+  function sealedBody() {
+    for (const e of document.querySelectorAll("body div, body section, body article, body main")) {
+      if (!e.children.length && isSealed(e)) return e;
+    }
+    return null;
+  }
+
   function parasFrom(el) {
     return textOf(el)
       .split(/\n+/)
@@ -244,7 +274,9 @@
   }
 
   const saved = savedElement();
-  if (saved) useElement(saved); else useCandidate(0);
+  const sealedSite = !!sealedBody() && !(cands.length && cands[0].len >= 3000);
+  if (sealedSite) paras = SEALED.slice();
+  else if (saved) useElement(saved); else useCandidate(0);
 
   /* ---------- 2. 리더 UI ---------- */
 
@@ -1117,7 +1149,7 @@
   // 목록으로 꺼내 읽는다.
   async function saveDoc() {
     // 본문을 못 잡은 상태(안내 문구만 있는 상태)로 저장하면 서재가 쓰레기로 찬다.
-    if (!paras.length || paras === MISS || /^이 페이지에서 본문으로/.test(paras[0] || "")) {
+    if (!paras.length || paras === MISS || /^이 페이지에서 본문으로|^이 사이트는 본문을 읽을 수 없게/.test(paras[0] || "")) {
       setMsg("저장할 본문이 없다");
       return;
     }
@@ -1177,6 +1209,14 @@
       // 섀도 안을 찍으면 e.target 은 호스트로 바뀌므로 composedPath 로 실제 노드를 잡는다.
       const path = e.composedPath ? e.composedPath() : [];
       let el = path[0] && path[0].nodeType === 1 ? path[0] : e.target;
+      // 닫힌 섀도를 누르면 클릭이 그 바깥 칸(호스트)에서 멈춘다. 거기서 위로 올라가면
+      // 메뉴 같은 엉뚱한 글을 잡으니, 막힌 칸이면 알리고 끝낸다.
+      if (isSealed(el)) {
+        paras = SEALED.slice();
+        idx = 0; win = Math.max(1, paras.length); boss = false;
+        done(); render();
+        return;
+      }
       // 문장 한 줄을 찍었을 수 있으니 문단이 모인 조상까지 올라간다(섀도 경계도 넘는다).
       for (let i = 0; i < 12 && textOf(el).trim().length < 200; i++) {
         const parent = up(el);
