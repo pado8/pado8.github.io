@@ -274,9 +274,98 @@
   }
 
   const saved = savedElement();
-  const sealedSite = !!sealedBody() && !(cands.length && cands[0].len >= 3000);
+  const sealedEl = sealedBody();
+  const sealedSite = !!sealedEl && !(cands.length && cands[0].len >= 3000);
   if (sealedSite) paras = SEALED.slice();
   else if (saved) useElement(saved); else useCandidate(0);
+
+  /* ---------- 위장 틀 (본문을 막아 둔 사이트용) ---------- */
+
+  // 본문을 닫힌 섀도에 넣어 둔 사이트는 글자를 꺼낼 수 없다. 대신 사이트가 직접 그리는
+  // 본문 칸을 그대로 두고, 그 칸만 리더 가운데 자리에 겹쳐 보이게 한다. 나머지 페이지는
+  // 감춘다. 글자는 읽지도 옮기지도 않는다 — 화면 배치만 바꾼다.
+  let frameMode = sealedSite;
+  let frameBox = sealedSite ? (sealedEl.closest("article, main, section") || sealedEl.parentElement || sealedEl) : null;
+  let fzoom = Math.max(0.6, Math.min(2, parseFloat(localStorage.getItem("dtfzoom") || "1") || 1));
+  const FKEY = "dtf:" + location.href;
+
+  function frameCss() {
+    if (document.getElementById("__dtf_css")) return;
+    const st = document.createElement("style");
+    st.id = "__dtf_css";
+    st.textContent = [
+      "html.__dtf, html.__dtf body { background: #202124 !important; }",
+      "html.__dtf body * { visibility: hidden !important; }",
+      "html.__dtf .__dtf-body, html.__dtf .__dtf-body * { visibility: visible !important; }",
+      "html.__dtf .__dtf-body {",
+      "  position: fixed !important; z-index: 2147483646 !important;",
+      "  top: var(--dtf-top) !important; left: var(--dtf-left) !important;",
+      "  width: var(--dtf-w) !important; height: var(--dtf-h) !important;",
+      "  max-width: none !important; max-height: none !important; min-height: 0 !important;",
+      "  margin: 0 !important; padding: 8px 18px !important; box-sizing: border-box !important;",
+      "  overflow: auto !important; transform: none !important; background: #ffffff !important;",
+      "}",
+      "html.__dtf.__dtf-dark .__dtf-body { background: #dfdedb !important; filter: invert(1) hue-rotate(180deg) !important; }",
+      "html.__dtf.__dtf-hide .__dtf-body, html.__dtf.__dtf-hide .__dtf-body * { visibility: hidden !important; }",
+      "html.__dtf .__dtf-body > * { zoom: var(--dtf-zoom, 1); }",
+    ].join("\n");
+    (document.head || document.documentElement).appendChild(st);
+  }
+
+  // 리더의 가운데 칸 자리에 사이트 본문 칸을 맞춘다. 반페이지·패널 폭이 바뀌면 다시 맞춘다.
+  function syncFrame() {
+    const root = document.documentElement;
+    if (!frameBox) return;
+    if (frameMode) frameCss();
+    const showing = frameMode && view === "read" && !boss;
+    root.classList.toggle("__dtf", frameMode);
+    frameBox.classList.toggle("__dtf-body", frameMode);
+    root.classList.toggle("__dtf-hide", frameMode && !showing);
+    root.classList.toggle("__dtf-dark", theme !== "light");
+    const wrap = S.querySelector(".wrap");
+    if (wrap) wrap.classList.toggle("frame", showing);
+    const tw = S.querySelector(".treeWrap");
+    if (!tw) return;
+    const r = tw.getBoundingClientRect();
+    root.style.setProperty("--dtf-top", r.top + "px");
+    root.style.setProperty("--dtf-left", r.left + "px");
+    root.style.setProperty("--dtf-w", r.width + "px");
+    root.style.setProperty("--dtf-h", r.height + "px");
+    root.style.setProperty("--dtf-zoom", String(fzoom));
+  }
+
+  function frameOff() {
+    const root = document.documentElement;
+    root.classList.remove("__dtf", "__dtf-hide", "__dtf-dark");
+    for (const v of ["--dtf-top", "--dtf-left", "--dtf-w", "--dtf-h", "--dtf-zoom"]) root.style.removeProperty(v);
+    if (frameBox) frameBox.classList.remove("__dtf-body");
+    const st = document.getElementById("__dtf_css");
+    if (st) st.remove();
+  }
+
+  // 읽던 스크롤 위치를 주소별로 기억한다(문단은 볼 수 없으니 스크롤 값으로).
+  let fsaveTimer = 0;
+  function saveFrameScroll() {
+    if (!frameMode || !frameBox) return;
+    try { localStorage.setItem(FKEY, String(Math.round(frameBox.scrollTop))); } catch { /* 무시 */ }
+  }
+  // 스크롤 이벤트는 화면이 실제로 그려질 때만 난다. 그래서 키로 넘길 때·탭을 떠날 때·
+  // Esc 로 닫을 때도 직접 저장한다 — 이벤트가 안 나는 상황에서도 자리가 남게.
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveFrameScroll(); });
+  window.addEventListener("pagehide", saveFrameScroll);
+  function watchFrameScroll() {
+    if (!frameBox || frameBox.__dtfWatched) return;
+    frameBox.__dtfWatched = true;
+    frameBox.addEventListener("scroll", () => {
+      clearTimeout(fsaveTimer);
+      fsaveTimer = setTimeout(saveFrameScroll, 400);
+    }, { passive: true });
+  }
+  function restoreFrameScroll() {
+    let y = 0;
+    try { y = parseInt(localStorage.getItem(FKEY) || "0", 10) || 0; } catch { /* 무시 */ }
+    if (frameBox && y > 0) frameBox.scrollTop = y;
+  }
 
   /* ---------- 2. 리더 UI ---------- */
 
@@ -482,6 +571,12 @@
   }
   .crumbs b { color: var(--fg); font-weight: normal; }
   .crumbs .gt { margin: 0 5px; color: var(--dim); }
+  /* 위장 틀 — 가운데 칸을 비워 그 자리에 사이트 본문이 비쳐 보이게 한다 */
+  .wrap.frame { background: transparent; pointer-events: none; }
+  .wrap.frame .topbar, .wrap.frame .styles, .wrap.frame .crumbs,
+  .wrap.frame .dragbar, .wrap.frame .fakeWrap { pointer-events: auto; background: var(--bg); }
+  .wrap.frame .topbar, .wrap.frame .crumbs { background: var(--panel); }
+  .wrap.frame .treeWrap { visibility: hidden; }
 
   /* ── 모바일(좁은 화면) — 폰에선 개발자도구 패널·가짜 탭을 숨겨 본문에 전체폭을 준다.
        문단은 기본이 전체 펼침이라 키보드 없이 스크롤로 읽고, ‹ ▣ › ↗ 버튼은 터치로. ── */
@@ -654,9 +749,10 @@
     if (lastView === "read" && view !== "read") { readTop = topRowIdx(); readTopSrc = paras; }
     restoreTop = lastView !== "read" && view === "read" && readTop !== null && readTopSrc === paras;
     lastView = view;
-    if (view === "lib") return renderLib();
-    if (view === "set") return renderSet();
-    renderRead();
+    if (view === "lib") renderLib();
+    else if (view === "set") renderSet();
+    else renderRead();
+    syncFrame();
   }
 
   function renderRead() {
@@ -1098,6 +1194,21 @@
     if (!document.getElementById(ID)) return;
     if (picking) return;   // 지정 모드 중에는 리더 단축키를 잠근다
     const k = codeToKey(e);
+    if (frameMode && frameBox && view === "read" && !boss) {
+      const h = frameBox.clientHeight;
+      const step = { j: 60, ArrowDown: 60, k: -60, ArrowUp: -60, PageDown: h * 0.9, PageUp: -h * 0.9, " ": h * 0.9 }[k];
+      if (step !== undefined) {
+        frameBox.scrollBy(0, step);
+        saveFrameScroll();
+        e.preventDefault(); e.stopPropagation(); return;
+      }
+      if (k === "-" || k === "_" || k === "+" || k === "=") {
+        fzoom = Math.max(0.6, Math.min(2, Math.round((fzoom + (k === "-" || k === "_" ? -0.05 : 0.05)) * 100) / 100));
+        try { localStorage.setItem("dtfzoom", String(fzoom)); } catch { /* 무시 */ }
+        syncFrame(); setMsg("본문 배율 " + Math.round(fzoom * 100) + "%");
+        e.preventDefault(); e.stopPropagation(); return;
+      }
+    }
     switch (k) {
       case "`": boss = !boss; break;
       case "j": case "ArrowDown":
@@ -1132,8 +1243,11 @@
         localStorage.setItem("dthalfpos", halfPos);
         break;
       case "t": theme = theme === "light" ? "dark" : "light"; localStorage.setItem("dttheme", theme); break;
-      case "n": useCandidate(e.shiftKey ? ci - 1 : ci + 1); idx = 0; win = Math.max(1, paras.length); boss = false; break;
+      case "n": if (frameMode) { frameMode = false; frameOff(); }
+        useCandidate(e.shiftKey ? ci - 1 : ci + 1); idx = 0; win = Math.max(1, paras.length); boss = false; break;
       case "Escape":
+        saveFrameScroll();
+        frameOff();
         host.remove();
         document.documentElement.style.overflow = "";
         document.title = prevTitle;
@@ -1214,7 +1328,11 @@
       if (isSealed(el)) {
         paras = SEALED.slice();
         idx = 0; win = Math.max(1, paras.length); boss = false;
+        frameBox = el.closest("article, main, section") || el.parentElement || el;
+        frameMode = true;
         done(); render();
+        watchFrameScroll(); restoreFrameScroll();
+        setMsg("위장 틀 — 사이트 본문을 그대로 보여주는 중");
         return;
       }
       // 문장 한 줄을 찍었을 수 있으니 문단이 모인 조상까지 올라간다(섀도 경계도 넘는다).
@@ -1311,10 +1429,16 @@
     document.addEventListener("mousemove", (e) => {
       if (!on) return;
       panel.style.width = Math.max(120, Math.min(innerWidth * 0.7, innerWidth - e.clientX)) + "px";
+      syncFrame();
     });
+    window.addEventListener("resize", () => syncFrame());
   })();
 
   clamp();
   updateNav();
+  if (frameMode) {
+    syncFrame(); watchFrameScroll(); restoreFrameScroll();
+    setMsg("위장 틀 — 사이트 본문을 그대로 보여주는 중");
+  }
   render();
 })();
