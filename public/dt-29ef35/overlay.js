@@ -52,25 +52,67 @@
   const LEAF = "p, li, h1, h2, h3, h4, blockquote, dd, figcaption";
   const NB = /\u00a0/g;
 
+  // 화면에 그려지지 않는 글자 — 사이트가 심어 둔 스크립트 코드·스타일 등. 이걸 긁으면
+  // "(function(){var w=window;…" 같은 코드가 본문 문단으로 끼어든다(sbxh9 에서 실제로 났다).
+  const HIDDEN_TAGS = new Set(["SCRIPT", "STYLE", "NOSCRIPT", "TEMPLATE", "SVG", "IFRAME", "OBJECT"]);
+
+  // 보이는 글자만 줄 단위로 모은다. innerText 를 못 쓰는 자리(섀도 루트 자체 등)용.
+  function visibleText(root) {
+    const out = [];
+    const walk = (n) => {
+      for (let c = n.firstChild; c; c = c.nextSibling) {
+        if (c.nodeType === 3) { out.push(c.nodeValue); continue; }
+        if (c.nodeType !== 1 || HIDDEN_TAGS.has(c.tagName.toUpperCase())) continue;
+        const cs = getComputedStyle(c);
+        if (cs.display === "none" || cs.visibility === "hidden") continue;
+        const block = cs.display !== "inline" && cs.display !== "contents";
+        if (block) out.push("\n");
+        walk(c);
+        if (c.shadowRoot) walk(c.shadowRoot);
+        if (block || c.tagName === "BR") out.push("\n");
+      }
+    };
+    walk(root);
+    return out.join("").replace(NB, " ");
+  }
+
+  // 섀도 루트가 있기만 하다고 섀도 방식으로 넘어가면 안 된다. Next.js 사이트는 빈
+  // 안내 요소(next-route-announcer)에 섀도를 달아 두는데, 그것 때문에 추출 방식이
+  // 바뀌어 엉뚱한 경로로 빠졌다. 보이는 글자가 실제로 든 섀도만 센다.
+  function hasVisibleText(root) {
+    return visibleText(root).trim().length > 0;
+  }
+
   function textOf(el) {
-    const roots = rootsUnder(el);
+    const roots = rootsUnder(el).filter((r) => r === el || hasVisibleText(r));
     if (roots.length === 1) return (el.innerText || "").replace(NB, " ");
 
-    // 섀도가 끼어 있으면 루트마다 잎 블록을 훑어 줄 단위로 모은다.
+    // 글자가 든 섀도가 끼어 있으면 루트마다 잎 블록을 훑어 줄 단위로 모은다.
+    // innerText 만 쓴다 — 그려지지 않은 블록에서 textContent 로 물러서면 숨은 글자가 샌다.
     const lines = [];
     for (const r of roots) {
       if (!r.querySelectorAll) continue;
       for (const b of r.querySelectorAll(LEAF)) {
         if (b.querySelector(LEAF)) continue;            // 중첩된 껍데기는 건너뛴다
-        const t = (b.innerText || b.textContent || "").replace(NB, " ").trim();
+        if (b.closest("script, style, noscript, template")) continue;
+        const t = (b.innerText || "").replace(NB, " ").trim();
         if (t) lines.push(t);
       }
     }
     if (lines.length) return lines.join("\n");
 
-    // 잎 블록이 없는 구조면 섀도 루트의 통짜 텍스트로 대체한다.
-    return roots.map((r) => (r.textContent || "").replace(NB, " ")).join("\n")
+    // 잎 블록이 없는 구조면 보이는 글자만 통째로 모은다(예전엔 textContent 라 코드가 샜다).
+    return roots.map((r) => visibleText(r)).join("\n")
                 .split(/\n+/).map((t) => t.trim()).filter(Boolean).join("\n");
+  }
+
+  // 마지막 거름망 — 그래도 코드처럼 생긴 줄이 끼면 뺀다. 코드 낱말이 있으면서
+  // 기호(; { } ( ) = 등) 비율이 높을 때만이라, 대사에 "window" 가 나오는 정도는 남는다.
+  const CODEISH = /(\bfunction\s*\(|=>|\b(var|let|const)\s+[\w$]+\s*=|\bdocument\.|\bwindow\.|\}\s*\)\s*\(\s*\)\s*;?)/;
+  function looksLikeCode(t) {
+    if (!CODEISH.test(t)) return false;
+    const sym = (t.match(/[;{}()=[\]<>|&]/g) || []).length;
+    return sym / t.length > 0.06;
   }
 
   // 섀도 안의 노드는 parentElement 가 경계에서 끊긴다. 호스트로 건너뛴다.
@@ -151,7 +193,7 @@
     return textOf(el)
       .split(/\n+/)
       .map((t) => t.replace(/[ \t]+/g, " ").trim())
-      .filter((t) => t.length > 0);
+      .filter((t) => t.length > 0 && !looksLikeCode(t));
   }
 
   function useElement(el) {
