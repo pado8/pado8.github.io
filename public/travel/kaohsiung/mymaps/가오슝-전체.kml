@@ -263,9 +263,9 @@
 가는 법 — SOGO 백화점 안
 1인 1냄비라 매운맛을 각자 고를 수 있습니다. 훠궈가 처음인 동행이 있으면 여기
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6144169,120.306338</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.306338,22.6144169,0</coordinates></Point></Placemark>
-<Placemark><name>Handelaars (치진 카페바)</name><description>평점 ★ 4.8 · 1,004 · 지역 치진 · 머무는 시간 약 1.0시간
-가는 법 — 치진 등대 아래
-치진에서 평점이 가장 높은 집. 바다 보며 쉬어가기
+<Placemark><name>한델라스(漢德那斯番菜料理) — 치진 코스요리</name><description>평점 ★ 4.8 · 1,019 · 지역 치진 · 머무는 시간 약 1.0시간
+가는 법 — ⏰ 11:30~14:30 · 17:30~20:00 · 예약 필수
+메뉴 없는 코스(NT$390·780 +10%). 하루 수량 한정
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6121254,120.2666889</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2666889,22.6121254,0</coordinates></Point></Placemark>
 <Placemark><name>산터우취안청 사차훠궈 중산총점(汕頭泉成)</name><description>평점 ★ 4.7 · 19,864 · 지역 메이리다오 · 머무는 시간 약 1.5시간
 가는 법 — MRT 미려도역 도보 3분
@@ -311,9 +311,9 @@
 가는 법 — MRT 하마싱역(Hamasen) 1번 출구
 남부 대만에만 있는 체인. 햄버거에 몐셴(麵線)이 딸려 나오는 조합이 가오슝다운 경험입니다
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6223566,120.2733317</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2733317,22.6223566,0</coordinates></Point></Placemark>
-<Placemark><name>치허우하이찬(旗后海產) — 치진 해산물</name><description>평점 ★ 4.3 · 2,227 · 지역 치진 · 머무는 시간 약 1.3시간
-가는 법 — 치진 옛거리
-치진에서 후기가 가장 많은 해산물집. 주문 전에 총액을 반드시 물어보세요
+<Placemark><name>치허우하이찬(旗后海產) — 치진 해산물</name><description>평점 ★ 4.3 · 2,258 · 지역 치진 · 머무는 시간 약 1.3시간
+가는 법 — ⏰ 11:00~20:00 · 월 휴무 · 치진 옛거리
+단호박 쌀국수(金瓜米粉)·회·바지락볶음. 주문 전에 총액을 물어보세요
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6120193,120.2677697</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2677697,22.6120193,0</coordinates></Point></Placemark>
 <Placemark><name>리자 위안짜이탕(李家圓仔湯)</name><description>평점 ★ 4.3 · 1,881 · 지역 옌청 · 머무는 시간 약 0.4시간
 가는 법 — MRT 옌청푸역 도보 5분
@@ -483,6 +483,34 @@
 가는 법 — ⏰ ~새벽 1시 · 호텔 173m
 찹쌀 순대에 소시지를 끼운 대만 핫도그
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6320537,120.2994609</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2994609,22.6320537,0</coordinates></Point></Placemark>
+<Placemark><name>야자오 해산물(鴨角活海產)</name><description>평점 ★ 3.9 · 1,857 · 지역 치진 · 머무는 시간 약 1.2시간
+가는 법 — ⏰ 10:30~20:00 · 매일 · 치진 옛거리
+바지락볶음·볶음면·데친 새우. 양이 많습니다
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6118842,120.2679647</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2679647,22.6118842,0</coordinates></Point></Placemark>
+<Placemark><name>완얼(萬二小吃店) — 풍차공원 옆 해산물</name><description>평점 ★ 3.9 · 5,358 · 지역 치진 · 머무는 시간 약 1.2시간
+가는 법 — ⏰ 11:00~21:00 · 매일 · 풍차공원 389m
+식권제 해산물 볶음집. 탕수 농어·회. 일몰 뒤 저녁에
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.5912536,120.2864068</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2864068,22.5912536,0</coordinates></Point></Placemark>
+<Placemark><name>완싼(萬三小吃部) — 무한리필 해산물</name><description>평점 ★ 3.7 · 6,500 · 지역 치진 · 머무는 시간 약 1.2시간
+가는 법 — ⏰ 10:30~20:30 · 매일
+볶음밥·볶음면·국·과일 무료 무한. 탕수 생선·오미 전복
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.5812632,120.292179</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.292179,22.5812632,0</coordinates></Point></Placemark>
+<Placemark><name>진성춘 해산물(金聖春海產)</name><description>평점 ★ 4.3 · 5,262 · 지역 치진 · 머무는 시간 약 1.3시간
+가는 법 — ⏰ 11:00~14:30 · 17:00~21:00 · 중저우 페리 앞
+게살죽(螃蟹粥)이 간판
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.5754799,120.2988371</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2988371,22.5754799,0</coordinates></Point></Placemark>
+<Placemark><name>라이원다오 회(來溫叨呷奔)</name><description>평점 ★ 4.5 · 533 · 지역 치진 · 머무는 시간 약 1.2시간
+가는 법 — ⏰ 12:00~14:30 · 17:30~20:30 · 목 휴무 · 12세 미만 불가
+회·초밥 전문. 가리비·연어 오야코동
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6118919,120.2670189</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2670189,22.6118919,0</coordinates></Point></Placemark>
+<Placemark><name>치하이위안 숯불 한치구이(旗海園碳烤小卷)</name><description>평점 ★ 4.7 · 188 · 지역 치진 · 머무는 시간 약 0.2시간
+가는 법 — ⏰ 평일 13:30~19:00 · 주말 10:00~20:00
+숯불 한치구이·닭껍질 꼬치. 걸으며 먹기
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6109459,120.2675201</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2675201,22.6109459,0</coordinates></Point></Placemark>
+<Placemark><name>펑싸오 고구마볼(椪嫂蕃薯椪)</name><description>평점 ★ 4.6 · 642 · 지역 치진 · 머무는 시간 약 0.2시간
+가는 법 — ⏰ 13:40~17:30 · 월 휴무
+땅콩 소 고구마볼 NT$15. 줄 길면 번호표
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6134853,120.2678704</description><styleUrl>#s_food</styleUrl><Point><coordinates>120.2678704,22.6134853,0</coordinates></Point></Placemark>
 </Folder>
 <Folder><name>카페</name>
 <Placemark><name>우링녠다이 커피(五零年代咖啡)</name><description>평점 ★ 4.9 · 719 · 지역 옌청푸 · 머무는 시간 약 0.8시간
@@ -533,6 +561,14 @@
 가는 법 — ⏰ 10:00~ · 보얼 大義창고 C9-19 · 1인 NT$200~400
 뉴욕 베이글 카페. 앉아서 제대로 먹을 때 가는 곳이라 &lt;b&gt;잠깐 들르기엔 무겁습니다&lt;/b&gt;
 구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6180909,120.2855586</description><styleUrl>#s_cafe</styleUrl><Point><coordinates>120.2855586,22.6180909,0</coordinates></Point></Placemark>
+<Placemark><name>대완궁 빙수(大碗公冰)</name><description>평점 ★ 4.4 · 2,070 · 지역 치진 · 머무는 시간 약 0.5시간
+가는 법 — ⏰ 09:30~21:00 · 치진 옛거리
+망고빙수·과일빙수. 에어컨
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6132018,120.2687257</description><styleUrl>#s_cafe</styleUrl><Point><coordinates>120.2687257,22.6132018,0</coordinates></Point></Placemark>
+<Placemark><name>더우류빙청 아이스크림(斗六冰城)</name><description>평점 ★ 4.5 · 1,931 · 지역 치진 · 머무는 시간 약 0.3시간
+가는 법 — ⏰ 10:30~22:30 · 무지개 교회 385m
+옛날식 타로·매실·말차 아이스크림
+구글 지도에서 열기: https://www.google.com/maps/search/?api=1&amp;query=22.6057456,120.2740402</description><styleUrl>#s_cafe</styleUrl><Point><coordinates>120.2740402,22.6057456,0</coordinates></Point></Placemark>
 </Folder>
 <Folder><name>쇼핑</name>
 <Placemark><name>드림몰(夢時代)</name><description>평점 ★ 4.5 · 72,368 · 지역 첸전 · 머무는 시간 약 4.0시간
