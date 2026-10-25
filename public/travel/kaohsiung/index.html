@@ -546,6 +546,56 @@
     .pc{padding:13px 13px}
   }
 .zh{font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",sans-serif;font-weight:700;white-space:nowrap}
+
+  /* ── 문서 검색 ─────────────────────────────────────────────────────
+     탭이 아홉 개라 "그거 어디 있었지"가 잦다. 표 한 줄·문단·장소 카드까지
+     낱말로 찾고, 누르면 그 탭으로 가서 접힌 칸을 열고 해당 줄을 반짝인다. */
+  nav.bn .bnq{flex:0 0 auto;position:sticky;left:0;z-index:2;font:inherit;font-size:14px;
+              padding:9px 11px;border-radius:11px;border:1px solid var(--line);background:var(--card);
+              color:var(--ink2);cursor:pointer;box-shadow:6px 0 10px -6px var(--bg);
+              -webkit-tap-highlight-color:transparent}
+  nav.bn .bnq:hover,nav.bn .bnq:focus-visible{border-color:var(--accent);color:var(--accent);outline:0}
+  .sqbg{position:fixed;inset:0;z-index:90;background:rgba(10,14,28,.45)}
+  .sqbg[hidden]{display:none}
+  .sq{position:fixed;left:0;right:0;top:0;z-index:91;margin:0 auto;max-width:720px;
+      max-height:88vh;display:flex;flex-direction:column;
+      background:var(--card);border:1px solid var(--line);border-top:0;
+      border-radius:0 0 18px 18px;box-shadow:var(--sh-lg);
+      padding:calc(10px + env(safe-area-inset-top,0px)) 14px 12px}
+  .sq[hidden]{display:none}
+  .sqhead{display:flex;gap:8px;align-items:center}
+  .sqhead input{flex:1 1 auto;width:100%;min-width:0;font:inherit;font-size:17px;font-weight:700;
+                padding:11px 13px;border-radius:12px;border:1px solid var(--line);
+                background:var(--card2);color:var(--ink)}
+  .sqhead input:focus{outline:0;border-color:var(--accent);background:var(--card)}
+  .sqtabs{display:flex;gap:5px;overflow-x:auto;margin:9px 0 2px;scrollbar-width:none}
+  .sqtabs::-webkit-scrollbar{display:none}
+  .sqtabs button{flex:0 0 auto;font:inherit;font-size:12px;font-weight:800;padding:5px 10px;
+                 border-radius:99px;border:1px solid var(--line);background:var(--card2);
+                 color:var(--ink2);cursor:pointer}
+  .sqtabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .sqtabs button small{font-weight:700;opacity:.75;margin-left:3px}
+  .sqlist{overflow-y:auto;margin:6px -6px 0;padding:0 6px;overscroll-behavior:contain}
+  .sqitem{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer;
+          background:transparent;border:0;border-bottom:1px solid var(--line);padding:10px 4px}
+  .sqitem:hover,.sqitem:focus-visible{background:var(--card2);outline:0}
+  .sqitem .w{display:flex;gap:6px;align-items:center;font-size:11.5px;color:var(--dim);
+             font-weight:700;margin-bottom:2px;min-width:0}
+  .sqitem .w i{font-style:normal;flex:0 0 auto;padding:1px 7px;border-radius:6px;
+               background:var(--accent-soft);color:var(--accent);font-weight:800}
+  .sqitem .w span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sqitem .t{font-size:14px;line-height:1.55;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}
+  .sqitem mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:var(--ink);
+               border-radius:3px;padding:0 1px}
+  .sqempty{color:var(--dim);font-size:13.5px;padding:14px 4px}
+  .sqsug{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px}
+  .sqsug b{width:100%;font-size:12px;color:var(--dim)}
+  .sqsug button{font:inherit;font-size:13px;font-weight:700;padding:6px 11px;border-radius:99px;
+                border:1px solid var(--line);background:var(--card2);color:var(--ink2);cursor:pointer}
+  .sqsug button:hover{border-color:var(--accent);color:var(--accent)}
+  .sqhit{background:color-mix(in srgb,var(--gold) 22%,transparent)!important;
+         box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 55%,transparent);border-radius:8px;
+         transition:background 1.2s,box-shadow 1.2s}
 </style>
 </head>
 <body><div class="wrap">
@@ -557,7 +607,7 @@
   <span class="hchip">2026.10.29 목 – 11.01 일</span>
   <span class="hchip">성인 4명 · 3박4일</span>
   <span class="hchip net" id="netdot"><s></s>온라인</span>
-  <span class="ver">v10-19a</span>
+  <span class="ver">v10-25a</span>
 </div>
 <p class="lead">항공·숙소·맛집·일정·오프라인 지도까지 한 문서에. 데이터가 없어도 열립니다.</p>
 </header>
@@ -643,7 +693,7 @@
 <ul>
 <li><b>여권을 새로 받았으면 구여권도 넣어야 합니다.</b> 입국 기록은 그때 쓴 여권으로 조회되기 때문입니다 —
     폼의 <b>"구여권으로 입국한 기록이 있습니까"</b>를 체크하고 구여권 번호·만료일·사진까지 올립니다</li>
-<li><b>실물 교통카드는 주지 않습니다.</b> 이지카드·아이패스·icash2.0 중 <b>1인 1장</b>을 각자 준비해야 합니다.
+<li><b>실물 교통카드는 주지 않습니다.</b> 이지카드·아이패스·icash2.0 중 <b>1인 1장</b>을 각자 준비해야 합니다 — <b>새 카드·옛 카드·디자인 카드·모바일 카드 모두 됩니다</b>(공식 FAQ).
     분할 충전도 공동 사용도 안 되고, 카드당 상한은 NT$10,000입니다</li>
 <li><b>옛 「Taiwan the Lucky Land」 때 받은 특별 제작 카드는 충전되지 않습니다</b> —
     그때 받아온 카드를 들고 가면 창구에서 막힙니다</li>
@@ -707,7 +757,7 @@
 <ul>
 <li>대만은 <b>현금 비중이 아직 높습니다.</b> 야시장·페리·소규모 식당은 카드가 안 되는 곳이 많습니다</li>
 <li>4인 기준 <b>현금 2~3만 NTD</b>는 준비하고, 부족하면 현지 ATM에서 인출</li>
-<li><b>이지카드(悠遊卡)</b> 또는 <b>아이패스(一卡通)</b>를 4장 사서 MRT·경전철·버스·편의점에 쓰세요. 편의점에서 충전됩니다</li>
+<li><b>이지카드(悠遊卡)</b> 또는 <b>아이패스(一卡通)</b>를 1인 1장 준비해 MRT·경전철·버스·편의점에 쓰세요. <b>예전 여행 때 쓰던 카드가 있으면 그대로 됩니다</b>(잔액 유지·기한 없음). 편의점에서 충전됩니다</li>
 </ul>
 <h3>날씨·복장</h3>
 
@@ -1482,8 +1532,11 @@
 </table></div>
 
 <b class="p-lose">⚠ 2024년 11월부터 아이패스의 MRT·경전철 15% 할인이 없어졌습니다.</b>
-카드로 타도 현금과 같은 값입니다. <b>그래도 아이패스는 사야 합니다</b> —
-<b>지원금을 이 카드로 받고</b>, 페리가 싸지고, 역마다 1회권을 사는 번거로움이 없어집니다.
+카드로 타도 현금과 같은 값입니다. <b>그래도 교통카드는 한 사람에 한 장씩 있어야 합니다</b> —
+<b>지원금을 그 카드로 받고</b>, 페리가 싸지고, 역마다 1회권을 사는 번거로움이 없어집니다.
+<br><b>⭐ 지난 대만 여행 때 쓴 이지카드(悠遊卡)·아이패스(一卡通)가 있으면 새로 살 필요 없습니다.</b>
+남은 잔액도 그대로 쓰고(기한 없음), 지원금도 그 카드에 충전됩니다 —
+단 <b>옛 「遊台灣金福氣」 특별 제작 카드만 지원금 충전이 안 됩니다</b>.
 
 <b>⭐ 아직 남아 있는 할인 두 가지</b>
 <div class="tw"><table>
@@ -3442,6 +3495,8 @@ DAY 2(컨딩)는 가오슝에서 120km 남쪽이라, 올리고 나면 지도가 
     }
   }
 
+  window.__focusPlace = function (p) { focusOn(p); };   // 문서 검색에서 부른다
+  window.__DB = DB;
   function focusOn(p) {
     // 오프라인 지도는 가오슝 시내(z15 타일 10x13장)만 담고 있다.
     // 컨딩·헝춘은 120km 밖이라 pct().inside 가 false 가 되고,
@@ -4153,6 +4208,276 @@ DAY 2(컨딩)는 가오슝에서 120km 남쪽이라, 올리고 나면 지도가 
   if (navigator.onLine !== false) setTimeout(function () { pull(false); }, 1200);
 })();
 
+
+/* 문서 검색 — 표 한 줄·문단·제목·장소 카드를 낱말로 찾는다.
+   여는 순간 화면에 있는 그대로 다시 색인해서, 카드 필터나 일정 변경도 반영된다. */
+(function () {
+  var NAME = { move: '동선', air: '항공', stay: '숙소', plan: '일정', shop: '쇼핑',
+               food: '맛집', map: '지도', course: '코스', tips: '팁' };
+  var ORDER = ['move', 'air', 'stay', 'plan', 'shop', 'food', 'map', 'course', 'tips'];
+  var CARDBOX = { food: 'c-food', cafe: 'c-cafe', shop: 'c-shop', stay: 'c-stay', see: 'c-see' };
+  var SUG = ['페리', '스노클링', '아이패스', '훠궈', '체크아웃', '입국신고', '환불', '우육면', '빙수', '택시'];
+  var RKEY = 'kh.sq.recent';
+  var BLOCK = /^(TABLE|THEAD|TBODY|TR|TD|TH|DIV|P|UL|OL|LI|DL|DT|DD|DETAILS|SUMMARY|H1|H2|H3|H4|H5|SECTION|FORM|SCRIPT|STYLE|NAV|PRE|BLOCKQUOTE|FIGURE|IMG|SVG|CANVAS|BUTTON|INPUT|SELECT|TEXTAREA)$/;
+
+  var nav = document.querySelector('nav.bn');
+  if (!nav) return;
+  var qb = document.createElement('button');
+  qb.className = 'bnq'; qb.type = 'button'; qb.textContent = '🔍';
+  qb.setAttribute('aria-label', '문서 검색');
+  nav.insertBefore(qb, nav.firstChild);
+
+  var bg = document.createElement('div'); bg.className = 'sqbg'; bg.hidden = true;
+  var box = document.createElement('section');
+  box.className = 'sq'; box.id = 'sq'; box.hidden = true;
+  box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', '문서 검색');
+  box.innerHTML =
+    '<div class="sqhead"><input type="search" id="sqIn" placeholder="찾을 낱말 — 예: 페리, 훠궈, 체크아웃" ' +
+      'autocomplete="off" enterkeyhint="search" aria-label="검색어">' +
+      '<button class="fxx" type="button" aria-label="닫기">✕</button></div>' +
+    '<div class="sqtabs" hidden></div><div class="sqlist"></div>';
+  document.body.appendChild(bg); document.body.appendChild(box);
+  var input = box.querySelector('#sqIn'), tabsEl = box.querySelector('.sqtabs'),
+      list = box.querySelector('.sqlist');
+
+  function norm(t) { return (t || '').normalize('NFKC').toLowerCase(); }
+  function clean(t) { return (t || '').replace(/\s+/g, ' ').trim(); }
+  function esc(t) { return t.replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // ── 색인 ────────────────────────────────────────────────────
+  var IDX = [];
+  function ownText(el) {
+    // 표·문단 같은 블록 자식은 따로 색인되니, 맨살 글자와 인라인 요소만 모은다
+    var out = '';
+    [].forEach.call(el.childNodes, function (n) {
+      if (n.nodeType === 3) out += n.nodeValue;
+      else if (n.nodeType === 1 && !BLOCK.test(n.tagName) && !n.classList.contains('h')) out += n.textContent;
+    });
+    return clean(out);
+  }
+  function build() {
+    IDX = [];
+    ORDER.forEach(function (tab) {
+      var sec = document.getElementById('tab-' + tab);
+      if (!sec) return;
+      var title = '';
+      var walker = document.createTreeWalker(sec, NodeFilter.SHOW_ELEMENT, {
+        acceptNode: function (n) {
+          if (/^(SCRIPT|STYLE|SVG|CANVAS)$/.test(n.tagName)) return NodeFilter.FILTER_REJECT;
+          if (n.classList.contains('pc') || n.classList.contains('cards')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+      var n;
+      while ((n = walker.nextNode())) {
+        var tg = n.tagName, txt = '', head = false;
+        if (/^H[1-4]$/.test(tg) || tg === 'SUMMARY' || (tg === 'B' && n.classList.contains('h'))) {
+          txt = clean(n.textContent); head = true;
+          if (txt) title = txt.length > 60 ? txt.slice(0, 60) + '…' : txt;
+        } else if (tg === 'TR') {
+          if (n.querySelector('th') && !n.querySelector('td')) continue;
+          txt = clean([].map.call(n.cells, function (c) { return c.textContent; }).join(' · '));
+        } else if (tg === 'LI' || tg === 'P' || tg === 'DT' || tg === 'DD') {
+          if (n.closest('td')) continue;            // 표 안 목록은 행이 이미 품는다
+          txt = clean(n.textContent);
+        } else if (tg === 'DIV' || tg === 'SECTION' || tg === 'TD') {
+          if (tg === 'TD') continue;
+          txt = ownText(n);
+        } else continue;
+        if (txt.length < 2) continue;
+        IDX.push({ tab: tab, el: n, head: head, title: head ? '' : title, text: txt, low: norm(txt) });
+      }
+    });
+    // 장소 카드는 지도 데이터에서 — 같은 장소가 여러 탭에 그려져도 한 번만
+    var db = window.__DB || [];
+    db.forEach(function (p) {
+      var t = clean([p.n, p.area, p.r, p.acc, p.why].filter(Boolean).join(' · '));
+      IDX.push({ place: p, tab: p.c === 'food' || p.c === 'cafe' ? 'food' : (p.c === 'shop' ? 'shop' :
+                (p.c === 'stay' ? 'stay' : 'plan')), head: true, title: '장소 카드',
+                text: t, low: norm(t) });
+    });
+  }
+
+  // ── 찾기 ────────────────────────────────────────────────────
+  var hits = [], curTab = '';
+  function find(q) {
+    var toks = norm(q).split(/\s+/).filter(Boolean);
+    if (!toks.length) return [];
+    var res = [];
+    IDX.forEach(function (u) {
+      var hay = u.low, hay2 = null, sc = 0;
+      for (var i = 0; i < toks.length; i++) {
+        var k = toks[i], at = hay.indexOf(k);
+        if (at < 0) {                                  // 띄어쓰기 차이는 봐준다
+          hay2 = hay2 || hay.replace(/\s+/g, '');
+          if (hay2.indexOf(k) < 0) return;
+          sc += 1; continue;
+        }
+        sc += 2 + Math.min(3, hay.split(k).length - 2) + (at < 12 ? 1 : 0);
+      }
+      if (u.head) sc += 3;
+      if (u.place && norm(u.place.n).indexOf(toks[0]) > -1) sc += 4;
+      sc -= Math.min(3, u.text.length / 400);
+      res.push({ u: u, sc: sc });
+    });
+    res.sort(function (a, b) { return b.sc - a.sc; });
+    return res;
+  }
+  function snip(text, toks) {
+    var low = norm(text), at = -1;
+    toks.some(function (k) { at = low.indexOf(k); return at > -1; });
+    var a = Math.max(0, at - 36), b = Math.min(text.length, (at < 0 ? 0 : at) + 110);
+    var s = (a > 0 ? '…' : '') + text.slice(a, b) + (b < text.length ? '…' : '');
+    var h = esc(s);
+    toks.forEach(function (k) {
+      if (!k) return;
+      var re = new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+      h = h.replace(re, function (m) { return '<mark>' + m + '</mark>'; });
+    });
+    return h;
+  }
+
+  function paint() {
+    var q = input.value.trim();
+    list.innerHTML = '';
+    if (!q) { tabsEl.hidden = true; suggest(); return; }
+    var toks = norm(q).split(/\s+/).filter(Boolean);
+    hits = find(q);
+    var count = {};
+    hits.forEach(function (h) { count[h.u.tab] = (count[h.u.tab] || 0) + 1; });
+    if (curTab && !count[curTab]) curTab = '';
+    tabsEl.hidden = !hits.length;
+    tabsEl.innerHTML = '<button type="button" data-t=""' + (curTab ? '' : ' class="on"') +
+      '>전체<small>' + hits.length + '</small></button>' +
+      ORDER.filter(function (t) { return count[t]; }).map(function (t) {
+        return '<button type="button" data-t="' + t + '"' + (curTab === t ? ' class="on"' : '') + '>' +
+          NAME[t] + '<small>' + count[t] + '</small></button>';
+      }).join('');
+    var show = hits.filter(function (h) { return !curTab || h.u.tab === curTab; }).slice(0, 80);
+    if (!show.length) {
+      list.innerHTML = '<p class="sqempty">「' + esc(q) + '」이(가) 들어간 곳이 없습니다. ' +
+        '낱말을 줄이거나 한자·영문 이름으로도 찾아보세요.</p>';
+      return;
+    }
+    show.forEach(function (h, i) {
+      var u = h.u, b = document.createElement('button');
+      b.type = 'button'; b.className = 'sqitem';
+      b.innerHTML = '<div class="w"><i>' + NAME[u.tab] + '</i><span>' +
+        esc(u.place ? '📍 ' + u.title : (u.title || (u.head ? '제목' : ''))) + '</span></div>' +
+        '<div class="t">' + snip(u.text, toks) + '</div>';
+      b.addEventListener('click', function () { remember(q); go(u); });
+      list.appendChild(b);
+    });
+    if (hits.length > show.length && !curTab) {
+      var more = document.createElement('p'); more.className = 'sqempty';
+      more.textContent = '결과가 많아 ' + show.length + '개만 보여 줍니다. 위 탭으로 좁히거나 낱말을 더하세요.';
+      list.appendChild(more);
+    }
+  }
+  tabsEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    curTab = b.dataset.t; paint(); list.scrollTop = 0;
+  });
+
+  function recent() { try { return JSON.parse(localStorage.getItem(RKEY) || '[]'); } catch (e) { return []; } }
+  function remember(q) {
+    try {
+      var r = recent().filter(function (x) { return x !== q; });
+      r.unshift(q); localStorage.setItem(RKEY, JSON.stringify(r.slice(0, 8)));
+    } catch (e) {}
+  }
+  function suggest() {
+    var r = recent();
+    var html = '';
+    if (r.length) html += '<div class="sqsug"><b>최근 찾은 것</b>' +
+      r.map(function (x) { return '<button type="button">' + esc(x) + '</button>'; }).join('') + '</div>';
+    html += '<div class="sqsug"><b>자주 찾는 것</b>' +
+      SUG.map(function (x) { return '<button type="button">' + x + '</button>'; }).join('') + '</div>' +
+      '<p class="sqempty">띄어 쓰면 모든 낱말이 들어간 곳만 찾습니다 — 예: <b>페리 아이패스</b></p>';
+    list.innerHTML = html;
+  }
+  list.addEventListener('click', function (e) {
+    var b = e.target.closest('.sqsug button'); if (!b) return;
+    input.value = b.textContent; curTab = ''; paint();
+  });
+
+  // ── 이동 ────────────────────────────────────────────────────
+  function flash(el) {
+    var t = el.tagName === 'TR' ? [].slice.call(el.cells) : [el];
+    t.forEach(function (x) { x.classList.add('sqhit'); });
+    setTimeout(function () { t.forEach(function (x) { x.classList.remove('sqhit'); }); }, 2600);
+  }
+  function go(u) {
+    close();
+    // 탭을 여는 순간 다시 그려지는 목록(일정 등)이 있어, 대상은 탭을 연 '뒤에' 찾는다
+    var tab = u.tab, find;
+    if (u.place) {
+      var p = u.place, want = CARDBOX[p.c];
+      find = function () {
+        return (want && document.querySelector('#' + want + ' .pc[data-id="' + p.id + '"]')) ||
+               document.querySelector('.pc[data-id="' + p.id + '"]') ||
+               // 카드가 없는 항목(공항 이동 등)은 일정 목록의 그 행으로
+               document.querySelector('.pi[data-pid="' + p.id + '"]');
+      };
+      var first = find();
+      if (!first) {
+        // 지도 밖(한국 쪽)이면 지도 함수가 경고창을 띄운다 — 그땐 일정 탭만 연다
+        var inMap = window.__mapPct && window.__mapPct(p.lat, p.lng).inside;
+        if (inMap && window.__focusPlace) { window.__focusPlace(p); return; }
+        tab = 'plan';
+      } else {
+        var sec = first.closest('section.tab');
+        if (sec) tab = sec.id.replace('tab-', '');
+      }
+    } else {
+      find = function () {
+        if (u.el.isConnected) return u.el;
+        build();
+        var m = IDX.filter(function (x) { return x.tab === u.tab && x.text === u.text; })[0];
+        return m && m.el;
+      };
+    }
+    var link = document.querySelector('nav.bn a[data-tab="' + tab + '"]');
+    if (link) link.click();
+    setTimeout(function () {
+      var el = find && find();
+      if (!el) return;
+      // 폰에서는 13번째 카드부터 '더 보기' 뒤에 숨어 있다 — 찾은 카드만 꺼내 보인다
+      if (el.hidden) el.hidden = false;
+      for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
+      el.scrollIntoView({ block: 'center' });   // 탭을 바꾸면 맨 위에서 시작하니 부드럽게 굴리면 반짝임이 끝난 뒤에 닿는다
+      flash(el);
+    }, 80);
+  }
+
+  // ── 열고 닫기 ───────────────────────────────────────────────
+  var timer = 0;
+  input.addEventListener('input', function () {
+    clearTimeout(timer); timer = setTimeout(function () { curTab = ''; paint(); list.scrollTop = 0; }, 90);
+  });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { var f = list.querySelector('.sqitem'); if (f) f.click(); }
+  });
+  function open() {
+    build();
+    bg.hidden = false; box.hidden = false;
+    paint();
+    setTimeout(function () { input.focus(); input.select(); }, 30);
+  }
+  function close() { bg.hidden = true; box.hidden = true; }
+  qb.addEventListener('click', open);
+  bg.addEventListener('click', close);
+  box.querySelector('.fxx').addEventListener('click', close);
+  addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !box.hidden) { close(); return; }
+    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || '');
+    if ((e.key === '/' && !typing) || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k')) {
+      if (box.hidden) { e.preventDefault(); open(); }
+    }
+  });
+})();
 </script>
 <script src="/tools/pick.js?v=8" data-open="always" defer></script>
 </body></html>
