@@ -67,21 +67,6 @@ export const sites = [
     ],
     status: 'active',
   },
-  {
-    id: 'rafdonia',
-    category: 'games',
-    title: { ko: '미궁 (Rafdonia)', en: 'Rafdonia' },
-    desc: {
-      ko: 'Unity로 혼자 만드는 2D 탑다운 픽셀 로그라이크 RPG. 절차적 던전, 영구 사망, 마우스 조준 전투. 브라우저에서 바로 플레이할 수 있어요.',
-      en: 'A 2D top-down pixel-art roguelike RPG built solo in Unity — procedural dungeons, permadeath, mouse-aimed combat. Playable in the browser.',
-    },
-    tags: ['Unity', 'WebGL', '개발 중'],
-    links: [
-      { href: 'https://rafdonia-deploy.vercel.app/', label: { ko: '브라우저에서 플레이', en: 'Play in browser' }, primary: true },
-    ],
-    status: 'wip',
-  },
-
   // ── 도구 ──────────────────────────────────────────────
   {
     id: 'web-tools',
