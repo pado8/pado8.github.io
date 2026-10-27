@@ -40,6 +40,7 @@ export const translations = {
     },
     footer: {
       copy: '© 2026 Taehyo Noh · Built with React & Vite',
+      privacy: 'Privacy Policy',
     },
   },
   ko: {
@@ -83,6 +84,7 @@ export const translations = {
     },
     footer: {
       copy: '© 2026 노태효 · React & Vite로 만들었습니다',
+      privacy: '개인정보처리방침',
     },
   },
 }
