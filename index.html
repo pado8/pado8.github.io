@@ -12,6 +12,21 @@
     <!-- Search engine site verification -->
     <meta name="naver-site-verification" content="eae09d0b5ecb85c02f520406be4c921402a0e504" />
 
+    <!-- GA4 — 아래 id에 측정 ID(G-…)를 넣고 push하면 켜진다. 비어 있으면 아무것도 불러오지 않는다. 켜기 전 /privacy/ 갱신 -->
+    <script>
+      (function (id) {
+        if (!id) return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag('js', new Date());
+        gtag('config', id);
+      })('');
+    </script>
+
     <!-- Primary meta -->
     <title>아쿠아파도 — 파도(pado)가 만든 사이트 모음 | 타르코프 시세 오버레이 · 뚝딱툴즈 · 알파 개미의 포트폴리오</title>
     <meta name="description" content="개발자 파도(pado)가 만들어 공개한 사이트를 한곳에 모았습니다. 타르코프 시세 오버레이와 탈콥 가이드, PoE 3.29 시뮬레이터, 뚝딱툴즈, 알파 개미의 포트폴리오. 전부 무료." />
