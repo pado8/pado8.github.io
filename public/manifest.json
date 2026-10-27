@@ -1,7 +1,7 @@
 {
-  "short_name": "노태효 포트폴리오",
-  "name": "노태효 포트폴리오 — Taehyo Noh Portfolio",
-  "description": "풀스택 개발자 노태효의 프로젝트 포트폴리오. 타르코프 시세 오버레이, 알파 개미의 포트폴리오, 미궁.",
+  "short_name": "아쿠아파도",
+  "name": "아쿠아파도 — 파도(pado)가 만든 사이트 모음",
+  "description": "개발자 파도(pado)가 만들어 공개한 사이트 모음. 타르코프 시세 오버레이, 탈콥 가이드, PoE 시뮬레이터, 뚝딱툴즈, 알파 개미의 포트폴리오.",
   "icons": [
     {
       "src": "favicon.svg",

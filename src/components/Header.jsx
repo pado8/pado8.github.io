@@ -16,15 +16,16 @@ export default function Header({ t, theme, toggleTheme, lang, toggleLang }) {
   }, [menuOpen])
 
   const navLinks = [
-    { href: '#about',    label: t.nav.about },
-    { href: '#projects', label: t.nav.projects },
-    { href: '#contact',  label: t.nav.contact },
+    { href: '#games',  label: t.nav.games },
+    { href: '#tools',  label: t.nav.tools },
+    { href: '#invest', label: t.nav.invest },
+    { href: 'https://console.aquapado.com/', label: t.nav.console },
   ]
 
   return (
     <header className={`header${scrolled ? ' header--scrolled' : ''}`}>
       <div className="container header__inner">
-        <a href="#" className="header__logo" onClick={() => setMenuOpen(false)}>pado8</a>
+        <a href="#" className="header__logo" onClick={() => setMenuOpen(false)}>aquapado</a>
 
         <nav className={`header__nav${menuOpen ? ' header__nav--open' : ''}`}>
           {navLinks.map(l => (

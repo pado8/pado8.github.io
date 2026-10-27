@@ -520,6 +520,43 @@ section { padding: 112px 0; }
   padding-top: 8px;
 }
 
+/* ─── Sites (허브) ─────────────────────────────────────────── */
+.hero--compact { min-height: auto; }
+.hero--compact .hero__inner { padding: 72px 28px 56px; }
+.sites__group { margin-bottom: 56px; }
+.sites__group-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+.sites__group-count {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 9px;
+}
+.sites__private {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  max-width: 640px;
+}
+.sites__private .sites__group-title { margin-bottom: 8px; }
+.sites__private-desc {
+  color: var(--text-muted);
+  line-height: 1.75;
+  margin-bottom: 16px;
+}
+.projects { padding-top: 48px; }
+
 /* ─── Contact ─────────────────────────────────────────────── */
 .contact__inner { max-width: 580px; }
 .contact__desc {

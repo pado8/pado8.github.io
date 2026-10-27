@@ -4,9 +4,7 @@ import { useLang } from './hooks/useLang'
 import { translations } from './i18n'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import About from './components/About'
-import Projects from './components/Projects'
-import Contact from './components/Contact'
+import Sites from './components/Sites'
 import Footer from './components/Footer'
 
 function App() {
@@ -14,9 +12,7 @@ function App() {
   const { lang, toggle: toggleLang } = useLang()
   const t = translations[lang]
 
-  // Keep <html lang>, document title and meta description in sync with the
-  // active language so crawlers (which render the default English state) get
-  // matching SEO signals instead of the static Korean ones.
+  // <html lang>·문서 제목·메타 설명을 활성 언어와 맞춘다 (정적 메타는 한국어, 토글하면 영어).
   useEffect(() => {
     document.documentElement.lang = lang
     document.title = t.meta.title
@@ -30,9 +26,7 @@ function App() {
       <Header t={t} theme={theme} toggleTheme={toggleTheme} lang={lang} toggleLang={toggleLang} />
       <main>
         <Hero t={t} />
-        <About t={t} />
-        <Projects t={t} lang={lang} />
-        <Contact t={t} />
+        <Sites t={t} lang={lang} />
       </main>
       <Footer t={t} />
     </div>
