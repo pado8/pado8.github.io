@@ -54,20 +54,6 @@ export const sites = [
     status: 'active',
   },
   {
-    id: 'maple-union',
-    category: 'games',
-    title: { ko: '메이플 링크 & 유니온 관리표', en: 'MapleStory Link & Union Planner' },
-    desc: {
-      ko: '메이플스토리 링크 스킬·유니온 배치를 한 표에서 관리하고, 보스 수익·아이템 추천·몬스터 컬렉션·일퀘 월드맵까지 같이 보는 관리표.',
-      en: 'A MapleStory planner for link skills and Legion (Union) placement, with boss income, item picks, monster collection and daily-quest map in one place.',
-    },
-    tags: ['메이플스토리'],
-    links: [
-      { href: 'https://maple.aquapado.com/', label: { ko: '열기', en: 'Open' }, primary: true },
-    ],
-    status: 'active',
-  },
-  {
     id: 'palworld-guide',
     category: 'games',
     title: { ko: '팰월드 덱 공략 가이드', en: 'Palworld Deck Guide (Korean)' },

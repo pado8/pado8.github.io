@@ -2,7 +2,7 @@ export const translations = {
   en: {
     meta: {
       title: "aquapado — sites built by pado | Tarkov Price Overlay, DdukDdak Tools, Alpha Ant's Portfolio",
-      description: "Everything pado has built and put online, in one place: Tarkov Price Overlay and guide, PoE 3.29 simulators, MapleStory planner, DdukDdak web tools, Alpha Ant's stock portfolio and more. Free to use.",
+      description: "Everything pado has built and put online, in one place: Tarkov Price Overlay and guide, PoE 3.29 simulators, DdukDdak web tools, Alpha Ant's stock portfolio and more. Free to use.",
     },
     nav: {
       games: 'Games',
@@ -39,7 +39,7 @@ export const translations = {
   ko: {
     meta: {
       title: '아쿠아파도 — 파도(pado)가 만든 사이트 모음 | 타르코프 시세 오버레이 · 뚝딱툴즈 · 알파 개미의 포트폴리오',
-      description: '개발자 파도(pado)가 만들어 공개한 사이트를 한곳에 모았습니다. 타르코프 시세 오버레이와 탈콥 가이드, PoE 3.29 시뮬레이터, 메이플 링크·유니온 관리표, 뚝딱툴즈, 알파 개미의 포트폴리오. 전부 무료.',
+      description: '개발자 파도(pado)가 만들어 공개한 사이트를 한곳에 모았습니다. 타르코프 시세 오버레이와 탈콥 가이드, PoE 3.29 시뮬레이터, 뚝딱툴즈, 알파 개미의 포트폴리오. 전부 무료.',
     },
     nav: {
       games: '게임',
