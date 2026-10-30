@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f4f6fd">
+<title>샤오류추 준비물</title>
+<style>
+  /* travel 도시에와 같은 팔레트 — 공유 링크로 열어도 같은 사이트처럼 보이게 */
+  :root{
+    --bg:#f4f6fd; --bg2:#e9edfb; --card:#fff; --card2:#f2f5fd; --line:#e0e6f5;
+    --ink:#131a2b; --ink2:#333d55; --dim:#68728d;
+    --accent:#3d5afe; --accent2:#7c4dff; --accent-soft:#eaeeff;
+    --ok:#0f9d58; --ok-soft:#e6f6ec; --warn:#b06000; --warn-soft:#fdf1e0;
+    --bad:#d3302f; --bad-soft:#fdecec;
+    --sh:0 1px 2px rgba(19,26,43,.05),0 8px 24px -12px rgba(19,26,43,.16);
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --bg:#0b1020; --bg2:#131b34; --card:#151d33; --card2:#1c2542; --line:#28325a;
+    --ink:#eef2ff; --ink2:#cfd8f5; --dim:#95a1c4;
+    --accent:#7aa2ff; --accent2:#b18cff; --accent-soft:#1d2748;
+    --ok:#4ade80; --ok-soft:#12291f; --warn:#fbbf24; --warn-soft:#2c2313;
+    --bad:#fb7185; --bad-soft:#2d1620;
+    --sh:0 1px 2px rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }}
+  *{box-sizing:border-box}
+  body{margin:0;padding:max(30px,env(safe-area-inset-top)) 0 60px;color:var(--ink);background:var(--bg);
+       background-image:radial-gradient(1100px 520px at 12% -8%,var(--bg2),transparent 62%),
+                        radial-gradient(900px 460px at 108% 4%,var(--accent-soft),transparent 60%);
+       background-attachment:fixed;
+       font:16px/1.72 -apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;
+        padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+  h1{font-size:1.9rem;line-height:1.25;margin:0 0 10px;letter-spacing:-.035em;font-weight:800}
+  .hchips{display:flex;flex-wrap:wrap;gap:6px}
+  .hchip{font-size:12px;font-weight:700;border-radius:10px;padding:5px 11px;background:var(--card);
+         border:1px solid var(--line);color:var(--ink2);box-shadow:var(--sh)}
+  .hchip.dday{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;border-color:transparent;font-weight:800}
+  h2{font-size:.8rem;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);margin:32px 0 12px;font-weight:800;
+     display:flex;justify-content:space-between;gap:10px}
+  h2 .cnt{color:var(--accent);letter-spacing:0;font-variant-numeric:tabular-nums}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh);overflow:hidden}
+  .alert{background:var(--warn-soft);border:1px solid var(--line);border-left:4px solid var(--warn);
+         border-radius:16px;padding:14px 18px;margin-top:22px;font-size:14px;color:var(--ink2)}
+  .alert b{color:var(--warn)}
+  /* 시간표 */
+  .tl{list-style:none;margin:0;padding:6px 0}
+  .tl li{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:9px 20px;font-size:14px}
+  .tl li+li{border-top:1px solid var(--line)}
+  .tl time{font-weight:800;font-variant-numeric:tabular-nums;color:var(--accent)}
+  .tl small{display:block;color:var(--dim);font-size:12.5px}
+  /* 체크리스트 */
+  .ck{list-style:none;margin:0;padding:0}
+  .ck li+li{border-top:1px solid var(--line)}
+  .ck label{display:grid;grid-template-columns:22px 1fr;gap:12px;padding:12px 20px;cursor:pointer}
+  .ck input{width:20px;height:20px;margin:3px 0 0;accent-color:var(--accent)}
+  .ck b{font-weight:750}
+  .ck small{display:block;color:var(--dim);font-size:12.5px;line-height:1.55}
+  .ck input:checked + span{opacity:.45;text-decoration:line-through}
+  .given{background:var(--card2);border:1.5px dashed var(--line);border-radius:14px;padding:12px 16px;
+         font-size:13.5px;color:var(--dim);margin-bottom:10px}
+  .given b{color:var(--ink)}
+  /* 거북이 */
+  .turtle{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;padding:18px 20px}
+  .turtle svg{width:130px;height:auto}
+  .fine{font-size:1.35rem;font-weight:800;color:var(--bad);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .turtle p{margin:2px 0 0;font-size:13.5px;color:var(--dim)}
+  .rules{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+  .rules li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-size:14px}
+  .rules li b{color:var(--ink)}
+  .rules.no li{border-left:4px solid var(--bad)}
+  .reset{margin-top:14px;font:inherit;font-size:12.5px;font-weight:700;color:var(--dim);background:var(--card);
+         border:1px solid var(--line);border-radius:9px;padding:6px 12px;cursor:pointer}
+  footer{margin-top:40px;color:var(--dim);font-size:12px;text-align:center;opacity:.85}
+  footer a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media(max-width:420px){.turtle{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div class="wrap">
+
+<header>
+  <h1>샤오류추 준비물</h1>
+  <div class="hchips">
+    <span class="hchip dday" id="dd">10/31 (토)</span>
+    <span class="hchip">🐢 거북이 섬 · DAY 3</span>
+    <span class="hchip">28° / 25°C · 비 5%</span>
+    <span class="hchip">성인 4명</span>
+  </div>
+</header>
+
+<div class="alert"><b>출발 전 확인</b> — 10/31은 동북계절풍이 다시 강해지는 날이에요. 아침에 타이푸(泰富) 배 운항 여부부터 확인하세요.</div>
+
+<h2>하루 흐름</h2>
+<div class="card">
+  <ul class="tl">
+    <li><time>07:15</time><span>호텔 앞 전용차 → 둥강(東港) 부두<small>약 50분 · 타이푸 매표소 앞 하차</small></span></li>
+    <li><time>09:00</time><span>타이푸 배 → 샤오류추<small>25–30분 · 출항 30분 전 멀미약</small></span></li>
+    <li><time>10:00</time><span>스노클링 (곰 다이빙)<small>바우처 4명 폰에 저장</small></span></li>
+    <li><time>오후</time><span>전동 보조차로 섬 한 바퀴<small>電輔車 · 면허 없이 여권만 · 섬 전체 30km/h</small></span></li>
+    <li><time>17:00</time><span>둥강 → 호텔 전용차</span></li>
+  </ul>
+</div>
+
+<section data-g="must">
+<h2>챙길 것 <span class="cnt"></span></h2>
+<div class="card"><ul class="ck">
+  <li><label><input type="checkbox" id="m1"><span><b>여권</b><small>배표 이름 확인 · 전동차 대여에 필요</small></span></label></li>
+  <li><label><input type="checkbox" id="m2"><span><b>현금 (대만달러)</b><small>섬 가게·식당은 카드 안 되는 곳이 많아요</small></span></label></li>
+  <li><label><input type="checkbox" id="m3"><span><b>멀미약</b><small>배 타기 30분 전에</small></span></label></li>
+  <li><label><input type="checkbox" id="m4"><span><b>모자 · 선글라스</b><small>물 위에서 떠 있는 시간이 길어요</small></span></label></li>
+  <li><label><input type="checkbox" id="m5"><span><b>물 · 개인 텀블러</b><small>섬이 일회용 줄이기 중 · 공유컵 琉行杯도 있어요</small></span></label></li>
+  <li><label><input type="checkbox" id="m6"><span><b>얇은 겉옷</b><small>젖은 채로 전동차 타면 바람에 금방 추워요</small></span></label></li>
+  <li><label><input type="checkbox" id="m7"><span><b>모기 기피제 · 물티슈</b></span></label></li>
+</ul></div>
+</section>
+
+<section data-g="snork">
+<h2>스노클링 <span class="cnt"></span></h2>
+<div class="given"><b>업체가 빌려줘요</b> — 마스크·스노클, 구명조끼, 슈트, 미끄럼 방지 신발, 수중 사진</div>
+<div class="card"><ul class="ck">
+  <li><label><input type="checkbox" id="s1"><span><b>수영복 안에 입고 출발</b><small>빨리 마르는 옷을 위에</small></span></label></li>
+  <li><label><input type="checkbox" id="s2"><span><b>긴팔 래시가드</b></span></label></li>
+  <li><label><input type="checkbox" id="s3"><span><b>스포츠·비치 타월</b><small>물에서 나오면 바람에 금방 추워요</small></span></label></li>
+  <li><label><input type="checkbox" id="s4"><span><b>갈아입을 옷 한 벌 + 지퍼백·비닐봉지</b></span></label></li>
+  <li><label><input type="checkbox" id="s5"><span><b>폰 방수팩</b><small>거북이 찍으려면 필수</small></span></label></li>
+  <li><label><input type="checkbox" id="s6"><span><b>렌즈 착용자: 일회용 렌즈 여분</b></span></label></li>
+  <li><label><input type="checkbox" id="s7"><span><b>머리끈</b><small>긴 머리는 묶기 — 거북이가 해초로 알고 물기도 해요</small></span></label></li>
+</ul></div>
+</section>
+
+<h2>거북이 규칙</h2>
+<div class="card turtle">
+  <svg viewBox="0 0 160 70" role="img" aria-label="사람과 거북이 사이 1.5미터 이상">
+    <circle cx="22" cy="28" r="9" fill="var(--accent)"/>
+    <rect x="14" y="38" width="16" height="24" rx="6" fill="var(--accent)"/>
+    <ellipse cx="130" cy="44" rx="21" ry="13" fill="var(--ok)"/>
+    <circle cx="154" cy="40" r="5" fill="var(--ok)"/>
+    <line x1="40" y1="20" x2="108" y2="20" stroke="var(--dim)" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <path d="M40 15v10M108 15v10" stroke="var(--dim)" stroke-width="1.5"/>
+    <text x="74" y="12" text-anchor="middle" font-size="12" font-weight="800" fill="var(--ink)">1.5 m+</text>
+  </svg>
+  <div>
+    <div class="fine">NT$6만–30만</div>
+    <p>만지거나 쫓으면 외국인도 형사 입건, 1년 이하 징역까지. 2026년 4월에도 화병암에서 실제 송치됐어요.</p>
+  </div>
+</div>
+<ul class="rules">
+  <li>거북이가 다가오면 <b>내가 먼저 피하기</b></li>
+  <li>만지지 · 방해하지 · 먹이 주지 · 쫓지 · 해치지 않기</li>
+  <li>산호 위에 서거나 밟지 않기</li>
+</ul>
+
+<h2>하지 말 것</h2>
+<ul class="rules no">
+  <li><b>입수 전 선크림·화장</b> — 업체가 금지해요. 선크림은 물 밖에서만</li>
+  <li><b>귀중품</b> — 지갑·귀금속은 숙소에 두고 오기</li>
+  <li><b>헬멧 없이 운전</b> — 섬 단속이 엄격해요</li>
+</ul>
+
+<button class="reset" id="reset" type="button">체크 초기화</button>
+
+<footer>
+  aquapado.com · 2026-10-30 확인<br>
+  <a href="https://news.pts.org.tw/article/777512" target="_blank" rel="noopener">海保署 1.5m</a> ·
+  <a href="https://news.ltn.com.tw/news/life/breakingnews/5417563" target="_blank" rel="noopener">自由時報</a> ·
+  <a href="https://money.udn.com/money/amp/story/5621/9047732" target="_blank" rel="noopener">時速30</a> ·
+  <a href="https://bunnyann.tw/?p=118874" target="_blank" rel="noopener">浮潛 攻略</a>
+</footer>
+
+</div>
+<script>
+(function(){
+  var K='liuqiu-share-v1', st={};
+  try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+  var bx=[].slice.call(document.querySelectorAll('.ck input'));
+  function save(){try{localStorage.setItem(K,JSON.stringify(st))}catch(e){}}
+  function cnt(){[].forEach.call(document.querySelectorAll('section[data-g]'),function(s){
+    var b=s.querySelectorAll('input'),n=0;[].forEach.call(b,function(x){if(x.checked)n++});
+    s.querySelector('.cnt').textContent=n+' / '+b.length;});}
+  bx.forEach(function(b){b.checked=!!st[b.id];b.addEventListener('change',function(){st[b.id]=b.checked;save();cnt();});});
+  document.getElementById('reset').addEventListener('click',function(){st={};bx.forEach(function(b){b.checked=false});save();cnt();});
+  cnt();
+  var go=new Date(2026,9,31),n=new Date(),d=Math.round((go-new Date(n.getFullYear(),n.getMonth(),n.getDate()))/864e5);
+  document.getElementById('dd').textContent=d>0?'D-'+d+' · 10/31 (토)':(d===0?'오늘 · 10/31 (토)':'다녀옴');
+})();
+</script>
+</body>
+</html>
