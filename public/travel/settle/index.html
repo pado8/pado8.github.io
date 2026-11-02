@@ -89,7 +89,7 @@
   var API = 'https://api.aquapado.com/settle/api';
   var DEF_CATS = ['숙소', '식비', '카페/간식', '교통', '관광/입장료', '쇼핑', '유심/통신', '기타'];
   var app = document.getElementById('app'), dlg = document.getElementById('dlg');
-  var room = '', S = null, tab = 'pay', mode = 'min', filter = 'all', online = true, syncing = false, timer = null;
+  var room = '', S = null, tab = 'pay', mode = 'min', filter = 'all', online = true, syncing = false, dirty = false, timer = null;
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function uid() { var a = new Uint8Array(10); crypto.getRandomValues(a); return Array.prototype.map.call(a, function (x) { return (x % 36).toString(36); }).join(''); }
@@ -136,8 +136,9 @@
     if (dlg.open || document.getElementById('setForm')) renderHead(); else render();
   }
   function sync() {
-    if (syncing || !room) return Promise.resolve();
-    syncing = true;
+    if (!room) return Promise.resolve();
+    if (syncing) { dirty = true; return Promise.resolve(); }   // 보내는 중에 생긴 변경은 끝나자마자 이어서 보낸다
+    syncing = true; dirty = false;
     var list = Object.keys(S.pending).map(function (k) { return S.pending[k]; });
     var req = (list.length || S.pendingMeta)
       ? fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ room: room, meta: S.pendingMeta || undefined, entries: list }) })
@@ -145,7 +146,10 @@
     return req.then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (j) { online = true; absorb(j.doc); })
       .catch(function () { online = false; })
-      .then(function () { syncing = false; afterSync(); });
+      .then(function () {
+        syncing = false; afterSync();
+        if (dirty && online) return sync();
+      });
   }
   function saveEntry(e) { e.u = Date.now(); S.pending[e.id] = e; persist(); render(); sync(); }
   function saveMeta(m) { m.u = Date.now(); S.pendingMeta = m; persist(); sync(); }
@@ -327,7 +331,7 @@
   function openEntry(id) {
     var m = meta(), last = getStore('settle:last:' + room) || {};
     var e = id ? entries().filter(function (x) { return x.id === id; })[0] : null;
-    var d = e || { id: uid(), date: today(), title: '', cat: m.cats[0] || '기타', amt: '', cur: last.cur || Object.keys(m.rates)[0] || 'KRW', payer: last.payer || m.members[0].id, split: m.members.map(function (x) { return x.id; }), done: false, c: Date.now() };
+    var d = e || { id: uid(), date: today(), title: '', cat: last.cat || (m.cats.indexOf('식비') >= 0 ? '식비' : m.cats[0]) || '기타', amt: '', cur: last.cur || Object.keys(m.rates)[0] || 'KRW', payer: last.payer || m.members[0].id, split: m.members.map(function (x) { return x.id; }), done: false, c: Date.now() };
     var split = (d.split || []).slice(), loan = false, curs = ['KRW'].concat(Object.keys(m.rates));
     if (curs.indexOf(d.cur) < 0) curs.push(d.cur);
     function chips() {
@@ -359,7 +363,7 @@
     };
     document.getElementById('spLoan').onclick = function () {
       loan = !loan; this.classList.toggle('on', loan);
-      document.getElementById('spLbl').textContent = loan ? '빌린 사람 (한 명)' : '함께 나눌 사람';
+      document.getElementById('spLbl').textContent = loan ? '빌린 사람 한 명 (빌려준 사람은 위 「결제한 사람」)' : '함께 나눌 사람';
       if (loan) {
         split = []; box.innerHTML = chips();
         if (m.cats.indexOf('기타') >= 0) document.getElementById('eCat').value = '기타';
@@ -375,10 +379,11 @@
       var amt = Number(String(document.getElementById('eAmt').value).replace(/[,\s]/g, ''));
       if (!(amt > 0)) { toast('금액을 넣어 주세요'); return; }
       if (!split.length && !confirm('나눌 사람이 없으면 정산에서 빠집니다. 그대로 저장할까요?')) return;
-      var payer = document.getElementById('ePayer').value, cur = document.getElementById('eCur').value;
-      setStore('settle:last:' + room, { cur: cur, payer: payer });
+      var payer = document.getElementById('ePayer').value, cur = document.getElementById('eCur').value, cat = document.getElementById('eCat').value;
+      if (loan && split[0] === payer) { toast('결제한 사람(빌려준 사람)과 빌린 사람이 같습니다'); return; }
+      setStore('settle:last:' + room, { cur: cur, payer: payer, cat: cat });
       dlg.close();
-      saveEntry({ id: d.id, c: d.c, date: document.getElementById('eDate').value, title: document.getElementById('eTitle').value.trim(), cat: document.getElementById('eCat').value, amt: amt, cur: cur, payer: payer, split: split, done: document.getElementById('eDone').checked });
+      saveEntry({ id: d.id, c: d.c, date: document.getElementById('eDate').value, title: document.getElementById('eTitle').value.trim(), cat: cat, amt: amt, cur: cur, payer: payer, split: split, done: document.getElementById('eDone').checked });
     };
   }
   function exportCsv() {

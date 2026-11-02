@@ -1,6 +1,6 @@
 /* 여행 정산 페이지 오프라인 캐시. 문서는 네트워크 우선 + 2.5초 타임아웃.
    데이터는 페이지가 localStorage 에 따로 두므로 여기서는 화면만 담는다. */
-const CACHE = 'settle-2026-11-02a';
+const CACHE = 'settle-2026-11-02b';
 const DOC = './index.html';
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', DOC])).then(() => self.skipWaiting()));
