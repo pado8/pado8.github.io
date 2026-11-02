@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>여행 정산</title>
+<style>
+  :root{
+    --bg:#f4f6fb;--card:#fff;--ink:#171b26;--dim:#667085;--line:#e2e6ef;--soft:#eef1f8;
+    --accent:#3d5afe;--accent-ink:#fff;--plus:#0a8f5b;--minus:#d0342c;--warn-bg:#fff5e5;--warn:#9a5b00;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0f1218;--card:#191d26;--ink:#eceff5;--dim:#98a1b2;--line:#2b303c;--soft:#232834;
+    --accent:#7d90ff;--accent-ink:#0f1218;--plus:#3ecf8e;--minus:#ff7b72;--warn-bg:#33270f;--warn:#f0b957;
+  }}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Pretendard","Malgun Gothic","Segoe UI",sans-serif;}
+  button,input,select{font:inherit;color:inherit}
+  .wrap{max-width:720px;margin:0 auto;padding:16px 16px 110px}
+  header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  h1{font-size:21px;margin:0;flex:1;min-width:0;overflow-wrap:anywhere;letter-spacing:-.02em}
+  h2{font-size:15px;margin:22px 0 8px}
+  .sync{font-size:12px;color:var(--dim);white-space:nowrap}
+  .sync.off{color:var(--warn)}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--soft);padding:4px;border-radius:12px;margin-bottom:14px}
+  .tabs button{border:0;background:none;padding:9px 0;border-radius:9px;font-weight:700;color:var(--dim);cursor:pointer}
+  .tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  .stats .card{margin:0}
+  .lbl{font-size:12px;color:var(--dim)}
+  .big{font-size:20px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .seg{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+  .seg button,.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 12px;font-size:13px;font-weight:650;cursor:pointer;color:var(--dim)}
+  .seg button.on,.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .tr{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .tr:last-of-type{border-bottom:0}
+  .tr .who{flex:1;min-width:0;font-weight:700;overflow-wrap:anywhere}
+  .tr .arw{color:var(--dim);font-weight:400;margin:0 4px}
+  .num{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .plus{color:var(--plus)}.minus{color:var(--minus)}
+  .hint{font-size:12.5px;color:var(--dim);margin:6px 0 0}
+  .warn{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:9px 12px;font-size:13px;margin-bottom:10px}
+  .warn button{all:unset;cursor:pointer;text-decoration:underline;font-weight:700}
+  .btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;font-weight:700;cursor:pointer;font-size:14px}
+  .btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .btn.del{color:var(--minus)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .ppl{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+  .ppl .card{margin:0}
+  .kv{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:2px 0;color:var(--dim)}
+  .kv b{color:var(--ink);font-weight:650;font-variant-numeric:tabular-nums}
+  .bar{height:6px;border-radius:9px;background:var(--soft);overflow:hidden;margin-top:3px}
+  .bar i{display:block;height:100%;background:var(--accent)}
+  .day{font-size:12.5px;font-weight:800;color:var(--dim);margin:14px 2px 6px}
+  .it{display:flex;gap:10px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:6px;cursor:pointer}
+  .it.done{opacity:.62}
+  .it .m{flex:1;min-width:0}
+  .it .t{font-weight:700;overflow-wrap:anywhere}
+  .it .s{font-size:12px;color:var(--dim);overflow-wrap:anywhere}
+  .it .r{text-align:right;flex:none}
+  .tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:0 5px;background:var(--soft);color:var(--dim)}
+  .fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));z-index:20;border:0;background:var(--accent);color:var(--accent-ink);font-weight:800;border-radius:99px;padding:13px 26px;box-shadow:0 6px 20px rgba(30,50,160,.32);cursor:pointer;white-space:nowrap}
+  dialog{border:0;border-radius:16px;padding:0;width:min(520px,calc(100vw - 24px));background:var(--card);color:var(--ink)}
+  dialog::backdrop{background:rgba(10,14,28,.5)}
+  .dlg{padding:16px;display:grid;gap:11px}
+  .dlg h3{margin:0;font-size:17px}
+  label.f{display:grid;gap:4px;font-size:12.5px;font-weight:650;color:var(--dim)}
+  input[type=text],input[type=date],input[type=number],select{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:9px 10px;font-size:16px;color:var(--ink)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .amt{display:grid;grid-template-columns:1fr 92px;gap:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .mem{display:grid;grid-template-columns:1fr 1fr 36px;gap:6px;margin-bottom:6px}
+  .x{border:1px solid var(--line);background:var(--card);border-radius:9px;cursor:pointer;color:var(--dim)}
+  .rate{display:grid;grid-template-columns:80px 1fr 36px;gap:6px;margin-bottom:6px;align-items:center}
+  .hero{padding:48px 0;text-align:center}
+  .hero p{color:var(--dim)}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:9px;font-size:13px;z-index:50;max-width:calc(100vw - 32px)}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<dialog id="dlg"></dialog>
+<script>
+(function () {
+  var API = 'https://api.aquapado.com/settle/api';
+  var DEF_CATS = ['숙소', '식비', '카페/간식', '교통', '관광/입장료', '쇼핑', '유심/통신', '기타'];
+  var app = document.getElementById('app'), dlg = document.getElementById('dlg');
+  var room = '', S = null, tab = 'pay', mode = 'min', filter = 'all', online = true, syncing = false, timer = null;
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function uid() { var a = new Uint8Array(10); crypto.getRandomValues(a); return Array.prototype.map.call(a, function (x) { return (x % 36).toString(36); }).join(''); }
+  function won(n) { return Math.round(n).toLocaleString('ko-KR') + '원'; }
+  function getStore(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function setStore(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function toast(t) { var d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(function () { d.remove(); }, 2200); }
+  function copy(t) {
+    var ok = function () { toast('복사했습니다'); };
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { prompt('복사하세요', t); }); else prompt('복사하세요', t);
+  }
+  function today() { var d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); }
+
+  /* ── 상태 · 동기화 ───────────────────────────────
+     server: 서버에서 받은 문서 / pending: 아직 서버 문서에서 확인 못 한 내 변경.
+     화면은 server 위에 pending 을 얹어 그린다. 오프라인이어도 pending 에 쌓였다가 나중에 올라간다. */
+  function key() { return 'settle:' + room; }
+  function load() { S = getStore(key()) || { server: { meta: null, entries: {} }, pending: {}, pendingMeta: null, recent: {} }; }
+  function persist() { setStore(key(), S); }
+  function meta() { return S.pendingMeta || S.server.meta; }
+  function entries() {
+    var all = Object.assign({}, S.server.entries, S.pending);
+    return Object.keys(all).map(function (k) { return all[k]; }).filter(function (e) { return !e.d; })
+      .sort(function (a, b) { return (a.date || '').localeCompare(b.date || '') || (a.c || 0) - (b.c || 0) || a.id.localeCompare(b.id); });
+  }
+  function absorb(doc) {
+    if (!doc) return;
+    S.server = { meta: doc.meta, entries: doc.entries || {} };
+    var now = Date.now();
+    Object.keys(S.pending).forEach(function (id) {
+      var srv = S.server.entries[id];
+      if (srv && srv.u >= S.pending[id].u) { S.recent[id] = { e: S.pending[id], t: now }; delete S.pending[id]; }
+    });
+    Object.keys(S.recent).forEach(function (id) {
+      var r = S.recent[id], srv = S.server.entries[id];
+      if (now - r.t > 120000) { delete S.recent[id]; return; }
+      if (!srv || srv.u < r.e.u) { S.pending[id] = r.e; delete S.recent[id]; }   // 동시 저장으로 밀려났으면 다시 보낸다
+    });
+    if (S.pendingMeta && doc.meta && doc.meta.u >= S.pendingMeta.u) S.pendingMeta = null;
+    persist();
+  }
+  function afterSync() {
+    // 고치는 중인 입력 칸을 동기화가 지우면 안 된다
+    if (dlg.open || document.getElementById('setForm')) renderHead(); else render();
+  }
+  function sync() {
+    if (syncing || !room) return Promise.resolve();
+    syncing = true;
+    var list = Object.keys(S.pending).map(function (k) { return S.pending[k]; });
+    var req = (list.length || S.pendingMeta)
+      ? fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ room: room, meta: S.pendingMeta || undefined, entries: list }) })
+      : fetch(API + '?room=' + room, { cache: 'no-store' });
+    return req.then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) { online = true; absorb(j.doc); })
+      .catch(function () { online = false; })
+      .then(function () { syncing = false; afterSync(); });
+  }
+  function saveEntry(e) { e.u = Date.now(); S.pending[e.id] = e; persist(); render(); sync(); }
+  function saveMeta(m) { m.u = Date.now(); S.pendingMeta = m; persist(); sync(); }
+
+  /* ── 계산 ─ 구글 시트의 식과 같다 ─────────────────
+     원화 = KRW면 금액, 아니면 금액×환율 / 1인 부담 = 원화÷나눌 인원 / 차액 = 미정산 낸 돈 − 미정산 부담 */
+  function krw(e, m) { return e.cur === 'KRW' ? e.amt : e.amt * (m.rates[e.cur] || 0); }
+  function calc() {
+    var m = meta(), P = {}, cats = {}, total = 0, open = 0, excluded = [], noRate = {};
+    m.members.forEach(function (x) { P[x.id] = { paidOpen: 0, burdenOpen: 0, paidDone: 0, burdenDone: 0, total: 0 }; });
+    entries().forEach(function (e) {
+      var w = krw(e, m), split = (e.split || []).filter(function (id) { return P[id]; }), each = split.length ? w / split.length : 0;
+      if (e.cur !== 'KRW' && !m.rates[e.cur]) noRate[e.cur] = 1;
+      total += w; cats[e.cat || '기타'] = (cats[e.cat || '기타'] || 0) + w;
+      if (!split.length) excluded.push(e);
+      if (!e.done) open += w;
+      if (P[e.payer]) P[e.payer][e.done ? 'paidDone' : 'paidOpen'] += w;
+      split.forEach(function (id) { P[id][e.done ? 'burdenDone' : 'burdenOpen'] += each; P[id].total += each; });
+    });
+    m.members.forEach(function (x) { P[x.id].net = P[x.id].paidOpen - P[x.id].burdenOpen; });
+    return { P: P, cats: cats, total: total, open: open, excluded: excluded, noRate: Object.keys(noRate) };
+  }
+  // 받을 사람·보낼 사람을 큰 금액부터 짝짓는다. 반올림으로 남는 1~2원은 버린다.
+  function minimize(nodes) {
+    var pos = [], neg = [], out = [];
+    nodes.forEach(function (n) { var v = Math.round(n.net); if (v > 0) pos.push({ n: n.name, v: v }); else if (v < 0) neg.push({ n: n.name, v: -v }); });
+    pos.sort(function (a, b) { return b.v - a.v; }); neg.sort(function (a, b) { return b.v - a.v; });
+    var i = 0, j = 0;
+    while (i < neg.length && j < pos.length) {
+      var x = Math.min(neg[i].v, pos[j].v);
+      if (x > 2) out.push({ from: neg[i].n, to: pos[j].n, amt: x });
+      neg[i].v -= x; pos[j].v -= x;
+      if (neg[i].v <= 0) i++;
+      if (pos[j].v <= 0) j++;
+    }
+    return out;
+  }
+  function transfers(c) {
+    var m = meta(), byId = {};
+    m.members.forEach(function (x) { byId[x.id] = x; });
+    if (mode === 'group') {
+      var g = {}, order = [];
+      m.members.forEach(function (x) {
+        var k = x.group || x.name;
+        if (!g[k]) { g[k] = { name: [], net: 0 }; order.push(k); }
+        g[k].name.push(x.name); g[k].net += c.P[x.id].net;
+      });
+      return minimize(order.map(function (k) { return { name: g[k].name.join('·'), net: g[k].net }; }));
+    }
+    if (mode === 'hub') {
+      var t = byId[m.treasurer] || m.members[0], out = [];
+      m.members.forEach(function (x) {
+        if (x.id === t.id) return;
+        var v = Math.round(c.P[x.id].net);
+        if (v < 0) out.push({ from: x.name, to: t.name, amt: -v });
+        else if (v > 0) out.push({ from: t.name, to: x.name, amt: v });
+      });
+      return out;
+    }
+    return minimize(m.members.map(function (x) { return { name: x.name, net: c.P[x.id].net }; }));
+  }
+
+  /* ── 화면 ─────────────────────────────────────── */
+  function renderHead() {
+    var el = document.getElementById('syncState');
+    if (!el) return;
+    var n = Object.keys(S.pending).length + (S.pendingMeta ? 1 : 0);
+    el.className = 'sync' + (online ? '' : ' off');
+    el.textContent = online ? (n ? '저장 중…' : '저장됨') : '오프라인' + (n ? ' · 대기 ' + n + '건' : '');
+  }
+  function render() {
+    if (!room) return renderHome();
+    var m = meta();
+    if (!m) { app.innerHTML = '<div class="hero"><p>' + (online ? '불러오는 중…' : '인터넷에 연결되면 불러옵니다.') + '</p></div>'; return; }
+    if (!m.members.length) tab = 'set';
+    var scroll = window.scrollY;
+    var html = '<header><h1>' + esc(m.title || '여행 정산') + '</h1><span class="sync" id="syncState"></span>' +
+      '<button class="btn" id="share">링크 공유</button></header>' +
+      '<div class="tabs">' + [['pay', '정산'], ['list', '내역'], ['set', '설정']].map(function (t) {
+        return '<button data-tab="' + t[0] + '" class="' + (tab === t[0] ? 'on' : '') + '">' + t[1] + '</button>';
+      }).join('') + '</div>';
+    html += tab === 'pay' ? viewPay() : tab === 'list' ? viewList() : viewSet();
+    if (m.members.length && tab !== 'set') html += '<button class="fab" id="add">＋ 지출 추가</button>';
+    app.innerHTML = html;
+    renderHead();
+    window.scrollTo(0, scroll);
+  }
+  function renderHome() {
+    var rooms = getStore('settle:rooms') || [];
+    app.innerHTML = '<div class="hero"><h1>여행 정산</h1><p>쓸 때마다 한 줄씩 넣으면 누가 누구에게 얼마 보낼지 바로 나옵니다.<br>링크를 아는 사람끼리 같이 입력합니다. 로그인은 없습니다.</p>' +
+      '<button class="btn pri" id="newRoom">새 정산 만들기</button></div>' +
+      (rooms.length ? '<h2>최근 정산</h2>' + rooms.map(function (r) { return '<a class="it" style="text-decoration:none;color:inherit" href="#' + esc(r.id) + '"><span class="m"><span class="t">' + esc(r.title || '이름 없는 정산') + '</span></span></a>'; }).join('') : '');
+  }
+  function viewPay() {
+    var m = meta(), c = calc(), t = transfers(c), h = '';
+    if (c.noRate.length) h += '<div class="warn">환율이 없는 통화가 있어 0원으로 계산됩니다: ' + esc(c.noRate.join(', ')) + ' — <button data-tab="set">설정에서 넣기</button></div>';
+    var loans = entries().filter(function (e) { return !e.done && /빌림|빌려/.test(e.title || '') && (e.split || []).length > 1; });
+    if (loans.length) h += '<div class="warn">빌린 돈이 여럿에게 나뉘어 있습니다: ' + loans.map(function (e) { return '<button data-edit="' + e.id + '">' + esc(e.title) + '</button>'; }).join(', ') + ' — 빌린 사람 한 명만 선택해야 맞습니다.</div>';
+    if (c.excluded.length) h += '<div class="warn">나눌 사람이 없어 정산에서 빠진 지출 ' + c.excluded.length + '건: ' + c.excluded.map(function (e) { return '<button data-edit="' + e.id + '">' + esc(e.title) + '</button>'; }).join(', ') + '</div>';
+    h += '<div class="stats"><div class="card"><div class="lbl">남은 정산 대상</div><div class="big">' + won(c.open) + '</div></div><div class="card"><div class="lbl">여행 총 지출</div><div class="big">' + won(c.total) + '</div></div></div>';
+    h += '<h2>지금 보낼 돈</h2><div class="seg">' + [['min', '송금 최소'], ['group', '커플·가족별'], ['hub', '총무 통해']].map(function (x) {
+      return '<button data-mode="' + x[0] + '" class="' + (mode === x[0] ? 'on' : '') + '">' + x[1] + '</button>';
+    }).join('') + '</div><div class="card">';
+    if (!t.length) h += '<div class="lbl">보낼 돈이 없습니다.</div>';
+    t.forEach(function (x) { h += '<div class="tr"><div class="who">' + esc(x.from) + '<span class="arw">→</span>' + esc(x.to) + '</div><div class="num">' + won(x.amt) + '</div></div>'; });
+    if (mode === 'group') h += '<p class="hint">같은 묶음(설정의 「묶음」 칸)은 한 지갑으로 보고 합칩니다.</p>';
+    if (mode === 'hub') h += '<p class="hint">모두 총무와 주고받습니다.</p>';
+    if (t.length) h += '<div class="row"><button class="btn" id="copyT">카톡용 복사</button><button class="btn" id="finish">송금 끝 — 모두 완료 처리</button></div>';
+    h += '</div><h2>사람별</h2><div class="ppl">';
+    m.members.forEach(function (x) {
+      var p = c.P[x.id], v = Math.round(p.net);
+      h += '<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><b>' + esc(x.name) + '</b><span class="num ' + (v > 0 ? 'plus' : v < 0 ? 'minus' : '') + '">' + (v > 0 ? '+' : '') + won(v) + '</span></div>' +
+        '<div class="kv"><span>미정산 낸 돈</span><b>' + won(p.paidOpen) + '</b></div><div class="kv"><span>미정산 부담</span><b>' + won(p.burdenOpen) + '</b></div>' +
+        '<div class="kv"><span>완료분 낸 돈</span><b>' + won(p.paidDone) + '</b></div><div class="kv"><span>완료분 부담</span><b>' + won(p.burdenDone) + '</b></div>' +
+        '<div class="kv"><span>여행 총 사용액</span><b>' + won(p.total) + '</b></div></div>';
+    });
+    h += '</div><h2>분류별</h2><div class="card">';
+    Object.keys(c.cats).sort(function (a, b) { return c.cats[b] - c.cats[a]; }).forEach(function (k) {
+      var pct = c.total ? c.cats[k] / c.total * 100 : 0;
+      h += '<div style="padding:5px 0"><div class="kv"><span>' + esc(k) + ' · ' + pct.toFixed(1) + '%</span><b>' + won(c.cats[k]) + '</b></div><div class="bar"><i style="width:' + pct.toFixed(1) + '%"></i></div></div>';
+    });
+    return h + '</div>';
+  }
+  function viewList() {
+    var m = meta(), names = {}, h = '<div class="seg">' + [['all', '전체'], ['open', '미정산'], ['done', '완료']].map(function (x) {
+      return '<button data-filter="' + x[0] + '" class="' + (filter === x[0] ? 'on' : '') + '">' + x[1] + '</button>';
+    }).join('') + '</div>';
+    m.members.forEach(function (x) { names[x.id] = x.name; });
+    var list = entries().filter(function (e) { return filter === 'all' || (filter === 'done') === !!e.done; }), day = null;
+    if (!list.length) h += '<div class="card lbl">아직 지출이 없습니다.</div>';
+    list.forEach(function (e) {
+      if (e.date !== day) { day = e.date; h += '<div class="day">' + esc(day ? Number(day.slice(5, 7)) + '/' + Number(day.slice(8, 10)) : '날짜 없음') + '</div>'; }
+      var w = krw(e, m), sp = (e.split || []).filter(function (id) { return names[id]; }), all = sp.length === m.members.length;
+      h += '<button class="it' + (e.done ? ' done' : '') + '" data-edit="' + e.id + '"><span class="m"><span class="t">' + esc(e.title || '(내용 없음)') + '</span>' +
+        '<br><span class="s">' + esc(names[e.payer] || '?') + ' 결제 · ' + (sp.length ? (all ? '모두' : sp.map(function (id) { return esc(names[id]); }).join(', ')) : '나눔 없음') + '</span> ' +
+        (e.done ? '<span class="tag">완료</span> ' : '') + '<span class="tag">' + esc(e.cat || '기타') + '</span></span>' +
+        '<span class="r"><span class="num">' + won(w) + '</span>' + (e.cur !== 'KRW' ? '<br><span class="s">' + esc(e.cur) + ' ' + Number(e.amt).toLocaleString('ko-KR') + '</span>' : '') +
+        (sp.length > 1 ? '<br><span class="s">1인 ' + won(w / sp.length) + '</span>' : '') + '</span></button>';
+    });
+    return h;
+  }
+  function viewSet() {
+    var m = meta();
+    var h = '<div class="card" id="setForm"><label class="f">여행 이름<input type="text" id="sTitle" maxlength="60" value="' + esc(m.title) + '"></label>' +
+      '<h2>사람</h2><p class="hint" style="margin-bottom:8px">「묶음」은 커플·가족 이름입니다. 같은 묶음은 「커플·가족별」 정산에서 합쳐집니다.</p><div id="sMem">';
+    m.members.forEach(function (x) { h += memRow(x); });
+    h += '</div><button class="btn" id="addMem">＋ 사람 추가</button>' +
+      '<h2>환율 (1단위당 원)</h2><div id="sRate">';
+    Object.keys(m.rates).forEach(function (k) { h += rateRow(k, m.rates[k]); });
+    h += '</div><button class="btn" id="addRate">＋ 통화 추가</button><p class="hint">환율을 바꾸면 그 통화의 모든 지출이 다시 계산됩니다.</p>' +
+      '<h2>총무</h2><select id="sTre">' + m.members.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === m.treasurer ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') + '</select>' +
+      '<h2>분류</h2><input type="text" id="sCats" value="' + esc(m.cats.join(', ')) + '"><p class="hint">쉼표로 구분합니다.</p>' +
+      '<div class="row"><button class="btn pri" id="saveSet">설정 저장</button><button class="btn" id="csv">CSV 내보내기</button></div></div>';
+    return h;
+  }
+  function memRow(x) {
+    return '<div class="mem" data-id="' + esc(x.id) + '"><input type="text" class="mName" placeholder="이름" maxlength="20" value="' + esc(x.name) + '"><input type="text" class="mGroup" placeholder="묶음 (예: 커플A)" maxlength="20" value="' + esc(x.group) + '"><button class="x" data-rm="mem" aria-label="빼기">✕</button></div>';
+  }
+  function rateRow(k, v) {
+    return '<div class="rate"><input type="text" class="rCur" maxlength="3" placeholder="TWD" value="' + esc(k) + '"><input type="number" class="rVal" step="any" min="0" inputmode="decimal" placeholder="41" value="' + esc(v) + '"><button class="x" data-rm="rate" aria-label="빼기">✕</button></div>';
+  }
+  function collectSet() {
+    var members = [], rates = {};
+    [].forEach.call(document.querySelectorAll('#sMem .mem'), function (r) {
+      var n = r.querySelector('.mName').value.trim();
+      if (n) members.push({ id: r.dataset.id, name: n, group: r.querySelector('.mGroup').value.trim() });
+    });
+    [].forEach.call(document.querySelectorAll('#sRate .rate'), function (r) {
+      var c = r.querySelector('.rCur').value.trim().toUpperCase(), v = Number(r.querySelector('.rVal').value);
+      if (/^[A-Z]{3}$/.test(c) && v > 0) rates[c] = v;
+    });
+    var tre = document.getElementById('sTre').value;
+    if (!members.some(function (x) { return x.id === tre; })) tre = members[0] ? members[0].id : '';
+    return { title: document.getElementById('sTitle').value.trim(), members: members, rates: rates, treasurer: tre,
+      cats: document.getElementById('sCats').value.split(',').map(function (s) { return s.trim(); }).filter(Boolean) };
+  }
+
+  /* ── 지출 입력 ─────────────────────────────────── */
+  function openEntry(id) {
+    var m = meta(), last = getStore('settle:last:' + room) || {};
+    var e = id ? entries().filter(function (x) { return x.id === id; })[0] : null;
+    var d = e || { id: uid(), date: today(), title: '', cat: m.cats[0] || '기타', amt: '', cur: last.cur || Object.keys(m.rates)[0] || 'KRW', payer: last.payer || m.members[0].id, split: m.members.map(function (x) { return x.id; }), done: false, c: Date.now() };
+    var split = (d.split || []).slice(), loan = false, curs = ['KRW'].concat(Object.keys(m.rates));
+    if (curs.indexOf(d.cur) < 0) curs.push(d.cur);
+    function chips() {
+      return m.members.map(function (x) { return '<button type="button" class="chip' + (split.indexOf(x.id) >= 0 ? ' on' : '') + '" data-sp="' + esc(x.id) + '">' + esc(x.name) + '</button>'; }).join('');
+    }
+    dlg.innerHTML = '<form class="dlg" id="ef"><h3>' + (e ? '지출 고치기' : '지출 추가') + '</h3>' +
+      '<div class="amt"><label class="f">금액<input type="text" id="eAmt" inputmode="decimal" autocomplete="off" value="' + esc(d.amt) + '"></label><label class="f">통화<select id="eCur">' + curs.map(function (c) { return '<option' + (c === d.cur ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select></label></div>' +
+      '<label class="f">내용<input type="text" id="eTitle" maxlength="80" value="' + esc(d.title) + '"></label>' +
+      '<div class="two"><label class="f">날짜<input type="date" id="eDate" value="' + esc(d.date) + '"></label><label class="f">분류<select id="eCat">' + m.cats.concat(m.cats.indexOf(d.cat) < 0 && d.cat ? [d.cat] : []).map(function (c) { return '<option' + (c === d.cat ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('') + '</select></label></div>' +
+      '<label class="f">결제한 사람<select id="ePayer">' + m.members.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === d.payer ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') + '</select></label>' +
+      '<div><div class="lbl" id="spLbl" style="font-weight:650">함께 나눌 사람</div><div class="chips" id="spBox" style="margin-top:4px">' + chips() + '</div>' +
+      '<div class="chips" style="margin-top:6px"><button type="button" class="chip" id="spAll">모두</button><button type="button" class="chip" id="spLoan">빌려준 돈</button></div></div>' +
+      '<label style="display:flex;gap:8px;align-items:center;font-size:14px"><input type="checkbox" id="eDone"' + (d.done ? ' checked' : '') + '> 이미 주고받음 (정산 완료)</label>' +
+      '<div class="row" style="justify-content:space-between"><div>' + (e ? '<button type="button" class="btn del" id="eDel">지우기</button>' : '') + '</div><div style="display:flex;gap:8px"><button type="button" class="btn" id="eCancel">닫기</button><button type="submit" class="btn pri">저장</button></div></div></form>';
+    dlg.showModal();
+    if (!e) document.getElementById('eAmt').focus();
+    var box = document.getElementById('spBox');
+    box.onclick = function (ev) {
+      var sid = ev.target.dataset && ev.target.dataset.sp;
+      if (!sid) return;
+      if (loan) split = [sid];
+      else { var i = split.indexOf(sid); if (i >= 0) split.splice(i, 1); else split.push(sid); }
+      box.innerHTML = chips();
+    };
+    document.getElementById('spAll').onclick = function () {
+      loan = false; document.getElementById('spLoan').classList.remove('on');
+      document.getElementById('spLbl').textContent = '함께 나눌 사람';
+      split = m.members.map(function (x) { return x.id; }); box.innerHTML = chips();
+    };
+    document.getElementById('spLoan').onclick = function () {
+      loan = !loan; this.classList.toggle('on', loan);
+      document.getElementById('spLbl').textContent = loan ? '빌린 사람 (한 명)' : '함께 나눌 사람';
+      if (loan) {
+        split = []; box.innerHTML = chips();
+        if (m.cats.indexOf('기타') >= 0) document.getElementById('eCat').value = '기타';
+      }
+    };
+    document.getElementById('eCancel').onclick = function () { dlg.close(); render(); };
+    if (e) document.getElementById('eDel').onclick = function () {
+      if (!confirm('이 지출을 지울까요?')) return;
+      dlg.close(); saveEntry({ id: e.id, d: true });
+    };
+    document.getElementById('ef').onsubmit = function (ev) {
+      ev.preventDefault();
+      var amt = Number(String(document.getElementById('eAmt').value).replace(/[,\s]/g, ''));
+      if (!(amt > 0)) { toast('금액을 넣어 주세요'); return; }
+      if (!split.length && !confirm('나눌 사람이 없으면 정산에서 빠집니다. 그대로 저장할까요?')) return;
+      var payer = document.getElementById('ePayer').value, cur = document.getElementById('eCur').value;
+      setStore('settle:last:' + room, { cur: cur, payer: payer });
+      dlg.close();
+      saveEntry({ id: d.id, c: d.c, date: document.getElementById('eDate').value, title: document.getElementById('eTitle').value.trim(), cat: document.getElementById('eCat').value, amt: amt, cur: cur, payer: payer, split: split, done: document.getElementById('eDone').checked });
+    };
+  }
+  function exportCsv() {
+    var m = meta(), names = {}, c = function (s) { return '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"'; };
+    m.members.forEach(function (x) { names[x.id] = x.name; });
+    var rows = [['날짜', '내용', '분류', '금액', '통화', '결제자'].concat(m.members.map(function (x) { return x.name; })).concat(['정산', '원화', '인원', '1인 부담'])];
+    entries().forEach(function (e) {
+      var sp = (e.split || []).filter(function (id) { return names[id]; }), w = krw(e, m);
+      rows.push([e.date, e.title, e.cat, e.amt, e.cur, names[e.payer] || ''].concat(m.members.map(function (x) { return sp.indexOf(x.id) >= 0 ? 'O' : ''; })).concat([e.done ? '완료' : '미정산', Math.round(w), sp.length, sp.length ? Math.round(w / sp.length) : '']));
+    });
+    var blob = new Blob(['﻿' + rows.map(function (r) { return r.map(c).join(','); }).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = (m.title || '정산') + '.csv'; a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  }
+
+  /* ── 이벤트 ───────────────────────────────────── */
+  app.addEventListener('click', function (ev) {
+    var t = ev.target.closest('button,a');
+    if (!t) return;
+    if (t.dataset.tab) { tab = t.dataset.tab; render(); window.scrollTo(0, 0); return; }
+    if (t.dataset.mode) { mode = t.dataset.mode; return render(); }
+    if (t.dataset.filter) { filter = t.dataset.filter; return render(); }
+    if (t.dataset.edit) return openEntry(t.dataset.edit);
+    if (t.dataset.rm) {
+      var row = t.parentNode;
+      if (t.dataset.rm === 'mem') {
+        var rid = row.dataset.id, used = entries().some(function (e) { return e.payer === rid || (e.split || []).indexOf(rid) >= 0; });
+        if (used) return toast('이 사람이 들어간 지출이 있어 뺄 수 없습니다');
+      }
+      return row.remove();
+    }
+    switch (t.id) {
+      case 'newRoom': location.hash = uid() + uid(); break;
+      case 'add': openEntry(); break;
+      case 'share': copy(location.href); break;
+      case 'addMem': document.getElementById('sMem').insertAdjacentHTML('beforeend', memRow({ id: uid(), name: '', group: '' })); break;
+      case 'addRate': document.getElementById('sRate').insertAdjacentHTML('beforeend', rateRow('', '')); break;
+      case 'saveSet':
+        var n = collectSet();
+        if (!n.members.length) return toast('사람을 한 명 이상 넣어 주세요');
+        tab = 'pay'; saveMeta(n); remember(n.title); render(); toast('저장했습니다');
+        break;
+      case 'csv': exportCsv(); break;
+      case 'copyT':
+        var m = meta(), c = calc();
+        copy(['[' + (m.title || '여행 정산') + ']'].concat(transfers(c).map(function (x) { return x.from + ' → ' + x.to + ' ' + won(x.amt); })).concat(['총 지출 ' + won(c.total)]).join('\n'));
+        break;
+      case 'finish':
+        if (!confirm('미정산 지출을 모두 「완료」로 바꿀까요? 송금이 끝난 뒤에 누르세요.')) return;
+        var stamp = Date.now();
+        entries().forEach(function (e) { if (!e.done) { var x = Object.assign({}, e, { done: true, u: stamp }); S.pending[x.id] = x; } });
+        persist(); render(); sync();
+        break;
+    }
+  });
+  function remember(title) {
+    var rooms = (getStore('settle:rooms') || []).filter(function (r) { return r.id !== room; });
+    rooms.unshift({ id: room, title: title }); setStore('settle:rooms', rooms.slice(0, 10));
+  }
+  function open() {
+    room = (location.hash || '').replace('#', '');
+    if (room && !/^[a-z0-9]{16,40}$/.test(room)) room = '';
+    clearInterval(timer);
+    if (!room) { S = null; return renderHome(); }
+    load(); tab = 'pay'; render();
+    sync().then(function () {
+      if (!meta() && online) {
+        // 처음 여는 방 — 빈 설정을 만들고 사람부터 넣게 한다
+        S.pendingMeta = { u: Date.now(), title: '', members: [], rates: {}, treasurer: '', cats: DEF_CATS.slice() };
+        tab = 'set'; persist(); render();
+      } else if (meta()) remember(meta().title);
+    });
+    timer = setInterval(function () { if (!document.hidden && !dlg.open) sync(); }, 15000);
+  }
+  window.addEventListener('hashchange', open);
+  window.addEventListener('online', function () { if (room) sync(); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && room) sync(); });
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function () {});
+  open();
+})();
+</script>
+</body>
+</html>
