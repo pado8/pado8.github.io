@@ -69,20 +69,6 @@ export const sites = [
   },
   // ── 도구 ──────────────────────────────────────────────
   {
-    id: 'web-tools',
-    category: 'tools',
-    title: { ko: '뚝딱툴즈', en: 'DdukDdak Tools' },
-    desc: {
-      ko: '파일이 서버에 올라가지 않는 무료 웹 도구 모음. 이미지 변환·압축, PDF 합치기·분할, 움짤 만들기, QR 생성까지 설치 없이 브라우저에서 처리해요.',
-      en: 'Free browser-side web tools that never upload your files: image convert & compress, PDF merge & split, GIF maker, QR codes and more.',
-    },
-    tags: ['브라우저 처리', '무료'],
-    links: [
-      { href: 'https://tools.aquapado.com/', label: { ko: '열기', en: 'Open' }, primary: true },
-    ],
-    status: 'active',
-  },
-  {
     id: 'page-comment',
     category: 'tools',
     title: { ko: '페이지 코멘트 도구', en: 'Page Comment Bookmarklet' },
