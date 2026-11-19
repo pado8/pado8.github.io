@@ -17,7 +17,6 @@ export default function Header({ t, theme, toggleTheme, lang, toggleLang }) {
 
   const navLinks = [
     { href: '#games',  label: t.nav.games },
-    { href: '#tools',  label: t.nav.tools },
     { href: '#invest', label: t.nav.invest },
     { href: 'https://console.aquapado.com/', label: t.nav.console },
   ]

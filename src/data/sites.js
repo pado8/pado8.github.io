@@ -1,10 +1,10 @@
 // aquapado.com 허브에 보여줄 공개 사이트 목록.
 // 개인용 사이트(생활·서버 관리 등)는 여기 넣지 않는다 — console.aquapado.com(로그인) 안에만 둔다.
 // 여행 도시에(/travel/)는 집을 비우는 날짜가 드러나므로 목록에서 뺀다.
+// 페이지 코멘트 도구(/tools/)는 공유 안 함(2026-11-19 사용자 결정) — 페이지는 여행 페이지의 pick.js 때문에 남기고 목록에서만 뺀다.
 
 export const categories = [
   { id: 'games', label: { ko: '게임', en: 'Games' } },
-  { id: 'tools', label: { ko: '도구', en: 'Tools' } },
   { id: 'invest', label: { ko: '투자', en: 'Investing' } },
 ]
 
@@ -67,22 +67,6 @@ export const sites = [
     ],
     status: 'active',
   },
-  // ── 도구 ──────────────────────────────────────────────
-  {
-    id: 'page-comment',
-    category: 'tools',
-    title: { ko: '페이지 코멘트 도구', en: 'Page Comment Bookmarklet' },
-    desc: {
-      ko: '아무 웹페이지나 열고 고칠 곳을 클릭해 메모를 남기면, 붙여넣기 한 번으로 전달되는 북마클릿. 피드백을 말로 설명하는 대신 위치째로 보내요.',
-      en: 'A bookmarklet: open any page, click the spots that need fixing, leave notes, and hand them over with a single paste.',
-    },
-    tags: ['북마클릿'],
-    links: [
-      { href: '/tools/', label: { ko: '열기', en: 'Open' }, primary: true },
-    ],
-    status: 'active',
-  },
-
   // ── 투자 ──────────────────────────────────────────────
   {
     id: 'alpha-ants-portfolio',

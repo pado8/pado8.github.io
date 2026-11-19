@@ -6,7 +6,6 @@ export const translations = {
     },
     nav: {
       games: 'Games',
-      tools: 'Tools',
       invest: 'Investing',
       console: 'Console',
     },
@@ -14,7 +13,7 @@ export const translations = {
       greeting: 'aquapado.com',
       name: 'Sites built by pado',
       title: 'A developer who ships small, useful things',
-      desc: 'This page is the index. Everything I have built and put online is listed below — games, tools, investing. Private pages live behind the console.',
+      desc: 'This page is the index. Everything I have built and put online is listed below — games and investing. Private pages live behind the console.',
       cta_sites: 'Browse sites',
       cta_github: 'GitHub',
     },
@@ -43,7 +42,6 @@ export const translations = {
     },
     nav: {
       games: '게임',
-      tools: '도구',
       invest: '투자',
       console: '콘솔',
     },
@@ -51,7 +49,7 @@ export const translations = {
       greeting: 'aquapado.com',
       name: '파도가 만든 사이트 모음',
       title: '작고 쓸모 있는 것을 만들어 올리는 개발자, pado',
-      desc: '이 페이지는 목차예요. 만들어서 공개한 사이트를 아래에 전부 모아 뒀어요 — 게임, 도구, 투자. 개인용 페이지는 콘솔 안에만 있어요.',
+      desc: '이 페이지는 목차예요. 만들어서 공개한 사이트를 아래에 전부 모아 뒀어요 — 게임, 투자. 개인용 페이지는 콘솔 안에만 있어요.',
       cta_sites: '사이트 보기',
       cta_github: 'GitHub',
     },
