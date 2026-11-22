@@ -49,7 +49,7 @@ li{margin:5px 0}
 .c{text-align:center}
 
 /* 탭 */
-.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;display:flex;flex-wrap:wrap;gap:6px;
   margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px))) 8px;padding:10px max(16px,env(safe-area-inset-left,0px));
   background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .tabs::-webkit-scrollbar{display:none}
@@ -62,8 +62,7 @@ section[hidden]{display:none}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 14px}
 .card>h3:first-child{margin-top:0}
 .card.has-table{padding:0}
-.card.has-table:not(.tw){overflow:hidden}
-.card.has-table.tw{overflow-x:auto}
+.card.has-table{overflow:visible}
 .card.has-table>h3,.card.has-table>p,.card.has-table>ul,.card.has-table>ol,.card.has-table>.sm{padding-left:20px;padding-right:20px}
 .card.has-table>h3:first-child{margin-top:16px}
 .card.has-table>p:first-child{padding-top:16px}
@@ -76,19 +75,43 @@ section[hidden]{display:none}
 .warn b{color:inherit}
 .warn a{color:inherit}
 
-/* 표 */
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* 표 — 가로 스크롤 없음: 화면에 안 들어가면 trip.js 가 그 표를 카드로 바꾼다(as-cards) */
+.tw{overflow:visible}
 table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.55}
 th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
-th{font-size:13px;font-weight:600;color:var(--muted);background:var(--zebra);white-space:nowrap}
+th{font-size:13px;font-weight:600;color:var(--muted);background:var(--zebra)}
 tr:last-child td{border-bottom:0}
 tbody tr:nth-child(odd):not(:first-child) td{background:color-mix(in srgb,var(--zebra) 45%,transparent)}
 td:first-child{font-weight:600}
-td.c{white-space:nowrap}
 tr.pick td{background:var(--accent-soft)!important}
 tr.pick td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
 .card:not(.has-table) table{margin:4px 0}
-@media (min-width:641px){.tw table{min-width:640px}}
+
+/* 카드로 펼친 표 */
+.card.has-table.cardmode{background:none;border:0;border-radius:0;overflow:visible}
+.card.has-table.cardmode>h3,.card.has-table.cardmode>p,.card.has-table.cardmode>.sm{padding-left:0;padding-right:0}
+.card.has-table.cardmode>ul,.card.has-table.cardmode>ol{padding-left:20px;padding-right:0}
+.card.has-table.cardmode>p:first-child{padding-top:0}
+table.as-cards,table.as-cards tbody,table.as-cards tr,table.as-cards td{display:block;width:auto}
+table.as-cards tbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;align-items:start}
+table.as-cards tr.hd{display:none}
+table.as-cards tr{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+table.as-cards tr.pick{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+table.as-cards td,table.as-cards tr td{background:none!important;box-shadow:none!important}
+table.as-cards td{border:0;padding:4px 0;display:grid;grid-template-columns:6.2em minmax(0,1fr);gap:12px;font-weight:400;text-align:left;white-space:normal;min-width:0}
+table.as-cards td::before{content:attr(data-l);color:var(--muted);font-size:12.5px;line-height:1.6;padding-top:1px}
+table.as-cards td>.v{min-width:0}
+table.as-cards td.ttl{display:block;font-weight:700;font-size:16px;line-height:1.45;padding:0 0 8px;margin:0 0 6px;border-bottom:1px solid var(--line)}
+table.as-cards td.ttl::before{content:none}
+table.as-cards td.ttl[data-r]::before{content:attr(data-r) "  ";color:var(--accent);font-size:16px}
+table.as-cards td.nolabel{display:block}
+table.as-cards td.nolabel::before{content:none}
+table.as-cards td.empty,table.as-cards td.rank{display:none}
+
+/* 지도 링크 */
+a.map{display:inline-block;font-size:12px;font-weight:600;line-height:1;padding:4px 8px 4px 7px;margin:2px 0 2px 6px;border-radius:999px;background:var(--accent-soft);color:var(--accent);text-decoration:none;white-space:nowrap;vertical-align:1px}
+a.map::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid currentColor;margin-right:5px;vertical-align:0}
+a.map:hover{background:var(--accent);color:var(--surface)}
 
 /* 꼬리표 */
 .tag{display:inline-block;font-size:12px;font-weight:600;line-height:1;border-radius:999px;padding:5px 9px;margin:0 4px 4px 0;background:var(--zebra);color:var(--muted);white-space:nowrap}
@@ -123,24 +146,5 @@ details.card{padding:0}
   .card{padding:16px}
   .day{padding:16px}
   .t{grid-template-columns:56px minmax(0,1fr)}
-  /* 폰: 표를 카드로 */
-  .card.has-table{background:none;border:0;border-radius:0;overflow:visible}
-  .card.has-table>h3,.card.has-table>p,.card.has-table>.sm{padding-left:0;padding-right:0}
-  .card.has-table>ul,.card.has-table>ol{padding-left:20px;padding-right:0}
-  .card.has-table>p:first-child{padding-top:0}
-  .tw{overflow:visible}
-  table.cards,table.cards tbody,table.cards tr,table.cards td{display:block;width:auto}
-  table.cards{font-size:14.5px}
-  table.cards tr.hd{display:none}
-  table.cards tr{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 10px}
-  table.cards tr.pick{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
-  table.cards td,tbody tr:nth-child(odd):not(:first-child) td,tr.pick td{background:none!important;box-shadow:none!important}
-  table.cards td{border:0;padding:4px 0;display:grid;grid-template-columns:6.2em minmax(0,1fr);gap:12px;font-weight:400;text-align:left;white-space:normal}
-  table.cards td::before{content:attr(data-l);color:var(--muted);font-size:12.5px;line-height:1.6;padding-top:1px}
-  table.cards td>.v{min-width:0}
-  table.cards td.ttl{display:block;font-weight:700;font-size:16px;line-height:1.45;padding:0 0 8px;margin:0 0 6px;border-bottom:1px solid var(--line)}
-  table.cards td.ttl::before,table.cards td.nolabel::before{content:none}
-  table.cards td.nolabel{display:block}
-  table.cards td.empty{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
