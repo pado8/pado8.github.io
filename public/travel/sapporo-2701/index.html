@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>삿포로 겨울 여행</title>
+<style>
+  :root{--bg:#f5f6fa;--card:#fff;--ink:#181c25;--dim:#636b7a;--line:#e1e5ee;--soft:#eef1f7;--accent:#2f54eb;--good:#0a8a55;--bad:#c9352b;--warn-bg:#fff4e2;--warn:#8a5300;--star:#e0a100}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1218;--card:#181c25;--ink:#eceff5;--dim:#9aa3b3;--line:#2a2f3b;--soft:#21262f;--accent:#7b93ff;--good:#41d095;--bad:#ff7d72;--warn-bg:#30250f;--warn:#f2bd5c;--star:#f5c542}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Pretendard","Malgun Gothic",sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:18px 16px 60px}
+  h1{font-size:24px;margin:0 0 4px;letter-spacing:-.02em}
+  h2{font-size:18px;margin:28px 0 10px}
+  h3{font-size:16px;margin:0 0 6px}
+  .lede{color:var(--dim);margin:0 0 12px}
+  .tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 0 10px;margin:0 0 4px;-webkit-overflow-scrolling:touch}
+  .tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  section[hidden]{display:none}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px}
+  .warn{background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .warn b{color:inherit}
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+  th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
+  th{background:var(--soft);font-weight:700;white-space:nowrap}
+  td.c{text-align:center;white-space:nowrap}
+  .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px;background:var(--soft);color:var(--dim);margin:0 4px 4px 0}
+  .tag.must{background:var(--bad);color:#fff}.tag.line{background:var(--warn-bg);color:var(--warn)}.tag.ok{background:var(--good);color:#fff}
+  .pick{outline:2px solid var(--accent);outline-offset:-2px}
+  ul,ol{margin:6px 0 0;padding-left:20px}
+  li{margin:3px 0}
+  .plus{color:var(--good)}.minus{color:var(--bad)}
+  .sm{font-size:13px;color:var(--dim)}
+  .num{font-variant-numeric:tabular-nums}
+  .day{border-left:4px solid var(--accent)}
+  .t{display:grid;grid-template-columns:62px minmax(0,1fr);gap:2px 10px;margin-top:8px}
+  .t b{font-variant-numeric:tabular-nums;color:var(--accent)}
+  a{color:var(--accent);word-break:break-all}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>삿포로 겨울 여행 — 남자 5명 3박 4일</h1>
+<p class="lede">2027년 1월 말 또는 2월 중순 · 김해 4명 + 인천 1명 · 온천 필수(우리끼리 탕 + 대욕장) · 술·먹거리 · 오타루·요이치 · 조잔케이 (2026-11-22 조사)</p>
+
+<nav class="tabs" role="tablist">
+  <button data-t="home">요약</button>
+  <button data-t="air">항공</button>
+  <button data-t="stay">숙소</button>
+  <button data-t="plan">일정</button>
+  <button data-t="go">관광·교통</button>
+  <button data-t="food">먹거리·술</button>
+  <button data-t="prep">준비·예산</button>
+</nav>
+
+<!-- ───────── 요약 ───────── -->
+<section id="tab-home">
+<h2>👥 멤버 일정</h2>
+<div class="card tw">
+<table>
+<tr><th>주말</th><th>ㅌㅇ</th><th>ㅈㅅ</th><th>나머지 3명</th><th>판정</th></tr>
+<tr class="pick"><td class="num"><b>1/30~31</b></td><td class="plus">가능</td><td class="plus">가능</td><td class="sm">미확인</td><td><b>후보</b></td></tr>
+<tr><td class="num">2/6~7</td><td class="sm">말 없음</td><td class="plus">가능</td><td class="sm">미확인</td><td class="minus">설 연휴 + 눈축제 — 가장 비쌈</td></tr>
+<tr class="pick"><td class="num"><b>2/13~14</b></td><td class="plus">가능</td><td class="plus">가능</td><td class="sm">미확인</td><td><b>후보</b></td></tr>
+<tr><td class="num">2/20~21</td><td>애매</td><td class="plus">가능</td><td class="sm">미확인</td><td>△</td></tr>
+<tr><td class="num">2/27~28</td><td>애매</td><td class="plus">가능</td><td class="sm">미확인</td><td>△</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">ㅌㅇ: 2월 3~4주차에 개학 전 할 일(날짜 미정). <b>ㅈㅅ: 1/14~15 발령이 법인세로 나면 모든 날짜 불가.</b></p>
+</div>
+
+<h2>⚠ 이 여행에만 걸리는 함정</h2>
+<div class="warn"><b>① ㅈㅅ 발령(1/14~15) — 5명으로 잡되 4명으로 줄일 수 있게.</b> 온천 숙소 대부분은 무료 취소 기한이 <b>1/18~1/25</b>라 발령 결과를 본 뒤 정해도 됩니다. 단 <b>노보리베쓰 만세이카쿠는 12/9 또는 1/14</b>, SAKURA 조잔케이 젠은 1/8, 시내 Minn·란도·메르큐르 조식 요금은 <b>예약 즉시 환불 불가</b>입니다. 항공권은 「항공」 탭의 취소 규정을 보세요.</div>
+<div class="warn"><b>② 숙소 최저가는 11/30 예약분까지.</b> 하나모미지·후루카와·세키스이테이·뷰호텔·시라이토의 가장 싼 값은 자란 「じゃらんのお得な10日間」 요금이라 <b>11/30까지 예약해야</b> 그 값입니다(하나모미지 1/29: 111,600엔 → 이후 117,500엔). 무료 취소 요금이니 <b>지금 두 주말 다 잡아 두고</b> 나중에 하나를 취소하세요.</div>
+<div class="warn"><b>③ 요이치 닛카 증류소는 1월에 무료 투어가 없습니다.</b> 12/23~1/7 휴업, 12~1월은 유료 「키 몰트 세미나」(3,000엔·90분·일본어)만. <b>웹 예약만, 개최일 4주 전 0시에 열림</b>(1/30이면 1/2 0시 무렵). 1회 1~9명이라 5명 가능, 만 20세 이상·당일 운전 안 함. 2월 운영 방식은 미발표.</div>
+<div class="warn"><b>④ 삿포로 맥주원 포플러관은 1월 중순까지 리뉴얼 휴업.</b> 징기스칸 + 삿포로 클래식 무제한은 같은 맥주원의 <b>개척사관</b>으로(5명 이상은 온라인 예약, 전날 16시까지).</div>
+<div class="warn"><b>⑤ 눈축제(2/4~11)·설 연휴(2/6~9)는 두 후보 주말 모두 비켜 갑니다.</b> 단 <b>2/11(목) 출발 목~일</b>이면 눈축제 마지막 날 저녁을 볼 수 있습니다(그날은 일본 공휴일이라 숙소가 토요일 값).</div>
+<div class="warn"><b>⑥ 춥고 해가 짧습니다.</b> 1~2월 평균 −3℃, 낮 최고도 0℃ 안팎, 한 달에 25~29일 눈. 일몰 1/30 16:43 · 2/13 17:02. 오타루 운하는 해 질 녘에 맞추세요. <b>렌터카는 권하지 않습니다</b>(홋카이도 운수국이 겨울길 경험 적은 외국인 사고 증가를 경고) — 이번 동선은 열차·버스로 다 됩니다.</div>
+
+<h2>✅ 지금 할 일 (순서대로)</h2>
+<div class="card">
+<ol style="margin:0">
+<li><b>나머지 3명 날짜 받기</b> — 1/30~31과 2/13~14 중 되는 것.</li>
+<li><b>~11/30: 온천 숙소를 두 주말 다 무료 취소 요금으로 잡기</b>(「숙소」 탭 추천). 시내 숙소도 무료 취소 되는 곳으로.</li>
+<li><b>1/14~15: ㅈㅅ 발령 확인</b> → 인원·날짜 확정 → 안 쓰는 숙소 취소(대부분 1/18~1/25까지 무료).</li>
+<li><b>항공권</b>: 발령 뒤 사면 안전하지만 값이 오를 수 있음. 「항공」 탭에서 저비용 항공사 취소 수수료 보고 결정.</li>
+<li><b>출발 4주 전 0시: 닛카 세미나 예약</b> · 출발 1개월 전부터: 갓파 라이너(조잔케이 버스) · 1~2주 전: 맥주원 개척사관·게 요리·하치쿄 예약.</li>
+<li>출발 전: Visit Japan Web 등록(입국·세관 QR) · 정산 방 만들기.</li>
+</ol>
+</div>
+</section>
+
+<!-- ───────── 항공 ───────── -->
+<section id="tab-air" hidden>
+<h2>✈ 한눈에 — 일찍 가서 늦게 오기</h2>
+<div class="card tw">
+<table>
+<tr><th></th><th>김해 4명</th><th>인천 1명</th></tr>
+<tr><td><b>가장 이른 가는 편</b></td><td>에어부산 BX523 <b>09:00</b> → 11:30<br>트리니티 TW269 <b>09:10</b> → 11:30</td><td>제주항공 7C1501 <b>07:15</b> → 10:00<br>진에어 LJ203 08:30 → 11:15</td></tr>
+<tr><td><b>가장 늦은 오는 편</b></td><td>이스타 ZE952 <b>18:00</b> → 21:05 (가격 미표시)<br>진에어 LJ528 <b>17:10</b> → 19:55</td><td>진에어 LJ210 <b>19:00</b> → 22:20 (2/1부터)<br>이스타 ZE624 18:05 · 진에어 LJ208 18:00</td></tr>
+<tr><td><b>마지막 날 시내 떠날 시각</b><br><span class="sm">귀국 편 2시간 반 전</span></td><td><b>14:40</b> (LJ528) · 15:30 (ZE952)</td><td>16:30 (LJ210) · 15:30 (LJ208)</td></tr>
+<tr><td><b>공항에서 합류</b></td><td colspan="2">인천 친구가 7C1501(10:00 도착)이나 LJ203(11:15)을 타면 김해 팀(11:30 도착)과 신치토세 공항에서 만나 같이 시내로. 귀국은 김해 LJ528(17:10)과 인천 LJ208(18:00)·ZE624(18:05)가 시간대가 맞습니다.</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">김해–신치토세는 <b>에어부산·트리니티·제주항공·진에어·이스타 5개사가 매일</b> 다닙니다(구글 항공권 기준, 공식 시간표로 교차 확인은 못 함). 트리니티 항공 = 티웨이항공의 새 이름(편명 TW 그대로). 김해–삿포로 대한항공 직항은 없습니다.</p>
+</div>
+
+<h2>💳 날짜별 1인 왕복 — 「이른+늦은」 vs 최저</h2>
+<div class="card tw">
+<table>
+<tr><th>일정</th><th>김해: 이른 출발 + 늦은 귀국</th><th>김해: 최저 조합</th><th>인천: 이른 + 늦은</th><th>인천: 최저</th><th>5명 차액</th></tr>
+<tr><td class="num">1/28(목)~1/31(일)</td><td class="num">82.8만<br><span class="sm">TW269 09:10 + LJ528 17:10</span></td><td class="num">72.6만<br><span class="sm">TW269 + TW270 12:30</span></td><td class="num">74.8만<br><span class="sm">7C1501 + ZE624 18:05</span></td><td class="num">62.0만</td><td class="num">+53.6만</td></tr>
+<tr class="pick"><td class="num"><b>1/29(금)~2/1(월)</b></td><td class="num"><b>82.8만</b><br><span class="sm">TW269 09:10 + LJ528 17:10</span></td><td class="num"><b>60.7만</b><br><span class="sm">7C1551 11:00 + TW270 12:30</span></td><td class="num">63.9만<br><span class="sm">7C1501 + LJ210 19:00</span></td><td class="num">61.3만</td><td class="num">+91.1만</td></tr>
+<tr><td class="num">1/30(토)~2/2(화)</td><td class="num">88.8만</td><td class="num">70.1만</td><td class="num">76.5만</td><td class="num">60.2만</td><td class="num">+91.2만</td></tr>
+<tr><td class="num">2/11(목)~2/14(일)</td><td class="num">79.8만</td><td class="num">64.2만<br><span class="sm">TW269 09:10 + 7C1552 14:30</span></td><td class="num">81.1만</td><td class="num">64.0만</td><td class="num">+79.5만</td></tr>
+<tr class="pick"><td class="num"><b>2/12(금)~2/15(월)</b></td><td class="num"><b>74.5만</b></td><td class="num">64.1만</td><td class="num">79.0만</td><td class="num">59.5만</td><td class="num">+60.9만</td></tr>
+<tr><td class="num">2/13(토)~2/16(화)</td><td class="num">77.9만<br><span class="sm">BX523 09:00 + LJ528</span></td><td class="num">63.7만</td><td class="num">76.5만</td><td class="num">59.7만</td><td class="num">+74.0만</td></tr>
+</table>
+<ul class="sm" style="margin-top:8px">
+<li><b>절충안</b>: 가는 편은 이른 09:10, 오는 편은 제주항공 7C1552 <b>14:30</b>(시내 12:00 출발). 2/11~14는 이게 곧 최저가(64.2만), 2/12~15도 64.2만으로 최저와 거의 같습니다.</li>
+<li>늦은 귀국 김해 편 중 가격이 나온 건 진에어 LJ528 하나뿐이라 「늦게 오기」가 김해 쪽 값을 올립니다. 이스타 ZE952(18:00)는 이스타 홈페이지에서 직접 확인하세요.</li>
+<li><b>설 연휴(2/6~9)는 김해 출발 직항이 사실상 매진</b>(가격 나온 편 없음)이라 후보에서 뺐습니다.</li>
+</ul>
+</div>
+
+<h2>🕘 그날 뜨는 직항 전부 (편도 1인, 천 원)</h2>
+<div class="card tw">
+<h3>가는 편 김해 → 신치토세 (매일)</h3>
+<table>
+<tr><th>편</th><th>시각</th><th>1/28 목</th><th>1/29 금</th><th>1/30 토</th><th>2/11 목</th><th>2/12 금</th><th>2/13 토</th></tr>
+<tr><td>에어부산 BX523</td><td class="num"><b>09:00</b>→11:30</td><td class="num">402</td><td class="num">382</td><td class="num">382</td><td class="num">402</td><td class="num">362</td><td class="num">402</td></tr>
+<tr><td>트리니티 TW269</td><td class="num"><b>09:10</b>→11:30</td><td class="num">315</td><td class="num">315</td><td class="num">375</td><td class="num">285</td><td class="num">315</td><td class="num">375</td></tr>
+<tr><td>제주항공 7C1551</td><td class="num">11:00→13:30</td><td class="num">341</td><td class="num plus"><b>255</b></td><td class="num">375</td><td class="num">315</td><td class="num">345</td><td class="num">375</td></tr>
+<tr><td>진에어 LJ527</td><td class="num">13:50→16:10</td><td class="num">373</td><td class="num">301</td><td class="num">349</td><td class="num">325</td><td class="num">373</td><td class="num">373</td></tr>
+<tr><td>이스타 ZE951</td><td class="num">14:30→17:00</td><td colspan="6" class="sm">구글에 가격 미표시 — eastarjet.com 확인</td></tr>
+</table>
+</div>
+<div class="card tw">
+<h3>오는 편 신치토세 → 김해 (매일)</h3>
+<table>
+<tr><th>편</th><th>시각</th><th>1/31 일</th><th>2/1 월</th><th>2/2 화</th><th>2/14 일</th><th>2/15 월</th><th>2/16 화</th></tr>
+<tr><td>에어부산 BX524</td><td class="num">12:30→15:30</td><td class="num">425</td><td class="num">374</td><td class="num">374</td><td class="num">408</td><td class="num">340</td><td class="num plus">264</td></tr>
+<tr><td>트리니티 TW270</td><td class="num">12:30→15:25</td><td class="num">411</td><td class="num">352</td><td class="num">352</td><td class="num">411</td><td class="num">326</td><td class="num">326</td></tr>
+<tr><td>제주항공 7C1552</td><td class="num">14:30→17:15</td><td class="num">461</td><td class="num">445</td><td class="num">381</td><td class="num">357</td><td class="num">327</td><td class="num">407</td></tr>
+<tr><td>진에어 LJ528</td><td class="num"><b>17:10</b>→19:55</td><td class="num">513</td><td class="num">513</td><td class="num">513</td><td class="num">513</td><td class="num">430</td><td class="num">405</td></tr>
+<tr><td>이스타 ZE952</td><td class="num"><b>18:00</b>→21:05</td><td colspan="6" class="sm">구글에 가격 미표시 — eastarjet.com 확인</td></tr>
+</table>
+</div>
+<div class="card tw">
+<h3>가는 편 인천 → 신치토세</h3>
+<table>
+<tr><th>편</th><th>시각</th><th>1/28</th><th>1/29</th><th>1/30</th><th>2/11</th><th>2/12</th><th>2/13</th></tr>
+<tr><td>제주 7C1501</td><td class="num"><b>07:15</b>→10:00</td><td class="num">366</td><td class="num">270</td><td class="num">345</td><td class="num">320</td><td class="num">345</td><td class="num">320</td></tr>
+<tr><td>이스타 ZE621</td><td class="num">07:40→10:20</td><td colspan="6" class="sm">가격 미표시</td></tr>
+<tr><td>아시아나 OZ174 / 대한 KE761</td><td class="num">08:00→10:45</td><td class="num">437</td><td class="num">437</td><td class="num">506</td><td class="num">478</td><td class="num">478</td><td class="num">478</td></tr>
+<tr><td>진에어 LJ203</td><td class="num">08:30→11:15</td><td class="num">318</td><td class="num">318</td><td class="num">348</td><td class="num">270</td><td class="num">318</td><td class="num">294</td></tr>
+<tr><td>이스타 ZE625</td><td class="num">09:10→11:40</td><td colspan="6" class="sm">가격 미표시</td></tr>
+<tr><td>진에어 LJ205</td><td class="num">09:40→12:20</td><td class="num">318</td><td class="num">294</td><td class="num">318</td><td class="num">294</td><td class="num">294</td><td class="num">294</td></tr>
+<tr><td>에어프레미아 YP751</td><td class="num">09:40→12:20</td><td class="num">333</td><td class="sm">없음</td><td class="num">252</td><td class="num">303</td><td class="sm">없음</td><td class="num">276</td></tr>
+<tr><td>대한 KE765</td><td class="num">10:05→12:50</td><td class="num">454</td><td class="num">454</td><td class="num">454</td><td class="num">478</td><td class="num">478</td><td class="num">478</td></tr>
+<tr><td>트리니티 TW263</td><td class="num">10:20→13:10</td><td class="num">320</td><td class="num">320</td><td class="num">320</td><td class="num">320</td><td class="num">320</td><td class="num">320</td></tr>
+<tr><td>제주 7C1503</td><td class="num">12:25→15:00</td><td class="num">480</td><td class="num">480</td><td class="num">480</td><td class="num">480</td><td class="num">480</td><td class="num">480</td></tr>
+<tr><td>대한 KE769</td><td class="num">13:00→15:45</td><td class="num">436</td><td class="num">436</td><td class="num">436</td><td class="num">400</td><td class="num">436</td><td class="num">436</td></tr>
+<tr><td>진에어 LJ207</td><td class="num">14:10→17:00</td><td class="num">270</td><td class="num">270</td><td class="num">294</td><td class="num">294</td><td class="num">348</td><td class="num">318</td></tr>
+<tr><td>이스타 ZE623</td><td class="num">14:35→17:05</td><td colspan="6" class="sm">가격 미표시</td></tr>
+<tr><td>진에어 LJ209</td><td class="num">15:15→18:00</td><td class="sm">없음</td><td class="sm">없음</td><td class="sm">없음</td><td class="num">246</td><td class="num">246</td><td class="num">270</td></tr>
+</table>
+</div>
+<div class="card tw">
+<h3>오는 편 신치토세 → 인천</h3>
+<table>
+<tr><th>편</th><th>시각</th><th>1/31</th><th>2/1</th><th>2/2</th><th>2/14</th><th>2/15</th><th>2/16</th></tr>
+<tr><td>제주 7C1502</td><td class="num">11:00→14:25</td><td class="num">375</td><td class="num">349</td><td class="num">349</td><td class="num">428</td><td class="num">349</td><td class="num">327</td></tr>
+<tr><td>아시아나 OZ173 / 대한 KE762</td><td class="num">12:00→15:20</td><td class="num">472</td><td class="num">489</td><td class="num">489</td><td class="num">803</td><td class="num">574</td><td class="num">438</td></tr>
+<tr><td>진에어 LJ204</td><td class="num">12:15→15:30</td><td class="num">420</td><td class="num">394</td><td class="num">369</td><td class="num">445</td><td class="num">445</td><td class="num">420</td></tr>
+<tr><td>진에어 LJ206</td><td class="num">13:20→16:30</td><td class="num">445</td><td class="num">343</td><td class="num">369</td><td class="num">394</td><td class="num">394</td><td class="num">369</td></tr>
+<tr><td>에어프레미아 YP752</td><td class="num">13:45→17:15</td><td class="num">398</td><td class="sm">없음</td><td class="sm">없음</td><td class="num">415</td><td class="sm">없음</td><td class="sm">없음</td></tr>
+<tr><td>대한 KE766</td><td class="num">14:15→17:30</td><td class="num">608</td><td class="num">574</td><td class="num">523</td><td class="num">718</td><td class="num">574</td><td class="num">523</td></tr>
+<tr><td>트리니티 TW264</td><td class="num">14:40→18:10</td><td class="num">450</td><td class="num">352</td><td class="num">352</td><td class="num">411</td><td class="num">411</td><td class="num">377</td></tr>
+<tr><td>제주 7C1504</td><td class="num">16:00→19:25</td><td class="num">501</td><td class="num">501</td><td class="num">501</td><td class="num">501</td><td class="num">501</td><td class="num">501</td></tr>
+<tr><td>대한 KE770</td><td class="num">16:55→20:10</td><td class="num">608</td><td class="num">574</td><td class="num">523</td><td class="num">803</td><td class="num">778</td><td class="num">523</td></tr>
+<tr><td>진에어 LJ208</td><td class="num">18:00→21:15</td><td class="num">504</td><td class="num">445</td><td class="num">420</td><td class="num">504</td><td class="num">504</td><td class="num">445</td></tr>
+<tr><td>이스타 ZE624</td><td class="num">18:05→21:20</td><td class="num">383</td><td colspan="5" class="sm">가격 미표시</td></tr>
+<tr><td>진에어 LJ210</td><td class="num"><b>19:00</b>→22:20</td><td class="sm">없음</td><td class="num">369</td><td class="num">420</td><td class="num">491</td><td class="num">445</td><td class="num">445</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">이스타 ZE622(11:20)·ZE626(13:00)·ZE628(13:55, 월·화 위주)도 있음. 구글 항공권 11-22 20시 조회, 편도 최저 표시가(운임 종류 미확인). 매진된 편은 목록에서 빠졌을 수 있습니다.</p>
+</div>
+
+<h2>⚠ ㅈㅅ 발령 대비 — 취소 수수료</h2>
+<div class="card">
+<ul style="margin:0">
+<li><b>모든 항공사가 다른 사람으로 이름 변경 불가</b>(철자 수정만). 못 가게 되면 대신 보낼 수 없고 취소만 됩니다.</li>
+<li><b>1/15에 1/29 출발 왕복을 취소하면(출발 14일 전)</b>, 가장 싼 운임 기준 1인 손해: 에어부산 특가·진에어 슈퍼로우·제주 BASIC 각 <b>16만 원</b>, 트리니티 이벤트·이스타 특가 각 <b>18만 원</b>. 한 단계 위 운임(진에어 지니·제주 BIZ LITE)이면 6만 원.</li>
+<li>2월 날짜도 1/15엔 출발 28~30일 전이라 같은 「30일 이내」 구간입니다.</li>
+<li><b>추천: 4명은 지금 사고, ㅈㅅ 표만 1/15 발령 뒤에 사기.</b> 그러면 손해는 「ㅈㅅ 한 장이 그사이 오른 값」뿐입니다. 같은 편 좌석이 남아 있는지만 그때 확인.</li>
+<li>홈페이지·앱에서 직접 산 표는 <b>24시간 안에 취소하면 수수료 0원</b>(전 항공사).</li>
+</ul>
+</div>
+
+<h2>🧳 수하물 · 취소 규정</h2>
+<div class="card tw">
+<table>
+<tr><th>항공사</th><th>가장 싼 운임의 위탁 수하물</th><th>수하물 사전 구매</th><th>가장 싼 운임 취소(한국 출발 편도 1인)</th></tr>
+<tr><td>에어부산</td><td class="minus">특가·이벤트 없음 (실속·일반 15kg)</td><td class="num">5kg당 40,000원</td><td class="num">31일 전까지 6만 · 30~8일 8만 · 7일~당일 9만</td></tr>
+<tr><td>제주항공</td><td class="minus">BASIC 없음 (STANDARD 15kg)</td><td>미확인</td><td class="num">31일 전까지 6만 · 30~6일 8만 · 5~1일 10만 · 당일 12만</td></tr>
+<tr><td>진에어</td><td>일본 15kg 표기 (슈퍼로우 예외 여부 미확인)</td><td class="num">5kg당 45,000원</td><td class="num">슈퍼로우: 31일 전까지 6만 · 30~8일 8만 · 7일~당일 10만</td></tr>
+<tr><td>트리니티</td><td class="minus">이벤트 없음 (스마트 15kg)</td><td>미확인</td><td class="num">이벤트: 61일 전까지 7만 · 60~6일 9만 · 그 뒤 10만</td></tr>
+<tr><td>이스타</td><td class="minus">특가 없음 (할인·일반 15kg)</td><td class="num">공항 구매 15kg 60,000원</td><td class="num">특가: 6만~10만 (30~7일 9만)</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">일본 출발 편(오는 편) 취소는 엔으로 따로 붙습니다(진에어 슈퍼로우 7,000엔, 제주 BASIC 7,000엔, 트리니티 이벤트 8,000엔). 겨울옷 때문에 짐이 크면 <b>5명 중 2~3명만 수하물을 사서 몰아 넣는 편</b>이 쌉니다. 대한항공 규정은 조회하지 못했습니다.</p>
+</div>
+
+<h2>❄ 폭설 결항</h2>
+<div class="card">
+<ul style="margin:0">
+<li>신치토세는 1~2월 대설 혼란이 최근 매년 있었습니다: 2025-02-11 결항 118편(국제선 7, 에어부산·제주항공 포함) · <b>2026-01-25 삿포로 24시간 적설 54cm, JR 공항 열차 140편 운휴, 공항에서 약 7,000명이 밤샘</b>.</li>
+<li><b>결항보다 공항↔시내 JR이 멈추는 게 더 흔한 위험</b>입니다. 귀국 날 눈이 많이 오면 공항버스도 같이 막히니 평소보다 1~2시간 일찍 시내를 떠나세요.</li>
+<li>에어부산·이스타는 기상 결항이면 변경·환불 수수료 면제라고 적고 있습니다. 숙박은 기상 사유면 항공사 의무가 없는 구조라 <b>결항·지연 보장 여행자 보험</b>을 권합니다.</li>
+</ul>
+</div>
+</section>
+
+<!-- ───────── 숙소 ───────── -->
+<section id="tab-stay" hidden>
+<h2>🏯 숙소 짜는 법</h2>
+<div class="card">
+<p style="margin:0 0 6px"><b>시내 2박 + 온천 1박</b>을 권합니다. 온천 1박은 <b>토요일 밤을 피하면</b> 7~30% 쌉니다 — 금~월이면 <b>일요일 밤</b>, 목~일이면 <b>목·금요일 밤</b>, 토~화면 <b>일·월요일 밤</b>을 온천으로.</p>
+<ul>
+<li><b>조잔케이 1순위</b>: 시내에서 버스 1시간, 1/20~2/28 저녁 <b>설등로</b>(눈 조명, 무료) — 숙박하면 조잔케이 신사 야간 입장까지.</li>
+<li><b>노보리베쓰는 대안</b>: 온천은 더 유명(유황천·지옥계곡)하지만 삿포로에서 1시간 반, 직행 버스는 하루 1편. 공항에서 바로 가는 버스(13:20·14:10·15:10)를 쓰면 첫날이나 마지막 날에 넣기 좋습니다.</li>
+<li><b>4명이 되면</b>: 하나모미지·시라이토·그랜드·세키스이테이·뷰호텔은 1인 요금 그대로, 후루카와 +1,425엔, 만세이카쿠 +3,529엔(1인).</li>
+</ul>
+<p class="sm" style="margin:8px 0 0">값은 자란(jalan.net) 11-22 20시 조회 · 세금 포함 · 5명 합계 1박 · 100엔 = 840.8원. 대절탕 정원·객실탕 크기는 거의 다 미확인이라 5명이 한 탕에 들어가야 하면 숙소에 문의하세요. 5→4명 인원 변경 규정은 어디에도 없었습니다(미확인).</p>
+</div>
+
+<h2>♨ 온천 1박 — 날짜별 값 (5명 1실 · 저녁·아침 포함)</h2>
+<div class="card tw">
+<table>
+<tr><th>숙소</th><th>우리끼리 탕 / 대욕장</th><th>1/29 금</th><th>1/30 토</th><th>1/31 일</th><th>2/11 목·휴일</th><th>2/12 금</th><th>2/14 일</th><th>1인(금)</th><th>평점</th><th>무료 취소</th></tr>
+<tr class="pick"><td><b>조잔케이 하나모미지</b>(花もみじ)<br><span class="sm">와실 60㎡</span></td><td>대절탕 3곳(2,200엔/60분) / 대욕장 2곳</td><td class="num">111,600</td><td class="num">145,000</td><td class="num sm">107,500(맡김 요금)</td><td class="num">135,000</td><td class="num">111,600</td><td class="num">111,600</td><td class="num">18.8만</td><td class="num">4.4 (3,414)</td><td class="plus">1/21까지</td></tr>
+<tr class="pick"><td><b>조잔케이 시라이토</b>(白糸)<br><span class="sm">와실 10첩</span></td><td>노천탕 14~16시 유료 대절 / 대욕장(원천 가케나가시)</td><td class="num">88,000</td><td class="num">99,000</td><td class="num">88,000</td><td class="num">88,000</td><td class="num">88,000</td><td class="num">88,000</td><td class="num"><b>14.8만</b></td><td class="num">4.5 (696)</td><td class="plus">1/18까지</td></tr>
+<tr><td><b>조잔케이 후루카와</b>(ふる川)<br><span class="sm">와양실 54㎡</span></td><td>대절탕 2곳(예약제) / 3층 대욕장동</td><td class="num">137,750</td><td class="num">147,250</td><td class="num">133,000</td><td class="num">147,250</td><td class="num">137,750</td><td class="num">133,000</td><td class="num">23.2만</td><td class="num"><b>4.7</b> (4,041)</td><td class="plus">1/21까지</td></tr>
+<tr><td><b>조잔케이 뷰호텔</b><br><span class="sm">본관 와실</span></td><td>없음 / 대욕장 7곳·사우나·실내 수영장</td><td class="num">59,400</td><td class="num">76,700</td><td class="num">59,400</td><td class="num sm">신관 89,100</td><td class="num sm">신관 89,100</td><td class="num">59,400</td><td class="num">10.0만</td><td class="num">4.1 (9,649)</td><td class="plus">1/25까지</td></tr>
+<tr><td><b>노보리베쓰 세키스이테이</b>(石水亭)</td><td>대절탕 3,300엔/50분 / 대욕장·사우나</td><td class="num">69,300</td><td class="num">76,725</td><td class="num">69,300</td><td class="num">74,250</td><td class="num">69,300</td><td class="num">69,300</td><td class="num">11.7만</td><td class="num">3.7 (372)</td><td class="plus">1/22까지</td></tr>
+<tr><td><b>노보리베쓰 그랜드호텔</b><br><span class="sm">와실 43㎡</span></td><td>가족탕 50분 포함 요금 / 천연 100% 대욕장</td><td class="num">110,000</td><td class="num">123,750</td><td class="num">110,000</td><td class="num">143,000</td><td class="num">132,000</td><td class="num sm">가족탕 없는 방 90,750</td><td class="num">18.5만</td><td class="num">4.3 (6,380)</td><td class="plus">1/25까지</td></tr>
+<tr><td><b>노보리베쓰 만세이카쿠</b><br><span class="sm">이그제큐티브(방에 온천 전망탕)</span></td><td>객실탕 + 대절탕 / 유황천 대욕장</td><td class="num">158,825</td><td class="num">170,590</td><td class="num">158,825</td><td class="num">170,590</td><td class="num">170,590</td><td class="sm">없음</td><td class="num">26.7만</td><td class="num">4.4 (4,915)</td><td class="minus">12/9 (일반 요금 1/14)</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">1/28(목)은 1/29와 거의 같습니다(하나모미지 111,600 · 시라이토 88,000 · 후루카와 133,000 · 세키스이테이 69,300 · 그랜드 110,000 · 뷰호텔 59,400 · 만세이카쿠 158,825).</p>
+</div>
+
+<h2>🛁 5명이 한 방 + 방에 딸린 온천 (비쌈)</h2>
+<div class="card tw">
+<table>
+<tr><th>숙소</th><th>방</th><th>1/29 1박 (5명)</th><th>1인</th><th>대욕장</th><th>평점</th><th>무료 취소</th></tr>
+<tr><td><b>그랜드 브리센 호텔 조잔케이</b></td><td>온천 전망탕 딸린 커넥팅 객실(정원 6) · 남은 방 1</td><td class="num">166,200 · 2식</td><td class="num">27.9만</td><td class="c plus">있음</td><td class="num">4.5 (511)</td><td class="plus">1/21까지</td></tr>
+<tr><td><b>조잔케이 하나모미지</b> 스위트</td><td>전망 온천 특별층 105㎡ · 남은 방 1</td><td class="num">225,000 · 2식</td><td class="num">37.8만</td><td class="c plus">있음</td><td class="num">4.4 (3,414)</td><td class="plus">1/21까지</td></tr>
+<tr><td><b>조잔케이 만세이카쿠 미리오네</b> 특별실</td><td>온천 전망탕 와양실 100㎡(8명까지)</td><td class="num">179,410 · 2식</td><td class="num">30.2만</td><td class="c plus">있음</td><td class="num">4.2 (7,993)</td><td class="minus">12/9</td></tr>
+<tr><td><b>노보리베쓰 하나유라</b>(花ゆら)</td><td>원천 노천탕 딸린 특별 화양실 82㎡ · 남은 방 1</td><td class="num">270,000 · 2식</td><td class="num">45.4만</td><td class="c plus">있음</td><td class="num">4.4 (517)</td><td class="plus">1/25까지</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">한 채 빌리기: 「SAKURA 조잔케이 젠」은 천연 온천이 아님(자란 표기 「温泉 無し」) · 「조잔케이 쓰바키테이」(하루 1팀, 최대 12명, 원천 노천탕+사우나)는 가격 미확인 · 시라오이 「미쓰노오토 하나레」(천연 온천, 7명, 23,900엔·밥 없음)는 노보리베쓰 온천가에서 떨어져 있음.</p>
+</div>
+
+<h2>🏙 시내 2박 — 스스키노·오도리·삿포로역</h2>
+<div class="card tw">
+<table>
+<tr><th>숙소 · 위치</th><th>5명 방</th><th>1/29 금</th><th>1/30 토</th><th>2/12 금</th><th>2/13 토</th><th>대욕장</th><th>평점</th><th>무료 취소</th></tr>
+<tr class="pick"><td><b>슈퍼호텔 스스키노 「空沼の湯」</b><br><span class="sm">호스이스스키노역 30초</span></td><td>2+2+1 · 조식 포함</td><td class="num">85,500</td><td class="num">125,970</td><td class="num">76,000</td><td class="num">64,600</td><td class="plus"><b>천연 온천</b>(남녀별 15~9시)</td><td class="num">4.3 (5,370)</td><td>전날까지</td></tr>
+<tr class="pick"><td><b>슈퍼호텔 기타5조 「大志の湯」</b><br><span class="sm">삿포로역 13분</span></td><td>2+2+1 · 조식 포함</td><td class="num">61,730</td><td class="num">81,700</td><td class="num">50,790</td><td class="num">61,750</td><td class="plus"><b>천연 온천</b>(실내탕만)</td><td class="num">4.3 (811)</td><td>전날까지</td></tr>
+<tr><td><b>언와인드 호텔&바</b><br><span class="sm">나카지마코엔역 4분</span></td><td>패밀리 스위트 1실 · 조식 포함</td><td class="num">41,040</td><td class="num">74,480</td><td class="num">103,360</td><td class="num">109,440</td><td class="sm">없음</td><td class="num">4.4 (166)</td><td>2일 전까지</td></tr>
+<tr><td><b>프리미어 호텔 TSUBAKI</b><br><span class="sm">호스이스스키노역 12분</span></td><td>와실 80㎡ 1실</td><td class="num">49,500</td><td class="sm">없음</td><td class="num">72,440</td><td class="num">75,600</td><td class="sm">사우나</td><td class="num">4.4 (1,801)</td><td>4일 전까지</td></tr>
+<tr><td><b>아파호텔 스스키노역 니시</b><br><span class="sm">스스키노역 5분</span></td><td>5인실 1실 ⚠흡연 가능 방</td><td class="num">59,400</td><td class="num">72,900</td><td class="num">52,650</td><td class="num">59,400</td><td class="sm">없음</td><td class="num">4.1 (1,814)</td><td>전날까지</td></tr>
+<tr><td><b>삿포로 그랜드 호텔</b><br><span class="sm">지하보도 직결</span></td><td>3+2 라지 트윈</td><td class="num">74,460</td><td class="num">115,260</td><td class="num">103,358</td><td class="num">105,060</td><td class="sm">없음</td><td class="num">4.5 (4,656)</td><td class="plus">1/21</td></tr>
+<tr><td><b>도미인 PREMIUM 삿포로</b><br><span class="sm">오도리역 10분</span></td><td>2+2+1</td><td class="num">66,700</td><td class="num">89,200</td><td class="num">68,200</td><td class="num">74,200</td><td>대욕장·사우나(<b>인공 온천</b>)</td><td class="num">4.4 (3,559)</td><td class="plus">1/27</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">⚠ Minn 삿포로 오도리(4베드 44,000)·란도 호텔 스위트(55,000)는 <b>예약 즉시 환불 불가</b>라 ㅈㅅ 발령 전엔 피하세요. 토요일(1/30) 시내는 금요일보다 4만 엔 넘게 오르는 곳이 많습니다.</p>
+</div>
+</section>
+
+<!-- ───────── 일정 ───────── -->
+<section id="tab-plan" hidden>
+<div class="warn" style="margin-top:12px"><b>⏳ 일정 다시 짜는 중</b> — 1일차 시내 술 / 2일차 청의 호수 / 3일차 온천 / 4일차 귀국 순서로 바꿉니다(청의 호수 가는 방법 조사 중). 아래는 이전 초안입니다.</div>
+<h2>🗓 기본 일정 — 금~월 기준</h2>
+<div class="card">
+<p style="margin:0">목~일이면 하루씩 앞으로(온천은 금요일 밤), 토~화면 하루씩 뒤로(온천은 일·월요일 밤). 첫날·마지막 날 시각은 「항공」 탭의 가장 이른 가는 편 / 가장 늦은 오는 편에 맞춥니다.</p>
+</div>
+
+<div class="card day">
+<h3>1일차 (금) — 도착 · 시내 · 징기스칸</h3>
+<div class="t">
+<b>오전</b><span>김해·인천 출발 → 신치토세 도착 → <b>JR 쾌속 에어포트</b>로 삿포로(37분, 1,230엔)</span>
+<b>점심</b><span>스프카레(스아게 플러스·오쿠시바 쇼텐 — 줄 섬) 또는 삿포로역 하나마루 회전초밥</span>
+<b>오후</b><span>호텔에 짐 → 오도리 공원 · TV타워(1,200엔) · 아카렌가(300엔) · 시계탑(350엔) · 다누키코지</span>
+<b>17:30</b><span><b>삿포로 맥주원 개척사관</b> — 겨울 징기스칸 무제한 + 삿포로 클래식 생맥주 무제한(1인 약 8,500엔, 120분, 예약)</span>
+<b>20:30</b><span>스스키노 2차 — 더 닛카 바(70석) → 시메 라멘 게야키(02시까지) 또는 밤 파르페</span>
+</div>
+</div>
+
+<div class="card day">
+<h3>2일차 (토) — 요이치 위스키 · 오타루</h3>
+<div class="t">
+<b>08:30</b><span>삿포로 → 오타루(JR 800엔, 32~47분) → 요이치(470엔, 25분)</span>
+<b>10:30</b><span><b>닛카 요이치 증류소</b> 키 몰트 세미나(3,000엔·90분, 4주 전 0시 웹 예약) · 박물관·유료 시음 바는 예약 없이</span>
+<b>13:00</b><span>오타루로 돌아와 점심 — 나루토 영계 반마리 튀김 또는 산카쿠 시장 다키나미 해산물 덮밥</span>
+<b>14:30</b><span>미나미오타루 <b>다나카 주조</b> 사케 견학·시음(무료) → 사카이마치 거리 · 기타카로</span>
+<b>16:40</b><span><b>해 질 녘 오타루 운하</b> 가스등</span>
+<b>18:00</b><span>오타루 마사즈시 초밥(수 휴무, 예약) 또는 삿포로로 돌아와 <b>우미 하치쿄</b>(연어알 퍼주는 쓰코메시, 예약)</span>
+</div>
+</div>
+
+<div class="card day">
+<h3>3일차 (일) — 아침 시장 · 조잔케이 온천</h3>
+<div class="t">
+<b>08:00</b><span>니조 시장 아침 — 오이소(수 휴무)·돈부리차야 해산물 덮밥</span>
+<b>오전</b><span>삿포로 맥주 박물관(가이드 투어 2,000엔·월요일 없음) 또는 시로이 코이비토 파크 · 쇼핑</span>
+<b>13:00</b><span><b>갓파 라이너</b>로 조잔케이(약 60분, 웹 1,460엔 · 1개월 전~전날 17시 예약)</span>
+<b>15:00</b><span>료칸 체크인 → <b>대절탕 + 대욕장</b> → 료칸 저녁(2식 포함)</span>
+<b>18:00</b><span><b>조잔케이 설등로</b>(1/20~2/28, 18:00~21:30, 무료)</span>
+</div>
+</div>
+
+<div class="card day">
+<h3>4일차 (월) — 늦게 귀국</h3>
+<div class="t">
+<b>아침</b><span>료칸 아침 → 아침 온천 한 번 더</span>
+<b>10:30</b><span>갓파 라이너로 삿포로 → 장외시장 점심 또는 스스키노 라멘(이치겐 새우 라멘)</span>
+<b>오후</b><span>쇼핑(면세는 출국 때 환급 — 「준비」 탭) → JR로 공항. <b>귀국 편 2시간 반 전에는 시내를 떠나기</b></span>
+<b>공항</b><span>신치토세 공항 안 라멘 도장·쇼핑으로 마무리</span>
+</div>
+</div>
+
+<div class="card">
+<h3>바꿔 끼울 수 있는 것</h3>
+<ul>
+<li><b>노보리베쓰로 바꾸기</b>: 1일차에 공항에서 노보리베쓰 직행 버스(13:20·14:10·15:10, 1시간 15분, 웹 예약) → 온천 1박 → 2일차 JR 특급으로 삿포로(4,890엔+버스 450엔). 지옥계곡은 무료.</li>
+<li><b>스키·스노모빌 반나절</b>: 사포로 테이네(1일권 온라인 8,800엔, 시내에서 1시간 안팎) · 스노모빌(원더랜드 삿포로 17,000엔~, 2일 전 15시 마감·취소 수수료 100%).</li>
+<li><b>모이와산 야경</b>: 로프웨이 왕복 2,100엔, 겨울 11~22시. 일몰 직후가 좋음.</li>
+<li><b>2/11 출발(목~일)</b>: 첫날 저녁 눈축제 마지막 날(오도리·스스키노 얼음 조각).</li>
+</ul>
+</div>
+</section>
+
+<!-- ───────── 관광·교통 ───────── -->
+<section id="tab-go" hidden>
+<h2>🚆 교통</h2>
+<div class="card tw">
+<table>
+<tr><th>구간</th><th>수단</th><th>요금(편도)</th><th>시간</th><th>예약</th></tr>
+<tr><td>공항 → 삿포로역</td><td>JR 쾌속 에어포트</td><td class="num">1,230엔 (지정석 u시트 +800~1,000엔)</td><td>37분</td><td>필요 없음</td></tr>
+<tr><td>공항 → 시내</td><td>공항버스</td><td class="num">1,500엔</td><td>약 70분</td><td>필요 없음</td></tr>
+<tr><td>삿포로 ↔ 오타루</td><td>JR</td><td class="num">800엔</td><td>32~47분</td><td>필요 없음</td></tr>
+<tr><td>오타루 ↔ 요이치</td><td>JR 보통열차</td><td class="num">470엔</td><td>25분 (하루 약 17편)</td><td>필요 없음</td></tr>
+<tr class="pick"><td>삿포로 → 조잔케이</td><td>갓파 라이너</td><td class="num">1,700엔 (웹 1,460엔)</td><td>약 60분</td><td><b>예약제</b> 1개월 전~전날 17시 (빈자리 있으면 그냥 탐)</td></tr>
+<tr><td>삿포로 → 조잔케이</td><td>조테츠 노선버스</td><td class="num">1,000엔</td><td>미확인</td><td>없음 · 2025-12 개편으로 직행 9편뿐</td></tr>
+<tr><td>공항 → 조잔케이</td><td>조잔케이 온천 라이너</td><td class="num">3,500엔</td><td>100~120분</td><td>완전 예약제, 전날 18시 · 12/19~2/21 · 공항 출발 하루 1편(15:15)</td></tr>
+<tr><td>공항 → 노보리베쓰 온천</td><td>도난버스 에어포트호</td><td class="num">1,900~2,400엔</td><td>1시간 15분</td><td>웹 예약 필수 · 13:20·14:10·15:10</td></tr>
+<tr><td>삿포로 → 노보리베쓰 온천</td><td>도난버스 おんせん号</td><td class="num">2,800~3,800엔</td><td>약 1시간 50분</td><td>웹 예약 필수 · <b>하루 1편 13:40</b></td></tr>
+<tr><td>삿포로 → 노보리베쓰</td><td>JR 특급 + 버스</td><td class="num">4,890엔 + 450엔</td><td>약 1시간 45분</td><td>특급은 전부 지정석</td></tr>
+</table>
+<ul class="sm" style="margin-top:8px">
+<li><b>지하철은 신용카드 터치</b>(Visa·Master·JCB·AMEX)로 타면 하루 상한(평일 830엔·주말 520엔)이 자동 적용돼 1일권이 필요 없습니다.</li>
+<li><b>삿포로-노보리베쓰 에어리어 패스</b>(외국인, 4일 10,000엔): 공항·삿포로·오타루·노보리베쓰 + 특급 지정석. 노보리베쓰를 넣을 때만 본전. 요이치 포함 여부 미확인.</li>
+<li>예전 「삿포로-오타루 웰컴 패스」는 JR 홋카이도 공식 목록에 없습니다(판매 종료 추정).</li>
+</ul>
+</div>
+
+<h2>📍 명소</h2>
+<div class="card tw">
+<table>
+<tr><th>명소</th><th>요금</th><th>시간·휴무</th><th>소요</th><th>예약·메모</th></tr>
+<tr class="pick"><td><b>닛카 요이치 증류소</b></td><td class="num">세미나 3,000엔</td><td>12/23~1/7 휴업 · 세미나 9:30~14:00 회차</td><td>90분</td><td><span class="tag must">웹 예약</span>4주 전 0시 · 1~9명 · 일본어 · 2월 방식 미발표</td></tr>
+<tr><td>다나카 주조 기코쿠라(오타루)</td><td>무료 시음 약 10종</td><td>9:05~17:30 연중무휴</td><td>15분</td><td>미나미오타루역 10분 · 10명 미만은 예약 없음</td></tr>
+<tr><td>오타루 운하·사카이마치</td><td>무료</td><td>가스등 해 질 녘~24시</td><td>2~3시간</td><td>일몰 1/30 16:43 · 2/13 17:02</td></tr>
+<tr><td>삿포로 맥주 박물관</td><td class="num">입장 1,000엔 · 투어 2,000엔(시음 2잔)</td><td>11~18시 · 투어는 <b>월요일 없음</b></td><td>55분</td><td>웹 예약 당일 9:30까지, 정원 16명, 일본어</td></tr>
+<tr><td>시로이 코이비토 파크</td><td class="num">1,200엔</td><td>10:00~17:30</td><td>1시간</td><td>온라인 사전 구매 시 우선 줄</td></tr>
+<tr><td>모이와산 로프웨이</td><td class="num">왕복 2,100엔</td><td>겨울 11~22시 (상행 막차 21:30)</td><td>1시간</td><td>야경 · 예약 없음</td></tr>
+<tr><td>TV타워</td><td class="num">1,200엔</td><td>9~22시</td><td>30분</td><td></td></tr>
+<tr><td>아카렌가(홋카이도청 구 본청사)</td><td class="num">300엔 (팔각탑 1,200엔)</td><td>8:45~21:00 · 2025-07 재개관</td><td>40분</td><td>팔각탑 하루 4회</td></tr>
+<tr><td>시계탑</td><td class="num">350엔</td><td>8:45~17:10</td><td>20분</td><td></td></tr>
+<tr><td>니조 시장 · 장외시장</td><td>—</td><td>니조 7~17시 · 장외 6~15시</td><td>1시간</td><td>아침 해산물</td></tr>
+<tr><td>노보리베쓰 지옥계곡</td><td>무료</td><td>상시</td><td>30~60분</td><td>오유누마 족욕 산책로는 겨울에 막힐 때 있음</td></tr>
+<tr><td>사포로 테이네 스키장</td><td class="num">1일권 9,800엔 (온라인 8,800엔)</td><td>12/19~3/7</td><td>하루</td><td>JR 테이네역 + 버스</td></tr>
+<tr><td>아사히야마 동물원</td><td class="num">1,000엔</td><td>10:30~15:30 · 펭귄 산책 11:00·14:30</td><td>하루</td><td>특급 1시간 25분 + 버스 40분 — 3박이면 빼는 걸 권함</td></tr>
+</table>
+</div>
+
+<h2>🎆 행사</h2>
+<div class="card tw">
+<table>
+<tr><th>행사</th><th>2027 날짜</th><th>메모</th></tr>
+<tr class="pick"><td><b>조잔케이 설등로</b>(雪灯路)</td><td>1/20~2/28, 18:00~21:30 ✅</td><td>무료 · 두 후보 주말 다 됨 · 올해부터 새 조명 연출</td></tr>
+<tr><td>삿포로 화이트 일루미네이션</td><td>에키마에도리 ~2/11 · 미나미1조 ~3/14 · 아카렌가 ~2/28 ✅</td><td>무료</td></tr>
+<tr><td>지토세·시코쓰호 빙도 축제</td><td>1/30~2/23 ✅</td><td>유료 · 공항 근처</td></tr>
+<tr><td>삿포로 눈축제</td><td>2/4~2/11 ✅</td><td>2/11 출발이면 마지막 날 저녁만</td></tr>
+<tr><td>오타루 눈빛 거리</td><td>미발표 (2026년 2/7~14)</td><td>2/13~14 주말에 겹칠 수도</td></tr>
+<tr><td>노보리베쓰 온천 유마쓰리</td><td>미발표 (2026년 2/3~4)</td><td>후보 주말 밖</td></tr>
+</table>
+</div>
+</section>
+
+<!-- ───────── 먹거리 ───────── -->
+<section id="tab-food" hidden>
+<h2>🍻 남자 5명 저녁 3끼 추천</h2>
+<div class="grid">
+<div class="card"><h3>① 징기스칸 + 맥주 무제한</h3><p style="margin:0"><b>삿포로 맥주원 개척사관</b> 겨울 킹 바이킹 120분 + 스탠더드 노미호다이(삿포로 클래식 생맥주 포함) · 1인 약 8,500엔 · 620석 · <span class="tag must">예약</span>5명 이상은 TableCheck, 전날 16시까지 · 21시 마감</p></div>
+<div class="card"><h3>② 게 요리</h3><p style="margin:0"><b>효세쓰노몬</b>(1964 창업, 인원수 맞춤 개인실, 1인 2~3만엔, Toreta 예약) 또는 싸게 <b>가니혼케 역앞 본점</b>(1~1.5만엔, 타베로그 예약) · 2차 <b>더 닛카 바</b>(70석)</p></div>
+<div class="card"><h3>③ 이자카야</h3><p style="margin:0"><b>우미 하치쿄 본점</b> — 연어알을 넘치게 퍼주는 쓰코메시 원조, 6·8인 개인실, 1인 5~6천엔, Toreta 예약 · 노미호다이 확실히 하려면 <b>홋카이도오 쿠라에</b>(2.5~3시간 코스 4,500~6,500엔)</p></div>
+</div>
+
+<h2>🍜 분야별 가게</h2>
+<div class="card tw">
+<table>
+<tr><th>분야</th><th>가게</th><th>위치</th><th>영업·휴무</th><th>예약</th><th>1인</th><th>타베로그</th></tr>
+<tr><td>게</td><td><b>효세쓰노몬</b>(氷雪の門)</td><td>스스키노</td><td>11~23시</td><td><span class="tag ok">가능</span>개인실</td><td class="num">2~3만엔</td><td class="num">3.54 (298)</td></tr>
+<tr><td>게</td><td><b>삿포로 가니혼케 역앞 본점</b></td><td>삿포로역 1분</td><td>11:30~22시 무휴</td><td><span class="tag ok">가능</span>반개인실</td><td class="num">1~1.5만엔</td><td class="num">3.51 (179)</td></tr>
+<tr><td>게</td><td>가니쇼군 / 가니야 본점</td><td>스스키노</td><td>11~15, 17~22시</td><td><span class="tag ok">가능</span>개인실</td><td class="num">1~1.5만엔</td><td class="num">3.40 / 3.20</td></tr>
+<tr><td>징기스칸</td><td><b>맥주원 개척사관</b></td><td>나에보(버스 188번)</td><td>11:30~21시</td><td><span class="tag must">예약</span></td><td class="num">약 8,500엔</td><td class="num">3.59 (1,271)</td></tr>
+<tr><td>징기스칸</td><td><b>다루마 7·4점</b></td><td>스스키노</td><td>17~23시 무휴</td><td><span class="tag ok">가능</span>다루마 중 유일, 1인 500엔</td><td class="num">4~5천엔</td><td class="num">3.54 (278)</td></tr>
+<tr><td>징기스칸</td><td>다루마 본점</td><td>스스키노</td><td>17~05시</td><td><span class="tag line">줄</span>카운터 14석 — 5명 나란히 어려움</td><td class="num">4~5천엔</td><td class="num">3.68 (2,061)</td></tr>
+<tr><td>징기스칸</td><td><b>마루타케</b></td><td>스스키노</td><td>17~23시</td><td><span class="tag ok">가능</span>LINE·당일 15시 전화 · 7인 테이블</td><td class="num">6~8천엔</td><td class="num">3.66 (513)</td></tr>
+<tr><td>스프카레</td><td>스아게 플러스</td><td>스스키노</td><td>11:30~21시</td><td><span class="tag line">줄</span>매우 김</td><td class="num">1~3천엔</td><td class="num">3.69 (2,408)</td></tr>
+<tr><td>스프카레</td><td>오쿠시바 쇼텐 역앞</td><td>삿포로역 2분</td><td>11~15, 17~22시</td><td><span class="tag line">줄</span>50~90분 예</td><td class="num">1~3천엔</td><td class="num">3.60 (1,292)</td></tr>
+<tr><td>스프카레</td><td>GARAKU 본점</td><td>오도리</td><td>11:30~15:30, 17~21시</td><td><span class="tag line">줄</span>70석</td><td class="num">1~3천엔</td><td class="num">3.44 (177)</td></tr>
+<tr><td>라멘</td><td><b>게야키</b></td><td>스스키노</td><td>~02시</td><td><span class="tag line">줄</span>카운터 8석</td><td class="num">1~2천엔</td><td class="num">3.70 (3,336)</td></tr>
+<tr><td>라멘</td><td>스미레 스스키노</td><td>스스키노</td><td>17:30~00:30</td><td><span class="tag line">줄</span>30명 줄 예</td><td class="num">1~2천엔</td><td class="num">3.59 (2,164)</td></tr>
+<tr><td>라멘</td><td>에비소바 이치겐</td><td>나카지마코엔 15분</td><td>11~03시</td><td><span class="tag line">줄</span></td><td class="num">1~2천엔</td><td class="num">3.59 (2,162)</td></tr>
+<tr><td>라멘</td><td>멘야 사이미</td><td>미소노역(도심 밖)</td><td>월 휴무</td><td><span class="tag line">줄</span>80분 예</td><td class="num">1~2천엔</td><td class="num"><b>3.98</b> (4,402)</td></tr>
+<tr><td>초밥</td><td>회전초밥 토리톤 기타8조</td><td>삿포로역 12분</td><td>11~22시</td><td><span class="tag line">번호표</span>2~3시간 예</td><td class="num">4~5천엔</td><td class="num">3.73 (868)</td></tr>
+<tr><td>초밥</td><td>네무로 하나마루(스텔라플레이스·코코노)</td><td>삿포로역·스스키노 직결</td><td>11~22시</td><td><span class="tag line">발권기</span></td><td class="num">3~5천엔</td><td class="num">3.68 / 3.56</td></tr>
+<tr><td>초밥</td><td><b>오타루 마사즈시 본점</b></td><td>오타루 스시야 거리</td><td>수 휴무</td><td><span class="tag ok">가능</span>개인실 6~20명</td><td class="num">점심 6~8천엔</td><td class="num">3.58 (1,092)</td></tr>
+<tr><td>아침</td><td>니조시장 오이소</td><td>버스센터마에</td><td>7:30~ · 수 휴무</td><td><span class="tag line">줄</span></td><td class="num">3~6천엔</td><td class="num">3.52 (812)</td></tr>
+<tr><td>아침</td><td>기타노 구르메테이(장외시장)</td><td>니주욘켄</td><td>7~15시 무휴</td><td><span class="tag line">줄</span>320석이라 쉬움</td><td class="num">1~3천엔</td><td class="num">3.49 (1,383)</td></tr>
+<tr><td>이자카야</td><td><b>우미 하치쿄 본점</b></td><td>스스키노 1분</td><td>18~24시(일 17~23)</td><td><span class="tag ok">가능</span>Toreta · 6·8인실</td><td class="num">5~6천엔</td><td class="num">3.61 (1,398)</td></tr>
+<tr><td>이자카야</td><td>홋카이도오 쿠라에 오도리점</td><td>오도리 2분</td><td>11~24시 무휴</td><td><span class="tag ok">가능</span>노미호다이 코스</td><td class="num">4.5~6.5천엔</td><td class="num">3.56 (41)</td></tr>
+<tr><td>이자카야</td><td>사부로 본점</td><td>호스이스스키노</td><td>금·토 ~03시</td><td><span class="tag ok">가능</span>70석·전석 흡연</td><td class="num">4~5천엔</td><td class="num">3.40 (116)</td></tr>
+<tr><td>이자카야</td><td>지자케 스미야키 사카나야</td><td>스스키노</td><td>일·휴일 휴무</td><td><span class="tag ok">가능</span>노미호다이 오마카세 1만엔</td><td class="num">8~10천엔</td><td class="num">3.61 (145)</td></tr>
+<tr><td>맥주</td><td>비어홀 라이온 다누키코지</td><td>다누키코지</td><td>11:30~22시</td><td><span class="tag ok">가능</span>삿포로 클래식 생맥주·120분 무제한 5천엔~</td><td class="num">5~6천엔</td><td class="num">3.49 (211)</td></tr>
+<tr><td>위스키</td><td><b>더 닛카 바</b></td><td>스스키노</td><td>18~01시</td><td><span class="tag ok">가능</span>70석, VIP실 8~11명</td><td class="num">4~5천엔</td><td class="num">3.58 (287)</td></tr>
+<tr><td>위스키</td><td>바 야마자키</td><td>스스키노</td><td>일 휴무</td><td>단체는 거절될 수 있음</td><td class="num">3~4천엔</td><td class="num">3.78 (400)</td></tr>
+<tr><td>사케</td><td>니혼슈 발 owl</td><td>호스이스스키노</td><td><b>목~일 19~23시만</b></td><td><span class="tag ok">가능</span></td><td class="num">5~6천엔</td><td class="num">3.60 (83)</td></tr>
+<tr><td>사케</td><td>지토세쓰루 사케 뮤지엄</td><td>버스센터마에</td><td>10~18시</td><td>낮 시음·판매</td><td class="num">~1천엔</td><td class="num">3.49 (203)</td></tr>
+<tr><td>디저트</td><td>밤 파르페 파르(PaL)</td><td>스스키노</td><td>18~24시(금·토 02시)</td><td><span class="tag line">줄</span>15~40분</td><td class="num">2~3천엔</td><td class="num">3.59 (1,148)</td></tr>
+<tr><td>오타루 점심</td><td>나루토 본점(영계 반마리 튀김)</td><td>오타루역 5분</td><td>11~21시</td><td><span class="tag ok">가능</span>270석</td><td class="num">1~3천엔</td><td class="num">3.53 (2,166)</td></tr>
+<tr><td>오타루 점심</td><td>다키나미 식당(산카쿠 시장)</td><td>오타루역 옆</td><td>7~17시</td><td><span class="tag line">번호표</span>20~30분</td><td class="num">3~4천엔</td><td class="num">3.55 (1,458)</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">타베로그 11-22 조회 · 점수(후기 수) · 대기 시간은 후기 예시라 평균이 아닙니다. ⚠ <b>교사이(魚菜)는 최대 4명</b>, INITIAL 파르페는 5명이면 따로 앉습니다. 많은 이자카야·바가 실내 흡연 가능입니다.</p>
+</div>
+</section>
+
+<!-- ───────── 준비·예산 ───────── -->
+<section id="tab-prep" hidden>
+<h2>💰 1인 예산 (금~월 · 김해 출발 · 추정 포함)</h2>
+<div class="card sm">⏳ 청의 호수 이동비가 나오면 알뜰·표준·여유 3단계로 채웁니다.</div>
+
+<h2>🧳 출국 전 실무</h2>
+<div class="card">
+<ul style="margin:0">
+<li><b>여권</b>: 남은 기간 확인. 일본은 한국인 90일 무비자. 전자여행허가(JESTA)는 2028년도 도입 예정이라 이번엔 필요 없음.</li>
+<li><b>Visit Japan Web</b>(vjw.digital.go.jp, 무료): 입국심사·세관이 QR 하나로 통합. 여권·항공편·숙소 주소 넣고 QR 캡처. 카드 정보 요구하는 가짜 사이트 주의.</li>
+<li><b>면세가 바뀌었습니다(2026-11-01~)</b>: 이제 <b>세금 포함 가격으로 사고, 출국할 때 공항 세관에서 확인받아 환급</b>. 같은 가게 5,000엔(세금 별도) 이상. 산 물건은 직접 들고 나가야 함 → 귀국 날 공항 세관 줄 시간을 넉넉히.</li>
+<li><b>결제</b>: 지하철·편의점은 신용카드 터치가 편함. 시장·작은 가게·교사이 같은 곳은 현금만 — 1인 2~3만엔 현금.</li>
+<li><b>문신</b>: 대욕장은 금지인 곳이 많음. 해당자 있으면 대절탕·객실탕 위주로.</li>
+<li><b>여행자 보험</b>: 폭설 결항·지연 보장 되는 것으로.</li>
+</ul>
+</div>
+
+<h2>🧤 날씨와 짐</h2>
+<div class="card tw">
+<table>
+<tr><th></th><th>평균</th><th>최고</th><th>최저</th><th>눈 온 날</th><th>최대 적설</th></tr>
+<tr><td>1월</td><td class="num">−3.2℃</td><td class="num">−0.4℃</td><td class="num">−6.4℃</td><td class="num">29일</td><td class="num">76cm</td></tr>
+<tr><td>2월</td><td class="num">−2.7℃</td><td class="num">0.4℃</td><td class="num">−6.2℃</td><td class="num">25일</td><td class="num">95cm</td></tr>
+</table>
+<ul style="margin-top:8px">
+<li><b>미끄럼 방지</b>: 바닥 홈 깊은 방한화, 또는 현지 편의점·돈키호테에서 파는 신발용 아이젠(스파이크). 인도가 빙판입니다.</li>
+<li>패딩 + 히트텍 같은 내복, 장갑·비니·넥워머. 실내는 덥게 난방하니 벗기 쉬운 옷.</li>
+<li>휴대폰 배터리가 추위에 빨리 닳음 → 보조배터리(기내 반입만).</li>
+<li>료칸은 유카타·수건 제공. 대욕장용 작은 수건 하나 있으면 편함.</li>
+</ul>
+<p class="sm">기상청(JMA) 1991~2020 평년값.</p>
+</div>
+
+<h2>☎ 비상 연락처</h2>
+<div class="card">
+<ul style="margin:0">
+<li><b>주삿포로 대한민국 총영사관</b>: 011-218-0288 (해외에서 +81-11-218-0288) · 札幌市中央区北2条西12丁目1-4 · 평일 8:45~17:30</li>
+<li>외교부 영사콜센터(24시간): +82-2-3210-0404</li>
+<li>경찰 110 · 구급·소방 119 (무료)</li>
+<li>삿포로시 관광 콜센터(한국어 가능): 011-222-4894</li>
+</ul>
+</div>
+
+<h2>🔗 바로가기</h2>
+<div class="card sm">
+<ul style="margin:0">
+<li>숙소: <a href="https://www.jalan.net/yad315689/">하나모미지</a> · <a href="https://www.jalan.net/yad350625/">시라이토</a> · <a href="https://www.jalan.net/yad321633/">후루카와</a> · <a href="https://www.jalan.net/yad322254/">조잔케이 뷰호텔</a> · <a href="https://www.jalan.net/yad372594/">그랜드 브리센</a> · <a href="https://www.jalan.net/yad349342/">세키스이테이</a> · <a href="https://www.jalan.net/yad331184/">노보리베쓰 그랜드</a> · <a href="https://www.jalan.net/yad321916/">만세이카쿠</a></li>
+<li>예약: <a href="https://reserva.be/nikkayoichi">닛카 요이치 세미나</a> · <a href="https://www.jotetsu.co.jp/bus/kappa_liner/">갓파 라이너</a> · <a href="https://jozankei-liner.jp/">조잔케이 온천 라이너(공항)</a> · <a href="https://www.donanbus.co.jp/map/newchitose_airport/">노보리베쓰 공항 버스</a> · <a href="https://www.tablecheck.com/ja/sapporobiergarten-kaitakushikan/reserve/message">맥주원 개척사관</a> · <a href="https://sapporo-jingisukan.info/74ten">다루마 7·4</a> · <a href="https://hachikyo.com/">하치쿄</a> · <a href="http://www.hyousetsu.co.jp/">효세쓰노몬</a> · <a href="https://www.sapporobeer.jp/brewery/s_museum/kengaku/">맥주 박물관 투어</a></li>
+<li>정보: <a href="https://www.sapporo.travel/?p=124466">조잔케이 설등로</a> · <a href="https://www.snowfes.com/">삿포로 눈축제</a> · <a href="https://www.jrhokkaido.co.jp/airport/">JR 공항 열차</a> · <a href="https://www.nikka.com/distilleries/yoichi/">닛카 요이치</a> · <a href="https://www.data.jma.go.jp/stats/etrn/view/nml_sfc_ym.php?prec_no=14&block_no=47412">삿포로 평년값</a> · <a href="https://vjw.digital.go.jp/">Visit Japan Web</a></li>
+<li>지역 비교(삿포로 vs 나고야): <a href="../japan-2701/">japan-2701</a></li>
+</ul>
+</div>
+
+<h2>확정이 아닌 값</h2>
+<div class="card sm">
+<ul style="margin:0">
+<li>숙소·항공 가격은 11-22 조회값이고 매일 바뀝니다. 숙소 최저가 다수는 11/30 예약분 한정 요금.</li>
+<li>2027년 미발표: 닛카 2월 운영 방식 · 오타루 눈빛 거리 · 노보리베쓰 유마쓰리.</li>
+<li>대절탕 정원·객실탕 크기 · 5→4명 인원 변경 규정 · 식당 대기 시간(후기 예시).</li>
+</ul>
+</div>
+</section>
+
+<p class="sm" style="margin-top:24px">판 11-22a</p>
+</div>
+<script>
+(function(){
+  var btns=[].slice.call(document.querySelectorAll('.tabs button'));
+  function show(k){
+    var ok=false;
+    btns.forEach(function(b){var on=b.getAttribute('data-t')===k;b.setAttribute('aria-selected',on);if(on)ok=true;});
+    if(!ok){k='home';btns[0].setAttribute('aria-selected',true);}
+    btns.forEach(function(b){var s=document.getElementById('tab-'+b.getAttribute('data-t'));if(s)s.hidden=b.getAttribute('data-t')!==k;});
+    try{localStorage.setItem('sp.tab',k)}catch(e){}
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){var k=b.getAttribute('data-t');history.replaceState(null,'','#'+k);show(k);window.scrollTo(0,0);});});
+  var h=location.hash.slice(1),saved=null;
+  try{saved=localStorage.getItem('sp.tab')}catch(e){}
+  show(h||saved||'home');
+})();
+</script>
+</body>
+</html>
