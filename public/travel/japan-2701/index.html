@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<title>일본 겨울 여행 지역 비교</title>
+<title>나고야 겨울 여행</title>
 <style>
   :root{--bg:#f5f6fa;--card:#fff;--ink:#181c25;--dim:#636b7a;--line:#e1e5ee;--soft:#eef1f7;--accent:#2f54eb;--good:#0a8a55;--bad:#c9352b;--warn-bg:#fff4e2;--warn:#8a5300;--star:#e0a100}
   @media (prefers-color-scheme:dark){:root{--bg:#0f1218;--card:#181c25;--ink:#eceff5;--dim:#9aa3b3;--line:#2a2f3b;--soft:#21262f;--accent:#7b93ff;--good:#41d095;--bad:#ff7d72;--warn-bg:#30250f;--warn:#f2bd5c;--star:#f5c542}}
@@ -37,11 +37,332 @@
   .plan b{display:inline-block;min-width:44px}
   a{color:var(--accent);word-break:break-all}
   .num{font-variant-numeric:tabular-nums}
+  .tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 0 10px;margin:0 0 4px;-webkit-overflow-scrolling:touch}
+  .tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+  .tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  section[hidden]{display:none}
+  .day{border-left:4px solid var(--accent)}
+  .t{display:grid;grid-template-columns:62px minmax(0,1fr);gap:2px 10px;margin-top:8px}
+  .t b{font-variant-numeric:tabular-nums;color:var(--accent)}
+  .tag.must{background:var(--bad);color:#fff}.tag.line{background:var(--warn-bg);color:var(--warn)}.tag.ok{background:var(--good);color:#fff}
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>일본 겨울 여행 — 삿포로 vs 나고야</h1>
+<h1>나고야 겨울 여행 — 남자 5명 3박 4일</h1>
+<p class="lede">2027년 <b>2/13~14 주말</b> 확정 · 금~월 또는 토~화 · 나고야 2박 + 게로 온천 1박 · 김해 4명 + 인천 1명 (2026-11-22)</p>
+<nav class="tabs" role="tablist">
+  <button data-t="decide">날짜 결정</button>
+  <button data-t="plan">일정</button>
+  <button data-t="gero">게로 온천</button>
+  <button data-t="stay">나고야 숙소</button>
+  <button data-t="todo">할 것·먹거리</button>
+  <button data-t="arch">보관</button>
+</nav>
+<section id="tab-decide">
+<h2>🗓 금~월(2/12~2/15) vs 토~화(2/13~2/16)</h2>
+<div class="card tw">
+<table>
+<tr><th>항목 (1인)</th><th>A. 금~월</th><th>B. 토~화</th><th>차이</th></tr>
+<tr><td><b>항공</b> 김해(진에어 08:40 + 대한항공 19:55)</td><td class="num">50.0만</td><td class="num">48.9만</td><td class="num plus">B −1.1만</td></tr>
+<tr><td><b>항공</b> 인천(제주 07:30 + 진에어 20:00)</td><td class="num">45.1만</td><td class="num">46.1만</td><td class="num">A −1.0만</td></tr>
+<tr><td>5명 항공 합계</td><td class="num">245.0만</td><td class="num">241.7만</td><td class="num plus">B −3.3만</td></tr>
+<tr><td><b>숙소 3박</b> 알뜰<br><span class="sm">슈퍼호텔 신칸센구치(천연 온천·조식) 2박 + 게로 쿠사카베(대욕장·2식)</span></td><td class="num">31.5만<br><span class="sm">금 51,400 · 토 70,900 · 일 게로 64,900엔</span></td><td class="num">26.7만<br><span class="sm">토 70,900 · 일 27,900 · 월 게로 59,900엔</span></td><td class="num plus">B −4.8만</td></tr>
+<tr><td><b>숙소 3박</b> 우리끼리 탕<br><span class="sm">같은 시내 2박 + 게로 사사라(대절 노천 포함 그룹 요금·2식)</span></td><td class="num">38.3만<br><span class="sm">게로 일 105,600엔</span></td><td class="num">30.9만<br><span class="sm">게로 월 85,000엔</span></td><td class="num plus">B −7.4만</td></tr>
+<tr><td><b>숙소 3박</b> 에어비앤비 + 우리끼리 탕<br><span class="sm">나고야 카나리야 R101 2박 + 게로 사사라</span></td><td class="num">25.1만<br><span class="sm">2박 43,800 + 게로 일 105,600엔</span></td><td class="num">21.3만<br><span class="sm">2박 41,800 + 게로 월 85,000엔</span></td><td class="num plus">B −3.8만</td></tr>
+<tr><td><b>항공+숙소 1인</b>(에어비앤비)</td><td class="num">75.1만</td><td class="num plus">70.2만</td><td class="num plus">B −4.9만</td></tr>
+<tr><td><b>항공+숙소 1인</b>(김해, 우리끼리 탕)</td><td class="num"><b>88.3만</b></td><td class="num plus"><b>79.8만</b></td><td class="num plus"><b>B −8.5만</b> (5명 약 −42만)</td></tr>
+<tr><td>연차</td><td>금·월 2일</td><td>월·화 2일</td><td>같음</td></tr>
+<tr><td>1일차 밤 술</td><td class="plus">금요일 밤 나고야</td><td>토요일 밤 나고야</td><td></td></tr>
+<tr><td>2일차 당일치기</td><td>토요일(붐빔)</td><td>일요일(붐빔)</td><td>비슷</td></tr>
+<tr><td>게로 온천 밤</td><td>일요일 밤</td><td class="plus">월요일 밤 — 평일 요금·한산</td><td></td></tr>
+<tr><td>게로 겨울 불꽃놀이(토 20:30)</td><td colspan="2">기본 순서로는 둘 다 못 봄 → 아래 「토요일 게로」 안</td><td></td></tr>
+<tr><td>ㅌㅇ(2월 3~4주차 할 일, 날짜 미정)</td><td class="plus">3주차는 2/15(월) 하루만</td><td class="minus">3주차 2/15·2/16 이틀</td><td></td></tr>
+<tr><td>귀국 다음 날</td><td>화요일 출근</td><td>수요일 출근</td><td></td></tr>
+</table>
+</div>
+
+<h2>🎆 게로 불꽃놀이를 보고 싶으면 — 온천을 토요일로</h2>
+<div class="card">
+<p style="margin:0 0 6px">게로 겨울 불꽃놀이 「花火物語」는 <b>매주 토요일만</b>(2027-01-09~03-27, 2026년엔 20:30부터 약 10분, 무료). 토요일 밤 게로는 비싸지만, <b>금~월에서 온천을 토요일로 옮기면 시내 숙박이 비싼 토요일 대신 싼 일요일이 되어 총액이 오히려 비슷하거나 쌉니다.</b></p>
+<div class="tw"><table>
+<tr><th>순서</th><th>1일차</th><th>2일차</th><th>3일차</th><th>4일차</th><th>숙소 3박 1인</th></tr>
+<tr><td>A 기본</td><td>금 나고야</td><td>토 다카야마·시라카와고 → 나고야</td><td>일 <b>게로</b></td><td>월 게로 → 공항</td><td class="num">38.3만 (사사라)</td></tr>
+<tr class="pick"><td><b>A 토요일 게로</b></td><td>금 나고야</td><td>토 다카야마(·시라카와고) → <b>게로 · 불꽃놀이</b></td><td>일 게로 → 나고야</td><td>월 나고야 → 공항(30분)</td><td class="num"><b>36.8만</b> (사사라 토 139,700엔)<br><span class="sm">스이메이칸 객실 온천이면 35.5만 · 쿠사카베면 31.0만</span></td></tr>
+<tr><td>B 기본</td><td>토 나고야</td><td>일 다카야마·시라카와고 → 나고야</td><td>월 <b>게로</b></td><td>화 게로 → 공항</td><td class="num">30.9만 (사사라)</td></tr>
+<tr><td>B 토요일 게로</td><td>토 공항 → <b>게로 · 불꽃놀이</b></td><td>일 다카야마·시라카와고 → 나고야</td><td>월 나고야</td><td>화 나고야 → 공항</td><td class="num">35.1만</td></tr>
+</table></div>
+<p class="sm" style="margin:8px 0 0"><b>토요일 밤~일요일 낮엔 게로 마을 축제 「다노카미 마쓰리」</b>(2/13 19:00 시가쿠사이, 2/14 13:30 꽃갓 춤)도 있어 불꽃놀이와 함께 볼 수 있습니다. 「A 토요일 게로」는 동선도 좋습니다: 나고야 → 다카야마(시라카와고) → 게로가 같은 JR 다카야마선 위라 되돌아오지 않고, 마지막 날은 나고야에서 공항까지 30분이라 하루 종일 씁니다.</p>
+</div>
+
+<h2>✅ 정리</h2>
+<div class="card">
+<ul style="margin:0">
+<li><b>돈만 보면 B(토~화)</b>: 항공+숙소 1인 약 6만~8.5만 원(5명 30만~42만 원) 쌉니다. 게로가 월요일 밤이라 평일 요금이고 한산합니다.</li>
+<li><b>ㅌㅇ 일정·불꽃놀이를 보면 A(금~월)</b>: ㅌㅇ의 2월 3주차와 겹치는 날이 하루뿐이고, <b>「A 토요일 게로」</b>로 짜면 불꽃놀이까지 보면서 숙소비는 A 기본보다 쌉니다(B 기본보다는 1인 약 6만 원 비쌈).</li>
+<li>제 추천: <b>ㅌㅇ의 3주차 일정이 2/15·16과 안 겹치면 B, 모르거나 겹칠 수 있으면 A 토요일 게로</b>.</li>
+</ul>
+<p class="sm" style="margin:8px 0 0">자란 11-22 21~22시 조회(5명 합계, 세금 포함), 구글 항공권 11-22 조회 · 100엔 = 840.8원. 숙소 최저가 다수는 「じゃらんのお得な10日間」 등 기간 한정 요금이라 <b>11/30 전에 무료 취소 요금으로 잡아 두기</b>를 권합니다.</p>
+</div>
+</section>
+<section id="tab-plan" hidden>
+<h2>🗓 일정 — 나고야 2박 + 게로 1박</h2>
+<div class="card">
+<p style="margin:0">두 안 모두 그렸습니다. <b>A안은 게로를 토요일로</b> 옮겨 불꽃놀이와 마을 축제를 보는 순서(「날짜 결정」 탭 참고), <b>B안은 가장 싼 기본 순서</b>입니다. 시각은 예시이고 열차·버스 시간표는 날짜가 정해지면 다시 확인하세요.</p>
+</div>
+
+<h3 style="margin:16px 0 8px">A안 — 2/12(금) ~ 2/15(월) · 토요일 게로</h3>
+<div class="card day">
+<h3>1일차 (금 2/12) — 도착 · 나고야 시내 · 데바사키</h3>
+<div class="t">
+<b>08:40</b><span>김해 진에어 LJ731 → 10:10 주부공항 (인천 친구 제주항공 07:30 → 09:30)</span>
+<b>11:00</b><span>메이테츠 μSKY(1,430엔, 약 29분) → 나고야역 → 숙소에 짐(에어비앤비는 짐 맡기기 가능한지 확인)</span>
+<b>12:00</b><span>점심 히쓰마부시 — 비초(나고야역 다이나고야빌딩, 3,980엔~)</span>
+<b>13:30</b><span><b>나고야성</b> 혼마루 어전(1,000엔, 16:30까지) → <b>오스 상점가·오스 칸논</b></span>
+<b>18:00</b><span>니시키3초메 <b>세카이노 야마짱</b>(데바사키 노미호다이 4,000엔~, 온라인 예약) → 2차</span>
+<b>옵션</b><span>B리그 나고야 다이아몬드 돌핀스 19:05(IG 아레나)</span>
+</div>
+</div>
+<div class="card day">
+<h3>2일차 (토 2/13) — 다카야마 → 게로 · 불꽃놀이 · 축제</h3>
+<div class="t">
+<b>08:00</b><span>나고야 → <b>특급 히다</b>로 다카야마(약 2시간 15분, 자유석 5,610엔) · 짐은 가볍게</span>
+<b>10:20</b><span>다카야마 <b>옛 거리(산마치)</b> · 양조장 사케 시음 · 히다규 초밥 · 미야가와 아침시장(오전)</span>
+<b>옵션</b><span>시라카와고까지: 노히버스(편도 2,900엔, 약 50분, 예약제 편 있음) 11시 무렵 → 14시 무렵 다카야마 복귀</span>
+<b>16:30</b><span>다카야마 → 게로(보통열차 약 1시간, 990엔)</span>
+<b>17:30</b><span>료칸 체크인 → 대절탕·대욕장 → 저녁</span>
+<b>19:00</b><span><b>다노카미 마쓰리 시가쿠사이</b>(森水無八幡神社, 무료)</span>
+<b>20:30</b><span><b>겨울 불꽃놀이</b>(下呂大橋 강변, 약 10분, 무료) → 밤 온천</span>
+</div>
+</div>
+<div class="card day">
+<h3>3일차 (일 2/14) — 게로 마을 · 축제 낮 · 나고야</h3>
+<div class="t">
+<b>아침</b><span>아침 온천 → 체크아웃 → 족욕(鷺の足湯·ゆあみ屋 온천 달걀)</span>
+<b>12:00</b><span>합장촌(800엔)에서 축제 목욕재계·사자춤 → <b>13:30 꽃갓 춤</b>(신사)</span>
+<b>15:00</b><span>특급 히다로 나고야(약 1시간 50분, 4,170엔~)</span>
+<b>18:00</b><span>나고야 숙소 → 저녁 니시키(후라이보 원조 데바사키는 일요일 영업, 월요일 휴무)</span>
+<b>옵션</b><span>나바나노사토 일루미네이션(3,000엔, 나고야에서 버스 약 1시간)</span>
+</div>
+</div>
+<div class="card day">
+<h3>4일차 (월 2/15) — 나고야 · 늦게 귀국</h3>
+<div class="t">
+<b>오전</b><span><b>아쓰타 신궁</b>(무료) → 아쓰타 호라이켄 본점 히쓰마부시(4,950엔, 예약 불가)</span>
+<b>오후</b><span>SCMAGLEV 리니어 철도관(월요일 영업, 1,200엔) 또는 오스 쇼핑 · ⚠ 도요타·도쿠가와·노리타케·수족관은 월요일 휴무</span>
+<b>17:00</b><span>메이테츠 μSKY로 주부공항(약 30분)</span>
+<b>19:55</b><span>대한항공 KE2134 → 21:35 김해 (인천 친구 진에어 20:00 → 22:15)</span>
+</div>
+</div>
+<p class="sm">A안 숙소: 나고야는 금·일 두 밤이라 에어비앤비를 따로 두 번 잡거나, <b>금~월 3박으로 잡고 토요일엔 짐 두고</b> 게로에 다녀오는 방법(빈 밤 1박 추가)이 있습니다.</p>
+
+<h3 style="margin:24px 0 8px">B안 — 2/13(토) ~ 2/16(화) · 기본 순서(가장 쌈)</h3>
+<div class="card day">
+<h3>1일차 (토 2/13) — 도착 · 나고야 시내 · 술</h3>
+<div class="t">
+<b>10:10</b><span>주부공항 → μSKY → 나고야 → 점심</span>
+<b>오후</b><span>나고야성 → 오스 상점가 · 옵션: 그램퍼스 vs FC도쿄(J1)</span>
+<b>저녁</b><span>니시키 세카이노 야마짱 / 후라이보 → 2·3차</span>
+</div>
+</div>
+<div class="card day">
+<h3>2일차 (일 2/14) — 다카야마 + 시라카와고 한국어 투어</h3>
+<div class="t">
+<b>07:50</b><span>와그 「아이트립」(48,600원, 미라이 타워 출발) 또는 마이리얼트립(나고야역 8:30) — 일요일 운행 여부 확인</span>
+<b>저녁</b><span>나고야 복귀 → 저녁(일요일 야마짱 23:15까지)</span>
+<b>대안</b><span>지브리 파크(주말 7,800엔, <b>12/10 14시 판매 시작</b>) 또는 돌핀스 14:05</span>
+</div>
+</div>
+<div class="card day">
+<h3>3일차 (월 2/15) — 이누야마성 → 게로 온천</h3>
+<div class="t">
+<b>09:00</b><span>메이테츠로 이누야마(약 25~37분) · <b>이누야마성</b>(1,000엔, 4층 일부 공사 제한) · 성하마을</span>
+<b>12:30</b><span>JR로 이동 → 특급 히다로 게로(나고야 출발이면 약 1시간 50분)</span>
+<b>15:00</b><span>체크인 → <b>대절탕 + 대욕장</b> → 저녁(사사라 그룹 플랜 2식 85,000엔) · 北乃寮는 월요일 휴무</span>
+</div>
+</div>
+<div class="card day">
+<h3>4일차 (화 2/16) — 게로 마을 · 늦게 귀국</h3>
+<div class="t">
+<b>아침</b><span>아침 온천 → 체크아웃 → 족욕·합장촌·温泉寺</span>
+<b>15:20</b><span>특급 히다 + μSKY로 주부공항(약 2시간 33분, 5,600엔)</span>
+<b>19:55</b><span>대한항공 KE2134 → 21:35 김해 (인천 친구 진에어 20:00)</span>
+</div>
+</div>
+
+<div class="card">
+<h3>두 안 공통으로 미리 할 것</h3>
+<ul style="margin:0">
+<li><b>~11/30</b>: 게로 숙소·나고야 숙소를 무료 취소 요금으로 잡기(10일 특가 요금 마감). 보센칸은 1/15까지만 무료라 주의.</li>
+<li><b>12/10 14시</b>: 지브리 파크 갈 거면 2월 입장권 판매 시작.</li>
+<li><b>1/14~15</b>: ㅈㅅ 발령 확인 → 인원 확정 → 숙소 인원 조정·취소.</li>
+<li><b>1개월 전</b>: 시라카와고 노히버스 예약(자유 여행이면) · 투어 날짜 확정.</li>
+<li>외국인용 <b>다카야마·호쿠리쿠 에어리어 패스</b>(5일 19,800엔: 나고야~다카야마 JR 자유석 + 지정석 6회 + 시라카와고 버스)는 A안처럼 다카야마·게로를 오가면 본전 이상.</li>
+</ul>
+</div>
+</section>
+<section id="tab-gero" hidden>
+<h2>♨ 게로 온천 1박 — 우리끼리 탕 먼저</h2>
+<div class="warn" style="margin-top:4px"><b>5명이 한 탕에 같이 들어갈 수 있다고 확인된 곳은 없습니다.</b> 대절탕 정원이 대부분 <b>2~3명</b>(사사라 3명, 스이메이칸·오가와야 2명)이라 <b>2~3명씩 나눠</b> 들어가는 걸 전제로 하세요. 5명이 확실히 같이 쓰는 건 <b>한 채짜리 「게로 스프링스 로지」</b>뿐입니다(노천탕 크기는 전화 확인 0576-74-1511).</div>
+
+<h3 style="margin:16px 0 8px">① 우리끼리 탕(대절탕·객실 탕) 숙소 — 2식, 5명 1실</h3>
+<div class="card tw">
+<table>
+<tr><th>숙소</th><th>우리끼리 탕</th><th>5명 한 탕</th><th>토 2/13</th><th>일 2/14</th><th>월 2/15</th><th>무료 취소</th><th>평점</th></tr>
+<tr class="pick"><td><b>아트나야카타 사사라</b> 일반실 그룹 플랜</td><td>대절 노천 2곳(각 3명, 30분 1,000엔, 플랜 특전) + 대욕장</td><td class="minus">불가(3명)</td><td class="num">139,700</td><td class="num">105,600</td><td class="num plus"><b>85,000</b></td><td>3일 전까지</td><td class="num">4.5</td></tr>
+<tr><td><b>사사라 森山館</b> 노송나무 노천탕 딸린 방 10첩</td><td>방에 노천탕 + 대절 2곳</td><td>미확인(작을 듯)</td><td class="num">146,850</td><td class="num">119,350</td><td class="num">119,350</td><td>3일 전까지</td><td class="num">4.5</td></tr>
+<tr><td><b>스이메이칸</b> 臨川閣 방에 실내 온천</td><td>객실 탕(2명) + 대절 2곳(2명, 3,300엔/60분)</td><td class="minus">불가</td><td class="num">132,000</td><td class="num">103,950</td><td class="num">94,050</td><td>2/11까지</td><td class="num">4.3</td></tr>
+<tr><td><b>야마가타야</b> 大観荘 12첩</td><td>대절 노천 7곳(2025-12 5곳 신설), 1회 무료, 당일 접수 45분</td><td>미확인</td><td class="num">93,500</td><td class="num plus">77,000</td><td class="num plus">77,000</td><td>2/11까지</td><td class="num">4.2</td></tr>
+<tr><td><b>보센칸</b> 大部屋 22.5첩(정원 11)</td><td>대절 노천 3곳(45분 2,000엔+세금, 플랜에 반값) + 대욕장</td><td>미확인</td><td class="num">88,000</td><td class="num plus">63,250</td><td class="num plus">57,750</td><td class="minus">1/15까지(30일 전부터 20%)</td><td class="num">4.2</td></tr>
+<tr><td><b>게로 관광호텔</b>(하기와라) 10첩</td><td>대절 노천 7곳, 무료 특전(시간 지정 불가)</td><td>미확인</td><td class="sm">2식 없음</td><td class="num">109,000</td><td class="num">104,000</td><td>2/9까지</td><td class="num">4.6</td></tr>
+<tr><td>桜 River Side Stay 14+4첩</td><td>대절 온천 60분 포함</td><td>미확인</td><td class="num">75,850</td><td class="num">64,850</td><td class="num">64,850</td><td>2/7까지</td><td class="num">4.2</td></tr>
+<tr><td>후가쿠 10첩</td><td>대절(공식 「커플 크기」)</td><td class="minus">불가</td><td class="num">115,500</td><td class="num">88,000</td><td class="num">88,000</td><td>2/7까지</td><td class="num">4.5</td></tr>
+<tr><td>미야코 노천 스위트</td><td>객실 노천 + 대절 3곳</td><td>미확인</td><td class="num">192,500</td><td class="num">154,000</td><td class="num">143,000</td><td>2/7까지</td><td class="num">4.9</td></tr>
+<tr><td>쓰키노아카리 별채</td><td>별채 노천</td><td>미확인</td><td class="num">220,000</td><td class="num">185,000</td><td class="num">185,000</td><td>2/7까지</td><td class="num">4.4</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">5명 합계(엔) · 자란 11-22 21:40 조회 · <b>입욕세 150엔 + 숙박세 200엔이 1인당 별도</b>(5명 1,750엔). 「下呂ロイヤルホテル雅亭」 대절 노천은 6명이라는 옛 자료가 있지만 한 방 4명까지만 팔아서 5명은 2실 필요(0576-25-2900).</p>
+</div>
+
+<h3 style="margin:16px 0 8px">② 한 채 · 에어비앤비</h3>
+<div class="card tw">
+<table>
+<tr><th>숙소</th><th>정원</th><th>온천</th><th>토 2/13</th><th>일 2/14</th><th>월 2/15</th><th>무료 취소</th></tr>
+<tr class="pick"><td><b><a href="https://www.jalan.net/yad308940/">게로 스프링스 로지</a></b>(하기와라, 게로역에서 차 4분)</td><td>「ミーサ」 5명 60㎡ · 6·8명 동도 있음</td><td class="plus">동마다 원천 흘려보내기 노천(우리만)</td><td class="num">54,500</td><td class="num plus"><b>35,500</b></td><td class="num">36,000 (6명 동)</td><td>10일 전까지</td></tr>
+<tr><td>에어비앤비 「마이사」 집 전체</td><td>5명 · 침대 5</td><td>노천</td><td class="num">67,750</td><td class="num">67,750</td><td class="num">67,750</td><td>미확인</td></tr>
+<tr><td>에어비앤비 「천연 온천 게르 저택」</td><td>8명 · 침대 8</td><td>노천</td><td class="num">76,750</td><td class="num">76,750</td><td class="num">76,750</td><td>미확인</td></tr>
+<tr><td>에어비앤비 게로역 30초 아파트</td><td>11명</td><td class="sm">없음(욕조)</td><td class="num">66,620</td><td class="num">39,260</td><td class="num">39,260</td><td>미확인</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">에어비앤비 두 온천 숙소는 설명·좌표가 같아 <b>스프링스 로지와 같은 곳으로 추정</b> — 그렇다면 자란이 절반 값. 한 채는 <b>밥이 없고 온천가에서 멀어</b> 저녁은 마을 식당(아래)이나 장 봐서 해결. 차가 없으면 게로역에서 택시.</p>
+</div>
+
+<h3 style="margin:16px 0 8px">③ 대욕장 숙소</h3>
+<div class="card tw">
+<table>
+<tr><th>숙소</th><th>방</th><th>토 2/13</th><th>일 2/14</th><th>월 2/15</th><th>메모</th></tr>
+<tr><td><b>보센칸</b> 2식</td><td>大部屋 22.5첩(정원 11)</td><td class="num">88,000</td><td class="num">63,250</td><td class="num plus">57,750</td><td>대절탕 반값 특전 · 1/15까지 무료 취소</td></tr>
+<tr><td><b>쿠사카베 알메리아</b> 2식</td><td>大部屋 32첩</td><td class="num">105,000</td><td class="num">64,900</td><td class="num">59,900</td><td>평일 뷔페 · <b>문신 금지</b></td></tr>
+<tr><td>쓰루쓰루노유 미노리소 2식</td><td>와실</td><td class="num">71,500</td><td class="num">60,500</td><td class="num plus">50,000</td><td>⚠ 전 객실 흡연 · 송영 있음</td></tr>
+<tr><td>大江戸 Premium 下呂本館</td><td>올인클루시브(술 포함)</td><td class="num">117,000</td><td class="num">87,500</td><td class="num">87,500</td><td>정원 5명 와실</td></tr>
+<tr><td>菊半旅館 숙박만</td><td>20첩, 원천 흘려보내기</td><td class="num">44,000</td><td class="num">38,500</td><td class="sm">없음</td><td>평점 4.5</td></tr>
+<tr><td>스이메이칸 숙박만</td><td>와실, 대욕장 3곳</td><td class="num">88,000</td><td class="num">71,500</td><td class="num plus">35,750</td><td></td></tr>
+<tr><td>게로 관광호텔 캡슐(남성 전용)</td><td>5명 합계</td><td class="num">26,500</td><td class="num">21,500</td><td class="num">21,500</td><td>가장 쌈</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">숙박만 할 때 저녁: 飛騨牛茶寮 神月(철판, 17:30~21:30, 화 휴무) · 割烹 美松(히다규, 16:00~21:30, 수 휴무, 카드 불가) · 料理茶屋 北乃寮(스이메이칸 안, <b>월 휴무</b>).</p>
+</div>
+
+<h3 style="margin:16px 0 8px">④ 게로 마을에서 할 것</h3>
+<div class="card tw">
+<table>
+<tr><th>무엇</th><th>내용</th><th>날짜</th></tr>
+<tr class="pick"><td><b>겨울 불꽃놀이 「花火物語」</b></td><td>20:30부터 약 10분, 무료, 下呂大橋 하류 강변(역 3분)</td><td><b>토 2/13만</b></td></tr>
+<tr class="pick"><td><b>다노카미 마쓰리(田の神祭り, 花笠まつり)</b></td><td>2/13 19:00 시가쿠사이(森水無八幡神社, 밤 0:45경 경내 춤) · 2/14 정오 합장촌에서 목욕재계·사자춤 → 13:30 신사에서 꽃갓 춤. 무료, 역 10분</td><td><b>토 밤 ~ 일 낮</b></td></tr>
+<tr><td>게로 온천 합장촌</td><td>8:30~17:00, 800엔, 역 도보 20분·버스 6분. 겨울 조명은 2027년 일정 미확인(2026년엔 1/26~2/19 평일 18~21시, 500엔)</td><td>매일</td></tr>
+<tr><td>무료 족욕</td><td>鷺の足湯(24시간, 역 8분) · ゆあみ屋(9:30~18:00, 온천 달걀) · 田の神 등</td><td>매일</td></tr>
+<tr><td>湯めぐり手形(온천 순례 패스)</td><td>2,500엔, 가맹 료칸 3곳 입욕</td><td>매일</td></tr>
+<tr><td>공중탕 白鷺乃湯</td><td>470엔(수 휴무)</td><td>2/13~15 영업</td></tr>
+<tr><td>温泉寺 · 加恵瑠(개구리) 신사</td><td>무료 · 噴泉池는 2021년부터 입욕 금지(보기만)</td><td>매일</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>📞 예약 전에 전화로 물어볼 것</h3>
+<ul style="margin:0">
+<li>대절탕·객실 탕에 <b>5명이 같이 들어가도 되는지</b>(스프링스 로지 노천탕 크기, 게로 관광호텔, 야마가타야 새 대절탕).</li>
+<li>게로 관광호텔 10첩 정원(공식 4명 vs 자란 5명 판매).</li>
+<li>문신 있는 사람이 있으면 대욕장 이용 가능 여부.</li>
+</ul>
+</div>
+</section>
+<section id="tab-stay" hidden>
+<h2>🏠 나고야 2박 — 에어비앤비가 호텔보다 1인 1만 엔 넘게 쌉니다</h2>
+<div class="card tw">
+<table>
+<tr><th>#</th><th>숙소 · 위치</th><th>인원·침대</th><th>A안 2/12~14 2박 (1인)</th><th>B안 2/13~15 2박 (1인)</th><th>평점(후기)</th><th>허가</th></tr>
+<tr class="pick"><td class="c">1</td><td><a href="https://www.airbnb.co.kr/rooms/54174419"><b>카나리야 R101</b></a> 1LDK 47㎡<br><span class="sm">나고야역 남쪽 · 오스 칸논 근처</span></td><td>6명 · 침실 1개에 싱글 6개</td><td class="num"><b>43,800엔</b> (8,760)</td><td class="num"><b>41,800엔</b> (8,360)</td><td class="num">4.85 (466)</td><td class="sm">여관업 허가</td></tr>
+<tr class="pick"><td class="c">2</td><td><a href="https://www.airbnb.co.kr/rooms/26404939"><b>야바초1 #401</b></a><br><span class="sm">야바초역 근처 · 사카에·오스 걸어서</span></td><td>5명 딱 · 침실 3개 · 싱글 5개</td><td class="num">51,400엔 (10,280)</td><td class="num">48,700엔 (9,740)</td><td class="num">4.66 (164)</td><td class="sm">여관업 허가</td></tr>
+<tr><td class="c">3</td><td><a href="https://www.airbnb.co.kr/rooms/45716336"><b>사로에 전통가옥</b></a> 72㎡<br><span class="sm">나고야역 도보 10분</span></td><td>10명 · 침실 2개 · 침대 12개</td><td class="num">60,000엔 + 세금 (12,000)</td><td class="num">60,000엔 + 세금</td><td class="num">4.7 (236)</td><td class="sm">여관업 허가</td></tr>
+<tr><td class="c">4</td><td><a href="https://www.airbnb.co.kr/rooms/1530815769709893660"><b>이마 오스</b></a><br><span class="sm">오스칸논역 2분 · 오스 상점가 5분</span></td><td>8명 · 침실 2개 · 침대 5개</td><td class="num">79,160엔 (15,832)</td><td class="num">76,500엔 (15,300)</td><td class="num">4.89 (28)</td><td class="sm">민박 신고 M230055668</td></tr>
+<tr><td class="c">5</td><td><a href="https://www.airbnb.co.kr/rooms/1614295076093220888"><b>혼진 상점가 숙소 · 사우나</b></a><br><span class="sm">혼진역 10분</span></td><td>10명 · 침대 7개</td><td class="num">81,300엔 (16,260)</td><td class="num">72,600엔 (14,520)</td><td class="num">5.0 (9)</td><td class="sm">여관업 허가</td></tr>
+<tr><td class="c">6</td><td><a href="https://www.airbnb.co.kr/rooms/1457547182185397356"><b>오스 90㎡ 한 층 전체</b></a><br><span class="sm">오스칸논역 근처 · 욕실 2개</span></td><td>8명 · 침대 6개</td><td class="num">107,943엔 (21,589)</td><td class="num">105,329엔</td><td class="num">4.96 (70)</td><td class="sm">여관업 허가</td></tr>
+</table>
+<ul class="sm" style="margin-top:8px">
+<li>airbnb.co.kr 11-22 21:40 검색 결과의 2박 총액(청소비·서비스 수수료 포함, 「+ 세금」 표시만 세금 별도). 8곳 모두 「취소 수수료 없음」 표시가 떠 있었지만 <b>정확한 무료 취소 기한은 예약 화면에서만 보입니다.</b></li>
+<li>⚠ <b>환불 정책이 「비교적 엄격」(30일 전)이면 고르지 마세요</b> — A안은 1/13, B안은 1/14까지라 ㅈㅅ 발령(1/14~15)보다 먼저 끝납니다. 「유연」(하루 전)·「일반」(5일 전)·「제한적」(14일 전)은 괜찮습니다.</li>
+<li>1번은 침실 하나에 싱글 6개(한 방에 다 같이), 2번은 침실 3개로 나뉨. 1명이 빠질 때 집 값이 그대로인지는 미확인.</li>
+</ul>
+</div>
+
+<h2>🏨 비교용 호텔 (천연 온천 대욕장)</h2>
+<div class="card tw">
+<table>
+<tr><th>호텔</th><th>방</th><th>금 2/12</th><th>토 2/13</th><th>일 2/14</th><th>월 2/15</th></tr>
+<tr><td><b>슈퍼호텔 신칸센구치</b> (천연 온천 「名城金鯱の湯」)</td><td>같은 층 3실 세트 · 조식</td><td class="num">51,400</td><td class="num">70,900</td><td class="num plus">27,900</td><td class="num">41,100</td></tr>
+<tr><td><b>슈퍼호텔 Premier 사쿠라도리구치</b> (천연 온천)</td><td>2실 커넥팅 · 밥 없음</td><td class="num">47,900</td><td class="num">74,030</td><td class="num">35,900</td><td class="num">41,900</td></tr>
+<tr><td>도미인 PREMIUM 나고야 사카에 (운반 천연 온천)</td><td>3+2 코너트윈 · 밥 없음</td><td class="num">90,000</td><td class="num">120,300</td><td class="num">90,000</td><td class="sm">—</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">자란 11-22 조회 · 5명 합계(엔). 호텔은 시내에서도 천연 온천 대욕장이 있고 조식이 붙는 대신, 에어비앤비보다 2박에 1인 1만 엔 이상 비쌉니다.</p>
+</div>
+</section>
+<section id="tab-todo" hidden>
+<h2>📍 나고야에서 할 것 — 요일 휴무 주의</h2>
+<div class="card tw">
+<table>
+<tr><th>곳</th><th>요금</th><th>시간</th><th>닫는 날(2/12 금~2/16 화)</th><th>메모</th></tr>
+<tr><td><b>나고야성</b> 혼마루 어전</td><td class="num">1,000엔</td><td>9:00~16:30</td><td class="plus">없음</td><td>천수각은 공사로 못 들어감</td></tr>
+<tr><td><b>아쓰타 신궁</b></td><td>경내 무료 · 보물관 500엔</td><td>보물관 9:00~16:30</td><td class="plus">없음</td><td>근처 아쓰타 호라이켄 본점 히쓰마부시</td></tr>
+<tr><td><b>오스 상점가·오스 칸논</b></td><td>무료</td><td>가게마다</td><td class="plus">없음</td><td>길거리 음식·쇼핑, 에어비앤비 1·4번 근처</td></tr>
+<tr><td><b>이누야마성</b>(국보 천수각)</td><td class="num">1,000엔</td><td>9:00~17:00</td><td class="plus">없음</td><td>⚠ 1/4~2/28 천수 4층 난간·마루 수리로 일부 입장 제한 · 메이테츠 약 25~37분</td></tr>
+<tr><td>도요타 산업기술기념관</td><td class="num">1,000엔</td><td>9:30~17:00</td><td class="minus">월 2/15</td><td>나고야역에서 가까움</td></tr>
+<tr><td>도쿠가와 미술관</td><td class="num">2,000엔</td><td>10:00~17:00</td><td class="minus">월 2/15</td><td></td></tr>
+<tr><td>노리타케의 숲</td><td class="num">500엔</td><td>10:00~17:00</td><td class="minus">월 2/15</td><td></td></tr>
+<tr><td>나고야항 수족관</td><td class="num">2,030엔</td><td>9:30~17:30</td><td class="minus">월 2/15</td><td>겨울 정비 휴관 여부 미확인</td></tr>
+<tr><td>SCMAGLEV 리니어 철도관</td><td class="num">1,200엔</td><td>10:00~17:30</td><td class="minus">화 2/16</td><td>월요일엔 염</td></tr>
+<tr><td><b>지브리 파크</b></td><td>오산포권 주말 7,800 · 평일 7,300엔</td><td>주말 9~17시</td><td class="minus">화 2/16</td><td><span class="tag must">예약 필수</span><b>2월 입장권은 12/10(목) 14시 판매 시작</b>(해외는 l-tike)</td></tr>
+<tr><td><b>나바나노사토 일루미네이션</b></td><td>2월 3,000엔(편의점)·3,200엔(현장), 1,000엔 금권 포함</td><td>점등 시각 미확인</td><td class="plus">없음</td><td>2026-10-17~2027-05-31 · 나가시마 스파랜드 옆</td></tr>
+<tr><td>나가시마 스파랜드</td><td>패스포트 6,000엔(15시 뒤 4,200)</td><td>미확인</td><td class="plus">여행 기간 영업(1월 휴업일만 공지)</td><td></td></tr>
+<tr><td>메이지무라</td><td class="num">2,500엔</td><td>겨울 10~16시</td><td class="minus">화 2/16 휴무 가능성(2월 달력 미발표)</td><td></td></tr>
+<tr><td>미라이 타워(옛 TV타워)</td><td class="num">1,300엔</td><td>10~21시(토 21:40)</td><td class="plus">없음</td><td>일루미네이션 2/28까지</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">⚠ <b>A안(금~월)은 마지막 날이 월요일</b>이라 도요타·도쿠가와·노리타케·수족관이 닫습니다. <b>B안(토~화)은 마지막 날이 화요일</b>이라 지브리·리니어관이 닫습니다.</p>
+</div>
+
+<h2>🏟 그 주말 경기</h2>
+<div class="card">
+<ul style="margin:0">
+<li>B리그 <b>나고야 다이아몬드 돌핀스</b>(IG 아레나): 2/12(금) 19:05 · 2/14(일) 14:05 (3자 사이트 기준, 공식 확인 필요)</li>
+<li>J1 <b>나고야 그램퍼스 vs FC도쿄</b>: 2/13(토) (경기장·시각 미확인)</li>
+</ul>
+</div>
+
+<h2>🍶 술·밤 — 니시키3초메(긴산)</h2>
+<div class="card tw">
+<table>
+<tr><th>가게</th><th>위치</th><th>영업</th><th>노미호다이</th><th>예약</th></tr>
+<tr><td><b>세카이노 야마짱</b> 니시키나카점 (데바사키)</td><td>사카에역 1번 출구 3분</td><td>월~토 17:00~0:15 · 일 ~23:15 · 무휴</td><td>코스 4,000엔~, 3시간</td><td><span class="tag ok">온라인</span>개인실</td></tr>
+<tr><td><b>후라이보</b> 사카에점 (원조 데바사키)</td><td>사카에</td><td class="minus">월요일 휴무</td><td>코스 5,000엔(음료 100분)</td><td><span class="tag ok">온라인</span></td></tr>
+<tr><td>고미토리 니시키점</td><td>니시키</td><td>미확인</td><td>5,600엔(쿠폰 5,000엔)</td><td>개인실</td></tr>
+</table>
+<ul class="sm" style="margin-top:8px">
+<li>나고야 먹거리 1인: 히쓰마부시 아쓰타 호라이켄 본점 4,950엔(예약 불가·수요일 등 휴무) · 데바사키 5개 660엔(야마짱) · 미소카츠 야바톤 정식 1,450~2,940엔.</li>
+<li>양조장: <b>구니자카리 술 문화관</b>(한다, 무료·예약 필수·목 휴관, 시음 가능, JR 한다역 7분). 도코나메 쪽 양조장 개방 행사(2026년엔 2/14·2/21~22)는 2027년 날짜 미확인.</li>
+</ul>
+</div>
+
+<h2>🚌 2일차 당일치기 — 다카야마 + 시라카와고 한국어 투어</h2>
+<div class="card tw">
+<table>
+<tr><th>상품</th><th>1인</th><th>출발</th><th>무료 취소</th></tr>
+<tr><td><a href="https://www.waug.com/ko/activities/150061">와그 「아이트립」</a> (한국인 가이드)</td><td class="num">48,600원</td><td>미라이 타워 7:50</td><td>7일 전까지</td></tr>
+<tr><td><a href="https://experiences.myrealtrip.com/products/3887559">마이리얼트립 「동화의 세계」</a></td><td class="num">50,000원~(상세 65,000원~)</td><td>나고야역 8:30</td><td>3일 전까지</td></tr>
+<tr><td><a href="https://www.waug.com/ko/activities/153743">와그 「3대 명소」</a>(구조하치만 포함)</td><td class="num">54,230원~</td><td>8:00</td><td>하루 전 10시까지</td></tr>
+</table>
+<p class="sm" style="margin-top:8px">토·일 운행 여부는 날짜 선택 화면에서 확인 필요. 시라카와고 야간 조명(1/11·17·24·31)은 후보 날짜와 안 겹침. 갓쇼즈쿠리 민가원은 12~3월 목요일 휴무.</p>
+</div>
+</section>
+<section id="tab-arch" hidden>
+<div class="warn" style="margin-top:12px"><b>📦 보관</b> — 나고야·2/13~14 주말로 정하기 전 자료입니다(혹시 몰라 남겨 둠). 삿포로 문서도 그대로 있습니다: <a href="../sapporo-2701/">삿포로 문서(보관)</a></div>
+
+<h2>일본 겨울 여행 — 삿포로 vs 나고야</h2>
 <p class="lede">2027년 <b>1월 말~2월 중순</b> · 3박 4일(주말 2일 포함) · 94년생 남자 5명(서울 1 · 포항·경주 4) · 조건: <b>온천 필수</b> · 술과 먹거리 · 관광 1~2곳 이상 · 전통 행사나 성이 있으면 좋음 (2026-11-22 갱신 · 항공권·온천 숙소 가격 추가 · 아래쪽에 처음 비교한 5곳도 남겨 둠)</p>
 
 <div class="card pick" style="margin-top:8px"><b>🔄 11-22 밤 — 삿포로가 비싸서 나고야를 다시 비교합니다.</b> 아래 「가장 이른 편 + 가장 늦은 편」 기준 항공권 비교가 최신입니다. 삿포로 쪽 자세한 내용은 <a href="../sapporo-2701/#air">삿포로 문서</a>에 있습니다. <b>결론: 1인 전체 예산이 나고야가 약 22만~45만 원 쌉니다</b>(아래 예산표).</div>
@@ -514,6 +835,24 @@
 <li><a href="https://koripin.com/guide/korea-from-nagoya/">나고야(주부)~부산·인천 겨울 시각</a> · <a href="https://www.skyscanner.co.kr/routes/spka/pus/sapporo-to-gimhae-international.html">삿포로~김해 운항사</a></li>
 </ul>
 </div>
+
+</section>
+<p class="sm" style="margin-top:24px">판 11-22p</p>
 </div>
+<script>
+(function(){
+  var btns=[].slice.call(document.querySelectorAll('.tabs button'));
+  function show(k){
+    var ok=btns.some(function(b){return b.getAttribute('data-t')===k;});
+    if(!ok)k='decide';
+    btns.forEach(function(b){var on=b.getAttribute('data-t')===k;b.setAttribute('aria-selected',on);var s=document.getElementById('tab-'+b.getAttribute('data-t'));if(s)s.hidden=!on;});
+    try{localStorage.setItem('ng27.tab',k)}catch(e){}
+  }
+  btns.forEach(function(b){b.addEventListener('click',function(){var k=b.getAttribute('data-t');history.replaceState(null,'','#'+k);show(k);window.scrollTo(0,0);});});
+  var h=location.hash.slice(1),saved=null;
+  try{saved=localStorage.getItem('ng27.tab')}catch(e){}
+  show(h||saved||'decide');
+})();
+</script>
 </body>
 </html>

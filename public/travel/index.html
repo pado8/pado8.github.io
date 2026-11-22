@@ -79,10 +79,28 @@
 
 <header>
   <h1>여행 도시에</h1>
-  <p class="lead">일정·항공·예산·지도를 한 문서에. 각 도시에는 <b>데이터가 없어도</b> 열립니다.<br><b>10/29–11/1 일정은 가오슝으로 확정</b>됐습니다. 나고야는 같은 날짜로 비교했던 후보로 남겨둡니다.</p>
+  <p class="lead">일정·항공·예산·지도를 한 문서에. 각 도시에는 <b>데이터가 없어도</b> 열립니다.<br><b>2027년 2월 친구 5명 여행은 나고야·2/13~14 주말로 확정</b>됐습니다. 비교했던 삿포로 문서는 보관해 둡니다.</p>
 </header>
 
 <h2>예정된 여행</h2>
+
+<a class="trip" href="japan-2701/">
+  <div class="top">
+    <div class="flag">JP</div>
+    <div class="ttl">
+      <b>나고야 겨울 3박4일</b>
+      <span>일본 · 2027.02.12(금)~15(월) 또는 02.13(토)~16(화) · 남자 5명 · 나고야 2박 + 게로 온천 1박</span>
+    </div>
+    <div class="dday"><b class="dd" data-go="2027-02-12">D-</b><span class="ddsub">출발까지</span></div>
+  </div>
+  <div class="meta">
+    <span class="tag on">지역·주말 확정</span>
+    <span class="tag alt">금~월 / 토~화 결정 중</span>
+    <span class="tag">날짜 결정 · 일정 · 게로 온천 · 숙소 · 할 것 · 보관</span>
+  </div>
+</a>
+
+<h2>지난 여행</h2>
 
 <a class="trip" href="kaohsiung/">
   <div class="top">
@@ -91,13 +109,29 @@
       <b>가오슝 3박4일</b>
       <span>대만 · 2026.10.29(목) – 11.01(일) · 성인 4명(부부 2쌍)</span>
     </div>
-    <div class="dday"><b id="dd">D-</b><span id="ddsub">출발까지</span></div>
+    <div class="dday"><b class="dd" data-go="2026-10-29">D-</b><span class="ddsub">출발까지</span></div>
   </div>
   <div class="meta">
-    <span class="tag on">일정 확정</span>
+    <span class="tag on">다녀옴</span>
     <span class="tag off">오프라인 지원</span>
     <span class="tag off">GPS 지도</span>
     <span class="tag">항공 · 숙소 · 예산 · 맛집 · 쇼핑</span>
+  </div>
+</a>
+
+<h2>보관</h2>
+
+<a class="trip" href="sapporo-2701/">
+  <div class="top">
+    <div class="flag">JP</div>
+    <div class="ttl">
+      <b>삿포로 겨울 3박4일</b>
+      <span>일본 · 2027년 1월 말~2월 중순 후보 · 남자 5명 · 나고야로 정하기 전 비교 문서</span>
+    </div>
+  </div>
+  <div class="meta">
+    <span class="tag alt">보관</span>
+    <span class="tag">항공 시각 전체 · 숙소 · 청의 호수 · 먹거리 · 예산</span>
   </div>
 </a>
 
@@ -105,21 +139,16 @@
   <div class="top">
     <div class="flag">JP</div>
     <div class="ttl">
-      <b>나고야 3박4일</b>
-      <span>일본 · 2026.10.29(목) – 11.01(일) · 성인 4명(부부 2쌍)</span>
+      <b>나고야 3박4일 (10월 후보)</b>
+      <span>일본 · 2026.10.29(목) – 11.01(일) · 성인 4명(부부 2쌍) · 가오슝과 비교했던 후보</span>
     </div>
-    <div class="dday"><b class="dd2">D-</b><span class="ddsub2">출발까지</span></div>
   </div>
   <div class="meta">
-    <span class="tag alt">같은 날짜 · 후보</span>
+    <span class="tag alt">보관</span>
     <span class="tag off">오프라인 지원</span>
     <span class="tag off">GPS 지도</span>
-    <span class="tag">항공 · 숙소 · 예산 · 맛집 · 쇼핑</span>
   </div>
 </a>
-
-<h2>다음 여행</h2>
-<div class="soon">아직 없습니다. 날짜와 목적지가 정해지면 여기에 추가됩니다.</div>
 
 <h2>현지에서 쓰는 법</h2>
 <div class="tips">
@@ -136,13 +165,15 @@
 </div>
 <script>
   (function () {
-    var go = new Date(2026, 9, 29), now = new Date();
-    var d = Math.round((go - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
-    var label = d > 0 ? 'D-' + d : (d === 0 ? 'D-DAY' : '다녀옴');
-    var sub = d > 0 ? '출발까지' : (d === 0 ? '오늘 출발' : '');
-    // 두 여행이 같은 날짜라 카드 전부에 같은 값을 넣는다
-    [].forEach.call(document.querySelectorAll('#dd, .dd2'), function (e) { e.textContent = label; });
-    [].forEach.call(document.querySelectorAll('#ddsub, .ddsub2'), function (e) { e.textContent = sub; });
+    var t = new Date(), today = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    [].forEach.call(document.querySelectorAll('.dday'), function (box) {
+      var b = box.querySelector('.dd'), sp = box.querySelector('.ddsub');
+      var g = (b.getAttribute('data-go') || '').split('-');
+      var go = new Date(+g[0], +g[1] - 1, +g[2]);
+      var d = Math.round((go - today) / 86400000);
+      b.textContent = d > 0 ? 'D-' + d : (d === 0 ? 'D-DAY' : '다녀옴');
+      sp.textContent = d > 0 ? '출발까지' : (d === 0 ? '오늘 출발' : '');
+    });
   })();
   if ('serviceWorker' in navigator) {
     addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
