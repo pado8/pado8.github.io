@@ -109,6 +109,28 @@ footer{margin-top:36px;color:var(--sub);font-size:12px;border-top:1px solid var(
   .ev time{font-size:13px}
   .more{grid-template-columns:1fr}
 }
+
+.fcat{display:flex;align-items:center;gap:8px;font:700 15.5px/1.3 var(--sans);margin:20px 0 8px}
+.fcat span{font-size:17px}
+.food{list-style:none;margin:0;padding:0;display:grid;gap:8px;grid-template-columns:1fr}
+@media (min-width:700px){.food{grid-template-columns:1fr 1fr}}
+.fd{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px 10px;min-width:0}
+.fd-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.fd .jp{display:block;font-size:15px;line-height:1.3}
+.fd .kr{display:block;color:var(--sub);font-size:12.5px;margin-top:1px}
+.fd p{margin:5px 0 0;font-size:13px}
+.fd .menu{color:var(--ink)}
+.fd .meta{color:var(--sub);font-size:12.5px}
+.fd .rate{color:var(--red);font-weight:600}
+.fd .memo{color:var(--sub);font-size:12.5px}
+.fd .memo b{color:var(--ink)}
+.wk{display:flex;gap:3px;flex:none}
+.wk i{font-style:normal;font:600 10.5px/1 var(--mono);width:19px;height:19px;border-radius:5px;display:grid;place-items:center}
+.wk i.on{background:var(--ok-soft);color:var(--ok)}
+.wk i.off{background:transparent;color:var(--sub);text-decoration:line-through;border:1px dashed var(--line)}
+.wk i.unk{background:transparent;color:var(--sub);border:1px solid var(--line)}
+.chip.yt::before{content:"▶";font-size:9px;color:var(--red)}
+
 @media (prefers-reduced-motion:no-preference){.day{animation:fade .18s ease-out}@keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
 </style>
 </head>
@@ -283,6 +305,94 @@ footer{margin-top:36px;color:var(--sub);font-size:12px;border-top:1px solid var(
 
   <h2>ㅌㅇ 픽 5곳 <small>MUST EAT</small></h2>
   <ul class="picks"><li><span class="pn">1</span><div><small>히다규 야키니쿠</small><b>馬喰一代 名古屋WEST</b><p>토 저녁 · 코스 8,250~엔</p></div><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%A3%9B%E9%A8%A8%E7%89%9B%E4%B8%80%E9%A0%AD%E5%AE%B6%20%E9%A6%AC%E5%96%B0%E4%B8%80%E4%BB%A3%20%E5%90%8D%E5%8F%A4%E5%B1%8BWEST" target="_blank" rel="noopener">지도</a></li><li><span class="pn">2</span><div><small>히쓰마부시</small><b>あつた蓬莱軒 本店</b><p>화 16:30 · 4,950엔</p></div><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%82%E3%81%A4%E3%81%9F%E8%93%AC%E8%8E%B1%E8%BB%92%20%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">지도</a></li><li><span class="pn">3</span><div><small>미소카츠</small><b>矢場とん 矢場町本店</b><p>일 저녁 · 정식 1,450~2,000엔</p></div><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%9F%A2%E5%A0%B4%E3%81%A8%E3%82%93%20%E7%9F%A2%E5%A0%B4%E7%94%BA%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">지도</a></li><li><span class="pn">4</span><div><small>규카츠</small><b>京都勝牛 名古屋伏見</b><p>토 점심 · 990~2,200엔</p></div><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%89%9B%E3%82%AB%E3%83%84%E4%BA%AC%E9%83%BD%E5%8B%9D%E7%89%9B%20%E5%90%8D%E5%8F%A4%E5%B1%8B%E4%BC%8F%E8%A6%8B" target="_blank" rel="noopener">지도</a></li><li><span class="pn">5</span><div><small>타코야키</small><b>たこいち 大須本店</b><p>토 오후 · 8개 900엔</p></div><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A4%A7%E9%98%AA%E3%83%9F%E3%83%8A%E3%83%9F%E3%81%AE%E3%81%9F%E3%81%93%E3%81%84%E3%81%A1%20%E5%A4%A7%E9%A0%88%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">지도</a></li></ul>
+
+  <h2>먹을 곳 — 찐맛집만 <small>EAT</small></h2>
+  <p class="note" style="margin-top:-4px">종류별 몇 곳만 · <b>토 일 월 화</b> 칸 = 그날 영업(초록) / 휴무(줄) / 미확인(빈칸) · 평점은 구글 우선, 없으면 타베로그 · 2026-11-24 조회</p>
+  <h3 class="fcat"><span>🍜</span>라멘</h3><ul class="food"><li class="fd">
+  <div class="fd-top"><div><b class="jp">麺家 獅子丸</b><span class="kr">닭 파이탄 · 거품 크림 국물</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 獅子丸ぱいたん 1,100 · A5和牛ぱいたん 1,600</p>
+  <p class="meta"><span class="rate">★ 구글 4.3 (3.3천) · 百名店 7년</span> · 나고야역</p>
+  <p class="memo">11~15시·17~21:30 · 줄 40~60분 · 카드 ✕</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%BA%BA%E5%AE%B6%20%E7%8D%85%E5%AD%90%E4%B8%B8%20%E5%90%8D%E5%8F%A4%E5%B1%8B" target="_blank" rel="noopener">지도</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">味仙 今池本店</b><span class="kr">나고야 명물 타이완 라멘(매운맛)</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 台湾ラーメン 750~850 · 青菜炒め 770 · 手羽先 550</p>
+  <p class="meta"><span class="rate">★ 구글 4.0 (3.4천)</span> · 이마이케</p>
+  <p class="memo">17시~새벽 1시 · 순하게는 「アメリカン」 · 5명 전화 예약 052-733-7670</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%91%B3%E4%BB%99%20%E4%BB%8A%E6%B1%A0%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">지도</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">麺屋しらかわ</b><span class="kr">다카야마 중화소바(쇼유)</span></div><span class="wk" aria-label="토일월화 영업"><i class="unk" title="토 미확인">토</i><i class="on" title="일 영업">일</i><i class="unk" title="월 미확인">월</i><i class="off" title="화 휴무">화</i></span></div>
+  <p class="menu">🍽 中華そば 1,000 + 맛달걀</p>
+  <p class="meta"><span class="rate">★ 구글 4.2 (1.9천)</span> · 다카야마</p>
+  <p class="memo">2/14 일 점심용 · 11시 개점 맞춰 · 현금만 · 화 휴무</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%BA%BA%E5%B1%8B%E3%81%97%E3%82%89%E3%81%8B%E3%82%8F%20%E9%AB%98%E5%B1%B1" target="_blank" rel="noopener">지도</a></div>
+</li></ul><h3 class="fcat"><span>🍻</span>술집 · 이자카야</h3><ul class="food"><li class="fd">
+  <div class="fd-top"><div><b class="jp">大甚 本店</b><span class="kr">1907년 대중주점 · 안주 40종 셀프</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="off" title="일 휴무">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 牛すじ煮込み · 생선회 · 통술 賀茂鶴</p>
+  <p class="meta"><span class="rate">★ 구글 4.2 (1.3천) · 百名店</span> · 후시미</p>
+  <p class="memo">토 15:45~20:00 · 일 휴무 · 현금만 · 전화 예약 052-231-1909</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A4%A7%E7%94%9A%20%E6%9C%AC%E5%BA%97%20%E4%BC%8F%E8%A6%8B" target="_blank" rel="noopener">지도</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">めしや 浮世ばなれ</b><span class="kr">제철 해산물 이자카야</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 모둠회 1,600 · 와규 육회 2,068 · 오마카세 8,800</p>
+  <p class="meta"><span class="rate">★ 타베로그 3.67 · 百名店</span> · 야바초(사카에)</p>
+  <p class="memo">매일 16~24시 · <b>일요일 저녁 1순위</b> · TableCheck 예약(2주 전)</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%82%81%E3%81%97%E3%82%84%20%E6%B5%AE%E4%B8%96%E3%81%B0%E3%81%AA%E3%82%8C%20%E7%9F%A2%E5%A0%B4%E7%94%BA" target="_blank" rel="noopener">지도</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">千亀</b><span class="kr">야키토리 명가</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="off" title="일 휴무">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 ちょうちん(노른자 꼬치) · 코친 もも塩 · つくね</p>
+  <p class="meta"><span class="rate">★ 구글 4.3 (378) · 百名店 8회</span> · 사카에</p>
+  <p class="memo">17~24시 · 일 휴무 · 현금만 · 한 달 전 1일부터 전화 예약 052-262-4848</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%8D%83%E4%BA%80%20%E7%84%BC%E9%B3%A5%20%E6%A0%84" target="_blank" rel="noopener">지도</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">のんき屋</b><span class="kr">1954년 서서 마시는 술집</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="off" title="일 휴무">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 味噌串カツ · どて焼き · 味噌おでん</p>
+  <p class="meta"><span class="rate">★ 구글 3.9 (556)</span> · 나고야역 서쪽</p>
+  <p class="memo">토 16:30~20:00 · 일 휴무 · 1인 ~2,000엔 · 영어 메뉴 없음</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%AE%E3%82%93%E3%81%8D%E5%B1%8B%20%E5%90%8D%E5%8F%A4%E5%B1%8B%20%E6%A4%BF%E7%94%BA" target="_blank" rel="noopener">지도</a></div>
+</li></ul><h3 class="fcat"><span>🥢</span>식사</h3><ul class="food"><li class="fd">
+  <div class="fd-top"><div><b class="jp">鈴波 エスカ店</b><span class="kr">생선 미림·술지게미 절임 정식</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 鈴波定食 · 銀だら定食 · 밥 무료 추가</p>
+  <p class="meta"><span class="rate">★ 타베로그 3.73 · 百名店 (본점 구글 4.4)</span> · 나고야역 지하</p>
+  <p class="memo">11~14:30·16:30~21시 · 예약 불가 · <b>2/16 화 점심</b></p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%88%B4%E6%B3%A2%20%E3%82%A8%E3%82%B9%E3%82%AB%E5%BA%97" target="_blank" rel="noopener">지도</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">立ち食い寿司 極 名駅4丁目店</b><span class="kr">서서 먹는 에도마에 스시</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 한 점 100엔대~ · きんき 880 · かつお 440</p>
+  <p class="meta"><span class="rate">★ 타베로그 3.65 · 百名店</span> · 나고야역</p>
+  <p class="memo">수 휴무 · 10석 → 5명은 예약</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%AB%8B%E3%81%A1%E9%A3%9F%E3%81%84%E5%AF%BF%E5%8F%B8%20%E6%A5%B5%20%E5%90%8D%E9%A7%854%E4%B8%81%E7%9B%AE%E5%BA%97" target="_blank" rel="noopener">지도</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">うどん 錦</b><span class="kr">술 마신 뒤 카레우동</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="off" title="일 휴무">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 カレーうどん 1,000 (+날달걀)</p>
+  <p class="meta"><span class="rate">★ 타베로그 3.73 · 百名店 6회</span> · 사카에</p>
+  <p class="memo">토 18:00~23:30 · 일 휴무 · 11석·현금만</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%86%E3%81%A9%E3%82%93%20%E9%8C%A6%20%E6%A0%84" target="_blank" rel="noopener">지도</a></div>
+</li></ul><h3 class="fcat"><span>📺</span>유튜버가 간 집</h3><ul class="food"><li class="fd">
+  <div class="fd-top"><div><b class="jp">麺屋はなび 高畑本店</b><span class="kr">타이완 마제소바 원조 — 쯔양 「나고야 1탄」</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="off" title="월 휴무">월</i><i class="off" title="화 휴무">화</i></span></div>
+  <p class="menu">🍽 元祖台湾まぜそば + 追い飯(밥 추가)</p>
+  <p class="meta"><span class="rate">★ 타베로그 3.42 · 百名店</span> · 다카바타(지하철 15분)</p>
+  <p class="memo"><b>토·일만</b>(월·셋째 화 휴무) · 14석 · 개점 전 줄 · 나고야역 지점은 매일</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%BA%BA%E5%B1%8B%E3%81%AF%E3%81%AA%E3%81%B3%20%E9%AB%98%E7%95%91%E6%9C%AC%E5%BA%97" target="_blank" rel="noopener">지도</a><a class="chip yt" href="https://www.youtube.com/watch?v=UeNIHU29oq0" target="_blank" rel="noopener">영상</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">PIZZERIA BRACERIA CESARI!!</b><span class="kr">나폴리 피자 대회 우승 셰프 — 쯔양 「나고야 6탄」</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 マルゲリータ・エクストラ 2,090 · 점심 세트</p>
+  <p class="meta"><span class="rate">★ 타베로그 피자 百名店 2025</span> · 오스</p>
+  <p class="memo">11~15시·18~21:30 · 예약 052-238-0372</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=PIZZERIA%20BRACERIA%20CESARI%20%E5%A4%A7%E9%A0%88" target="_blank" rel="noopener">지도</a><a class="chip yt" href="https://www.youtube.com/watch?v=8YSYlNg1AE4" target="_blank" rel="noopener">영상</a></div>
+</li><li class="fd">
+  <div class="fd-top"><div><b class="jp">黒豚屋 らむちぃ</b><span class="kr">대파 폭탄 미소카츠 — 육식맨·이자반</span></div><span class="wk" aria-label="토일월화 영업"><i class="unk" title="토 미확인">토</i><i class="unk" title="일 미확인">일</i><i class="unk" title="월 미확인">월</i><i class="unk" title="화 미확인">화</i></span></div>
+  <p class="menu">🍽 味噌カツ定食 1,600~1,800 · 큰 새우튀김</p>
+  <p class="meta"><span class="rate">★ 타베로그 3.49</span> · 사카에</p>
+  <p class="memo">11~15:30·17:30~22:30 · 휴무일 미확인 · 현금만 · 밥·장국 리필</p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%BB%92%E8%B1%9A%E5%B1%8B%20%E3%82%89%E3%82%80%E3%81%A1%E3%81%83" target="_blank" rel="noopener">지도</a><a class="chip yt" href="https://www.youtube.com/watch?v=BkaXXwLDOg4" target="_blank" rel="noopener">영상</a></div>
+</li></ul><h3 class="fcat"><span>☕</span>아침</h3><ul class="food"><li class="fd">
+  <div class="fd-top"><div><b class="jp">KAKO 柳橋店</b><span class="kr">나고야 모닝 킷사</span></div><span class="wk" aria-label="토일월화 영업"><i class="on" title="토 영업">토</i><i class="on" title="일 영업">일</i><i class="on" title="월 영업">월</i><i class="on" title="화 영업">화</i></span></div>
+  <p class="menu">🍽 あんバタートースト · 小倉トースト</p>
+  <p class="meta"><span class="rate">★ 구글 4.0 (1.1천) · 百名店</span> · 나고야역 서남쪽</p>
+  <p class="memo">7~17시 · 목 휴무 · 주말 아침 줄 → <b>평일 아침</b></p>
+  <div class="chips"><a class="chip map" href="https://www.google.com/maps/search/?api=1&amp;query=KAKO%20%E6%9F%B3%E6%A9%8B%E5%BA%97" target="_blank" rel="noopener">지도</a></div>
+</li></ul>
 
   <h2>더 보기 <small>DETAILS</small></h2>
   <div class="more">
